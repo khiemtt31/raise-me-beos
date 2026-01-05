@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider = "prisma-client-js"
+  engineType = "binary"
 }
 
 datasource db {
@@ -26,7 +26,8 @@ model Donation {
   message   String? @db.Text
   status    String  @default("PENDING")
 
-  senderName String @default("Anonymous")
+  senderName  String @default("Anonymous")
+  isAnonymous Boolean @default(false)
 
   userId String?
   user   User?   @relation("UserDonations", fields: [userId], references: [id])

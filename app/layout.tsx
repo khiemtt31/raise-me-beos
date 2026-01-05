@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Pacifico, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const pacifico = Pacifico({
@@ -29,6 +30,7 @@ export default function RootLayout({
         className={`${pacifico.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );
