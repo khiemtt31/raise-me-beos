@@ -72,6 +72,12 @@ export default function DonationPage() {
     }
   }
 
+  const paymentServiceBase =
+    process.env.NEXT_PUBLIC_PAYMENT_SERVICE_URL?.replace(/\/$/, '') ?? ''
+
+  const getCreateEndpoint = () =>
+    paymentServiceBase ? `${paymentServiceBase}/api/payment/create` : '/api/payment/create'
+
   const handleDonate = async () => {
     if (amount < 10000) {
       toast.error('Minimum donation amount is 10,000đ')
@@ -80,7 +86,7 @@ export default function DonationPage() {
 
     setIsLoading(true)
     try {
-      const response = await fetch('/api/payment/create', {
+      const response = await fetch(getCreateEndpoint(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

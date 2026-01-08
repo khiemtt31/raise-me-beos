@@ -1,0 +1,69 @@
+{
+  "info": {
+    "name": "Raise Me BeOS APIs",
+    "description": "Collection for testing the Raise Me BeOS payment APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:4001/healthz",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4001",
+          "path": ["healthz"]
+        }
+      }
+    },
+    {
+      "name": "Create Payment",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 10000,\n  \"senderName\": \"Test User\",\n  \"message\": \"Test donation\",\n  \"isAnonymous\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:4001/api/payment/create",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4001",
+          "path": ["api", "payment", "create"]
+        }
+      }
+    },
+    {
+      "name": "Payment Webhook",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"code\": \"00\",\n  \"desc\": \"Success\",\n  \"data\": {\n    \"orderCode\": 123456789,\n    \"amount\": 10000,\n    \"description\": \"Donation\",\n    \"accountNumber\": \"123456789\",\n    \"reference\": \"RF123456\",\n    \"transactionDateTime\": \"2023-01-01T00:00:00Z\",\n    \"currency\": \"VND\",\n    \"paymentLinkId\": \"abc123\",\n    \"code\": \"00\",\n    \"desc\": \"Success\",\n    \"counterAccountBankId\": \"\",\n    \"counterAccountBankName\": \"\",\n    \"counterAccountName\": \"\",\n    \"counterAccountNumber\": \"\",\n    \"virtualAccountName\": \"\",\n    \"virtualAccountNumber\": \"\"\n  },\n  \"signature\": \"signature_here\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:4001/api/payment/webhook",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4001",
+          "path": ["api", "payment", "webhook"]
+        }
+      }
+    }
+  ]
+}

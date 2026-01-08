@@ -12,3 +12,6 @@
 
 > Prisma ORM setup with Supabase Postgres DB.
 > Designs Database Schema for User, Donation, Notification.
+
+> Implement simple page for donations with static props from Supabase DB.
+> Create Backend for Integrate PayOS Payment Gateway for processing donations.
