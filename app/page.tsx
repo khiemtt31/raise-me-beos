@@ -24,6 +24,7 @@ export default function DonationPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [qrCode, setQrCode] = useState<string>('')
   const [showQR, setShowQR] = useState<boolean>(false)
+  const [checkoutUrl, setCheckoutUrl] = useState<string>('')
   const [orderCode, setOrderCode] = useState<string>('')
 
   useEffect(() => {
@@ -84,6 +85,11 @@ export default function DonationPage() {
       return
     }
 
+    if (amount > 50000000) {
+      toast.error('Maximum donation amount is 50,000,000đ')
+      return
+    }
+
     setIsLoading(true)
     try {
       const response = await fetch(getCreateEndpoint(), {
@@ -100,17 +106,20 @@ export default function DonationPage() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to create payment')
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Failed to create payment')
       }
 
       const data = await response.json()
       setQrCode(data.qrCode)
       setOrderCode(data.orderCode)
+      setCheckoutUrl(data.checkoutUrl)
       setShowQR(true)
+      // Only open checkout URL in new tab, don't redirect
       window.open(data.checkoutUrl, '_blank')
-    } catch (error) {
-      toast.error('Failed to create donation. Please try again.')
-      console.error(error)
+    } catch (error: any) {
+      console.error('Donation creation error:', error)
+      toast.error(error.message || 'Failed to create donation. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -213,14 +222,34 @@ export default function DonationPage() {
       <Dialog open={showQR} onOpenChange={setShowQR}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Scan QR Code to Pay</DialogTitle>
+            <DialogTitle>Complete Your Payment</DialogTitle>
           </DialogHeader>
-          <div className="flex justify-center">
-            <QRCode value={qrCode} size={256} />
+          <div className="flex flex-col items-center space-y-4">
+            <QRCode value={qrCode} size={200} />
+            <div className="text-center space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Scan this QR code with your banking app to complete payment
+              </p>
+              <p className="text-xs text-muted-foreground">
+                A payment page has also been opened in a new tab
+              </p>
+            </div>
+            <div className="flex space-x-2 w-full">
+              <Button
+                variant="outline"
+                onClick={() => setShowQR(false)}
+                className="flex-1"
+              >
+                Close
+              </Button>
+              <Button
+                onClick={() => window.open(checkoutUrl, '_blank')}
+                className="flex-1"
+              >
+                Open Payment Page
+              </Button>
+            </div>
           </div>
-          <p className="text-center text-sm text-muted-foreground">
-            Or open the link in your browser to complete payment
-          </p>
         </DialogContent>
       </Dialog>
     </div>

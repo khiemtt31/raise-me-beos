@@ -11,11 +11,11 @@ CREATE TABLE IF NOT EXISTS public.users (
 CREATE TABLE IF NOT EXISTS public.donations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_code TEXT UNIQUE NOT NULL,
-  amount INTEGER NOT NULL,
+  amount DECIMAL(20, 2) NOT NULL CHECK (amount >= 10000.00 AND amount <= 50000000.00),
   sender_name TEXT,
   message TEXT,
   is_anonymous BOOLEAN DEFAULT false,
-  status TEXT DEFAULT 'PENDING',
+  status TEXT DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'PAID', 'CANCELLED')),
   user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
