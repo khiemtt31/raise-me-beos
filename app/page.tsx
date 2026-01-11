@@ -85,8 +85,8 @@ export default function DonationPage() {
       return
     }
 
-    if (amount > 50000000) {
-      toast.error('Maximum donation amount is 50,000,000đ')
+    if (amount > 5000000) {
+      toast.error('Maximum donation amount is 5,000,000đ')
       return
     }
 
@@ -115,8 +115,6 @@ export default function DonationPage() {
       setOrderCode(data.orderCode)
       setCheckoutUrl(data.checkoutUrl)
       setShowQR(true)
-      // Only open checkout URL in new tab, don't redirect
-      window.open(data.checkoutUrl, '_blank')
     } catch (error: any) {
       console.error('Donation creation error:', error)
       toast.error(error.message || 'Failed to create donation. Please try again.')
