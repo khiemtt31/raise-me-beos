@@ -124,7 +124,7 @@ export default function DonationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-pink-100 to-purple-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="flex items-center justify-center gap-2 text-2xl">
@@ -201,7 +201,7 @@ export default function DonationPage() {
           <Button
             onClick={handleDonate}
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+            className="w-full bg-linear-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
             size="lg"
           >
             {isLoading ? (
