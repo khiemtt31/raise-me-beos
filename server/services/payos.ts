@@ -1,8 +1,10 @@
+import "dotenv/config";
 import { PayOS } from "@payos/node";
+import { createLogger, transports } from "winston";
 
-const clientId = process.env.PAYOS_CLIENT_ID;
-const apiKey = process.env.PAYOS_API_KEY;
-const checksumKey = process.env.PAYOS_CHECKSUM_KEY;
+const clientId = process.env.PAYOS_CLIENT_ID || undefined;
+const apiKey = process.env.PAYOS_API_KEY || undefined;
+const checksumKey = process.env.PAYOS_CHECKSUM_KEY || undefined;
 
 if (!clientId || !apiKey || !checksumKey) {
   throw new Error(
@@ -14,5 +16,10 @@ export const payos = new PayOS({
   clientId: clientId,
   apiKey: apiKey,
   checksumKey: checksumKey,
-  baseURL: 'https://api-merchant-sandbox.payos.vn',
+  baseURL: "https://api-merchant.payos.vn/",
+  logLevel: "debug",
+  logger: createLogger({
+    level: "debug",
+    transports: [new transports.Console()],
+  }),
 });

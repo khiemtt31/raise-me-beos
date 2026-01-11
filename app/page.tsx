@@ -12,7 +12,6 @@ import QRCode from 'react-qr-code'
 import confetti from 'canvas-confetti'
 import { toast } from 'sonner'
 import { Heart, DollarSign } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
 
 const AMOUNT_PRESETS = [10000, 20000, 50000, 100000, 200000, 500000]
 
@@ -28,34 +27,35 @@ export default function DonationPage() {
   const [orderCode, setOrderCode] = useState<string>('')
 
   useEffect(() => {
-    const channel = supabase
-      .channel('donations')
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'donations',
-          filter: `orderCode=eq.${orderCode}`,
-        },
-        (payload: { new: { status: string } }) => {
-          if (payload.new.status === 'PAID') {
-            confetti({
-              particleCount: 100,
-              spread: 70,
-              origin: { y: 0.6 }
-            })
-            toast.success('Thank you for your donation!')
-            setShowQR(false)
-            setQrCode('')
-            setOrderCode('')
-          }
-        }
-      )
-      .subscribe()
+    if (!orderCode) return
+
+    const paymentServiceBase =
+      process.env.NEXT_PUBLIC_PAYMENT_SERVICE_URL?.replace(/\/$/, '') ?? ''
+
+    const eventSource = new EventSource(`${paymentServiceBase}/api/sse/status/${orderCode}`)
+
+    eventSource.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      if (data.status === 'PAID') {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        })
+        toast.success('Thank you for your donation!')
+        setShowQR(false)
+        setQrCode('')
+        setOrderCode('')
+        eventSource.close()
+      }
+    }
+
+    eventSource.onerror = () => {
+      eventSource.close()
+    }
 
     return () => {
-      supabase.removeChannel(channel)
+      eventSource.close()
     }
   }, [orderCode])
 

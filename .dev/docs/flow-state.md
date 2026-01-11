@@ -15,3 +15,6 @@
 
 > Implement simple page for donations with static props from Supabase DB.
 > Create Backend for Integrate PayOS Payment Gateway for processing donations.
+
+
+> Follow postman's collection to implement PayOS Payment Gateway integration.
