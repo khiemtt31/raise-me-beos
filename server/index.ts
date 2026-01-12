@@ -14,7 +14,14 @@ const port = Number(process.env.PORT ?? process.env.PAYMENT_SERVICE_PORT ?? 4001
 
 const app = express()
 
-app.use(cors({ origin: ['http://localhost:3000', 'https://raise-me-beos-hanzo.uk/'] }))
+const allowedOrigins = process.env.CORS_ORIGINS 
+  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+  : ['http://localhost:3000', 'https://raise-me-beos-hanzo.uk/']
+
+app.use(cors({ 
+  origin: allowedOrigins,
+  credentials: true
+}))
 
 app.use(
   bodyParser.json({
