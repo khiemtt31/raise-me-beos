@@ -10,7 +10,7 @@ import donationsRouter from './routes/donations'
 
 dotenv.config()
 
-const port = Number(process.env.PAYMENT_SERVICE_PORT ?? process.env.PORT ?? 4001)
+const port = Number(process.env.PORT ?? process.env.PAYMENT_SERVICE_PORT ?? 4001)
 
 const app = express()
 
@@ -33,6 +33,6 @@ app.get('/healthz', (_req, res) => {
   res.json({ status: 'ok' })
 })
 
-app.listen(port, () => {
-  console.log(`> Payment service ready on http://localhost:${port}`)
+app.listen(port, '0.0.0.0', () => {
+  console.log(`> Payment service ready on port ${port}`)
 })
