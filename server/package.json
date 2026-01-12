@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon",
-    "start": "node --import=tsx/esm index.ts",
+    "start": "npx tsx watch index.ts",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
