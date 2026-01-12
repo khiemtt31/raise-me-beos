@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { PayOS } from "@payos/node";
 import { createLogger, transports } from "winston";
 

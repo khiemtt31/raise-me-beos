@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -8,11 +8,13 @@ import sseRouter from './routes/sse'
 import usersRouter from './routes/users'
 import donationsRouter from './routes/donations'
 
+dotenv.config()
+
 const port = Number(process.env.PAYMENT_SERVICE_PORT ?? process.env.PORT ?? 4001)
 
 const app = express()
 
-app.use(cors({ origin: 'http://localhost:3000' }))
+app.use(cors({ origin: ['http://localhost:3000', 'https://raise-me-beos-hanzo.uk/'] }))
 
 app.use(
   bodyParser.json({
