@@ -18,3 +18,11 @@
 
 
 > Follow postman's collection to implement PayOS Payment Gateway integration.
+
+> Build APIs.
+
+> Build UI.
+
+> Test End to End Flow.
+
+> Deploy to FE and BE.
