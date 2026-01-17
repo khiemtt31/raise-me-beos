@@ -79,6 +79,19 @@
   --sidebar-accent-foreground: #540863;
   --sidebar-border: #92487A;
   --sidebar-ring: #540863;
+  --hero-bg: #FFE9ED;
+  --hero-foreground: #3A0519;
+  --hero-accent: #92487A;
+  --hero-accent-strong: #540863;
+  --hero-accent-contrast: #FFE9ED;
+  --hero-muted: rgba(84, 8, 99, 0.55);
+  --hero-surface: rgba(255, 211, 213, 0.65);
+  --hero-surface-strong: rgba(255, 211, 213, 0.82);
+  --hero-border: rgba(146, 72, 122, 0.35);
+  --hero-grid: rgba(146, 72, 122, 0.12);
+  --hero-scan: rgba(146, 72, 122, 0.06);
+  --hero-glow: rgba(146, 72, 122, 0.2);
+  --hero-glow-strong: rgba(146, 72, 122, 0.28);
 }
 
 .dark {
@@ -113,6 +126,19 @@
   --sidebar-accent-foreground: #EF88AD;
   --sidebar-border: #A53860;
   --sidebar-ring: #EF88AD;
+  --hero-bg: #16061A;
+  --hero-foreground: #FFD3D5;
+  --hero-accent: #E49BA6;
+  --hero-accent-strong: #FFD3D5;
+  --hero-accent-contrast: #2A0A2F;
+  --hero-muted: rgba(255, 211, 213, 0.65);
+  --hero-surface: rgba(84, 8, 99, 0.35);
+  --hero-surface-strong: rgba(84, 8, 99, 0.55);
+  --hero-border: rgba(146, 72, 122, 0.45);
+  --hero-grid: rgba(228, 155, 166, 0.14);
+  --hero-scan: rgba(146, 72, 122, 0.12);
+  --hero-glow: rgba(146, 72, 122, 0.25);
+  --hero-glow-strong: rgba(146, 72, 122, 0.35);
 }
 
 .vietnamese {
@@ -150,10 +176,134 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@layer utilities {
+  .bg-cyber-grid {
+    background-image:
+      linear-gradient(to right, var(--hero-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--hero-grid) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  .bg-scanlines {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--hero-scan) 0,
+      var(--hero-scan) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  }
+
+  .text-glow {
+    text-shadow:
+      0 0 6px var(--hero-glow),
+      0 0 12px var(--hero-glow-strong);
+  }
+
+  .neon-border {
+    box-shadow:
+      0 0 0 1px var(--hero-border),
+      0 0 12px var(--hero-glow);
+  }
+
+  .glass-panel {
+    background: var(--hero-surface);
+    border: 1px solid var(--hero-border);
+    backdrop-filter: blur(16px);
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 300ms ease, transform 300ms ease;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .milestone-panel.reveal {
+    transform: translateY(40px) scale(0.96);
+  }
+
+  .milestone-panel.reveal.is-visible {
+    transform: translateY(0) scale(1);
+  }
+
+  .milestone-panel.reveal.is-visible .milestone-media {
+    transform: translateY(0) scale(1);
+  }
+
+  .milestone-media {
+    transform: translateY(20px) scale(0.98);
+    transition: transform 300ms ease;
+  }
+
+  .milestone-panel.reveal.is-visible .milestone-content {
+    transform: translateY(0) scale(1);
+  }
+
+  .milestone-content {
+    transform: translateY(20px) scale(0.98);
+    transition: transform 300ms ease;
+  }
+
+  .sphere-section {
+    --sphere-scale: 1;
+    --sphere-blur: 0px;
+    --sphere-opacity: 1;
+    transform: scale(var(--sphere-scale));
+    filter: blur(var(--sphere-blur));
+    opacity: var(--sphere-opacity);
+    transform-origin: center center;
+    transition: transform 300ms ease, filter 300ms ease, opacity 300ms ease;
+    will-change: transform, filter, opacity;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sphere-section {
+      transform: none;
+      filter: none;
+      opacity: 1;
+      transition: none;
+    }
+  }
+
+  .milestone-node {
+    transform: scale(0.94);
+  }
+
+  .reveal.is-visible .milestone-node {
+    animation: milestone-zoom 700ms ease forwards;
+  }
+
+  @keyframes milestone-zoom {
+    0% {
+      transform: scale(0.94);
+    }
+    60% {
+      transform: scale(1.03);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 }
