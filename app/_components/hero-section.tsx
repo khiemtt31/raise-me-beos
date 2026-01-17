@@ -26,7 +26,7 @@ type HeroSectionProps = {
   onAnonymousChange: (checked: boolean) => void
   onDonate: () => void
 }
-
+ 
 export function HeroSection({
   amount,
   customAmount,

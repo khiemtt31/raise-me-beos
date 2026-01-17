@@ -1,30 +1,28 @@
-# Raise Me BeOS
+﻿# Raise Me BeOS
 
-## 🚀 Support This Project
+## Support the Project
 
-If you find this project helpful, consider supporting its development! Your contributions help keep the project alive and growing.
-    
-### 💝 Donation Options
+If you find this project helpful, consider supporting its development. Donations help cover hosting costs and fund new features.
 
-[![GitHub Sponsors](https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/khiemtt31)
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/yourusername)
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/yourusername)
-[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/yourusername)
+### Donation Options
 
-### 🌟 Why Support?
+- VietQR/PayOS (VN): add your gateway link or QR landing page.
+- International: Buy Me a Coffee / Ko-fi / PayPal (add your links).
+- GitHub Sponsors: https://github.com/sponsors/your-handle
 
-- ⭐ Help maintain and improve the codebase
-- 🐛 Fund bug fixes and feature development
-- 📚 Support documentation and tutorials
-- ☕ Keep the developer caffeinated!
+### Donation Policy
 
-### 🙏 Thank You!
+- Donations are voluntary and non-refundable.
+- Donations do not grant equity, ownership, or guaranteed services.
+- Contributions are used to maintain servers and improve the project.
 
-Every contribution, big or small, makes a difference. Thank you for your support! 💖
+### Security Note
+
+Payment credentials must never be committed. Keep all API keys in `.env` and validate webhooks server-side.
 
 ---
 
-## 🧰 Development
+## Development
 
 ### Payment Service
 
