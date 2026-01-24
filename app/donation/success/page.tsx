@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { Button } from '@/components/ui/button'
 
 const SuccessPage = () => {
   return (
@@ -15,12 +16,12 @@ const SuccessPage = () => {
           <p className="text-sm text-gray-500">
             You will receive a confirmation email shortly.
           </p>
-          <button
+          <Button
             onClick={() => window.location.href = '/'}
             className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
           >
             Make Another Donation
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@ export function StorySection() {
         <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
           {storyContent.eyebrow}
         </p>
-        <h2 className="text-3xl font-sans text-glow md:text-4xl">
+        <h2 className="text-3xl font-heading text-glow md:text-4xl">
           {storyContent.title}
         </h2>
         <p className="text-[var(--hero-muted)]">{storyContent.description}</p>
@@ -22,7 +22,7 @@ export function StorySection() {
               key={stat.label}
               className="glass-panel neon-border rounded-2xl p-4 text-center"
             >
-              <p className="text-2xl font-sans text-glow">{stat.value}</p>
+              <p className="text-2xl font-heading text-glow">{stat.value}</p>
               <p className="mt-2 text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
                 {stat.label}
               </p>
@@ -48,7 +48,7 @@ export function StorySection() {
                   {signal.detail}
                 </span>
               </div>
-              <h3 className="mt-4 text-xl font-sans text-glow">{signal.title}</h3>
+              <h3 className="mt-4 text-xl font-heading text-glow">{signal.title}</h3>
               <p className="mt-3 text-sm text-[var(--hero-muted)]">
                 {signal.description}
               </p>

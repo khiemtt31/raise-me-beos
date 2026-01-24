@@ -1,7 +1,7 @@
 import { Layers, Shield, Sparkles, Zap } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-export type SectionId = 'hero' | 'story' | 'milestones' | 'projects'
+export type SectionId = 'hero' | 'story' | 'projects'
 
 export type Section = {
   id: SectionId
@@ -13,7 +13,6 @@ export type HeroContent = {
   title: string
   subtitle: string
   primaryCta: string
-  secondaryCta: string
   tags: string[]
   scrollHint: string
 }
@@ -49,18 +48,6 @@ export type Signal = {
   description: string
   detail: string
   icon: LucideIcon
-}
-
-export type MilestoneContent = {
-  eyebrow: string
-  title: string
-  status: string
-}
-
-export type Milestone = {
-  year: string
-  title: string
-  description: string
 }
 
 export type ProjectsContent = {
@@ -102,17 +89,15 @@ export type SiteContent = {
 export const sections: Section[] = [
   { id: 'hero', label: 'Hero' },
   { id: 'story', label: 'Story' },
-  { id: 'milestones', label: 'Milestones' },
   { id: 'projects', label: 'Drops' },
 ]
 
 export const heroContent: HeroContent = {
   pill: 'Signal ready',
-  title: 'Crafting neon narratives for fearless founders and glowing brands.',
+  title: 'Caging the demon inside me is not wise',
   subtitle:
     'I design cyberpunk interfaces that feel alive, with motion, clarity, and instant payment portals that let supporters fuel the next build.',
   primaryCta: 'View drops',
-  secondaryCta: 'See milestones',
   tags: ['UI systems', 'Motion rituals', 'Instant QR'],
   scrollHint: 'Scroll for the signal',
 }
@@ -187,40 +172,6 @@ export const signals: Signal[] = [
   },
 ]
 
-export const milestoneContent: MilestoneContent = {
-  eyebrow: 'Milestone tree',
-  title: 'The in-out path of the neon build.',
-  status: 'Live signal',
-}
-
-export const milestones: Milestone[] = [
-  {
-    year: '2021',
-    title: 'Signal Ignition',
-    description: 'Built the first neon identity system and learned to bend type.',
-  },
-  {
-    year: '2022',
-    title: 'Prototype Sprint',
-    description: 'Shipped rapid MVPs for fintech and creator platforms.',
-  },
-  {
-    year: '2023',
-    title: 'Motion Rituals',
-    description: 'Focused on scroll narrative and cinematic UI transitions.',
-  },
-  {
-    year: '2024',
-    title: 'Flow Architecture',
-    description: 'Scaled design systems for payment, community, and growth.',
-  },
-  {
-    year: '2025',
-    title: 'Neon Portfolio',
-    description: 'Curated the cyberpunk identity and donation portal.',
-  },
-]
-
 export const projectsContent: ProjectsContent = {
   eyebrow: 'Latest drops',
   title: 'A curated feed of cinematic UI work.',
@@ -251,7 +202,7 @@ export const contactContent: ContactContent = {
   description:
     'Reach out for collaborations, commissions, or to keep the neon engine alive with a quick QR scan.',
   primaryCta: 'Start a project',
-  secondaryCta: 'Donate now',
+  secondaryCta: 'Send an email',
   email: 'hello@neon.studio',
 }
 

@@ -8,13 +8,20 @@ const clients = new Map<string, { res: any, orderCode: string }>()
 
 router.get('/status/:orderCode', async (req, res) => {
   const { orderCode } = req.params
+  
+  const allowedOrigins = process.env.CORS_ORIGINS 
+    ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
+    : ['http://localhost:3000']
+    
+  const origin = req.headers.origin as string
+  const allowOrigin = (origin && allowedOrigins.includes(origin)) ? origin : allowedOrigins[0]
 
   // Set headers for SSE
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     'Connection': 'keep-alive',
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': allowOrigin,
     'Access-Control-Allow-Headers': 'Cache-Control',
   })
 

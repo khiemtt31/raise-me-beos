@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
-import { Pacifico, Geist_Mono } from "next/font/google";
+import { Orbitron, Rajdhani, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const pacifico = Pacifico({
-  variable: "--font-pacifico",
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
+
+const rajdhani = Rajdhani({
+  variable: "--font-rajdhani",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -28,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${pacifico.variable} ${geistMono.variable} antialiased`}
+        className={`${orbitron.variable} ${rajdhani.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"

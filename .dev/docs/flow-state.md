@@ -32,3 +32,10 @@
 > Read about copyrights -> attach LICENSE, re-documentating.
 
 <!-- Day 7 -->
+> Keep implements perfect UI/UX.
+
+<!-- Day 8 -->
+> Reforged UI for smooth UX
+> Refactor Donation Part: Replace with my image and create a whole screen for donation + history of donations
+> Add A component button that call api GET /healthz
+> Create dummy content data.ts for blog posts (should be use server)

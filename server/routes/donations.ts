@@ -26,46 +26,6 @@ router.get('/public', async (req, res) => {
   }
 })
 
-// Get user's donations (requires auth)
-router.get('/my', async (req, res) => {
-  try {
-    const authHeader = req.headers.authorization
-    if (!authHeader) {
-      return res.status(401).json({ error: 'No authorization header' })
-    }
-
-    const token = authHeader.replace('Bearer ', '')
-    // For now, we'll assume the user ID is passed in the request
-    // In a real app, you'd verify the token and get user ID
-    const userId = req.query.userId as string
-
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID required' })
-    }
-
-    const { data: donations, error } = await supabase
-      .from('donations')
-      .select(`
-        *,
-        user:users (
-          fullName:full_name,
-          email
-        )
-      `)
-      .eq('userId', userId)
-      .order('created_at', { ascending: false })
-
-    if (error) {
-      console.error('Get user donations error:', error)
-      return res.status(500).json({ error: 'Failed to get donations' })
-    }
-
-    return res.json({ donations })
-  } catch (error) {
-    console.error('Get user donations error:', error)
-    return res.status(500).json({ error: 'Failed to get donations' })
-  }
-})
 
 // Get donation by ID
 router.get('/:id', async (req, res) => {

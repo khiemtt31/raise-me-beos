@@ -9,12 +9,11 @@ router.post('/create', async (req, res) => {
   console.log(`[PAYMENT CREATE] Starting payment creation for amount: ${req.body.amount}`)
 
   try {
-    const { amount, senderName, message, isAnonymous, userId } = req.body as {
+    const { amount, senderName, message, isAnonymous } = req.body as {
       amount?: number
       senderName?: string
       message?: string
       isAnonymous?: boolean
-      userId?: string
     }
 
     // Validate amount
@@ -95,7 +94,7 @@ router.post('/create', async (req, res) => {
           message,
           is_anonymous: isAnonymous,
           status: 'PENDING',
-          user_id: userId || null,
+          // user_id: null, // No user system
         })
 
       // Add timeout for database operation

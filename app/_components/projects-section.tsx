@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
   contactContent,
@@ -18,7 +19,7 @@ export function ProjectsSection() {
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
             {projectsContent.eyebrow}
           </p>
-          <h2 className="text-3xl font-sans text-glow md:text-4xl">
+          <h2 className="text-3xl font-heading text-glow md:text-4xl">
             {projectsContent.title}
           </h2>
         </div>
@@ -27,7 +28,7 @@ export function ProjectsSection() {
           variant="outline"
           className="border-[var(--hero-border)] bg-transparent text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)]"
         >
-          <a href="#donate">{projectsContent.cta}</a>
+          <Link href="/donate">{projectsContent.cta}</Link>
         </Button>
       </div>
       <div className="grid gap-5 md:grid-cols-3">
@@ -41,7 +42,7 @@ export function ProjectsSection() {
             <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
               {project.type}
             </p>
-            <h3 className="mt-3 text-xl font-sans text-glow">
+            <h3 className="mt-3 text-xl font-heading text-glow">
               {project.title}
             </h3>
             <p className="mt-3 text-sm text-[var(--hero-muted)]">
@@ -58,7 +59,7 @@ export function ProjectsSection() {
         <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
           {contactContent.eyebrow}
         </p>
-        <h2 className="text-3xl font-sans text-glow md:text-4xl">
+        <h2 className="text-3xl font-heading text-glow md:text-4xl">
           {contactContent.title}
         </h2>
         <p className="text-[var(--hero-muted)]">{contactContent.description}</p>
@@ -76,7 +77,7 @@ export function ProjectsSection() {
             variant="outline"
             className="border-[var(--hero-border)] bg-transparent text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)]"
           >
-            <a href="#donate">{contactContent.secondaryCta}</a>
+            <Link href="/donate">{contactContent.secondaryCta}</Link>
           </Button>
         </div>
       </div>
