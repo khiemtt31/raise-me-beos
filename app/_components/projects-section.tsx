@@ -28,7 +28,7 @@ export function ProjectsSection() {
           variant="outline"
           className="border-[var(--hero-border)] bg-transparent text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)]"
         >
-          <Link href="/donate">{projectsContent.cta}</Link>
+          <Link href="">{projectsContent.cta}</Link>
         </Button>
       </div>
       <div className="grid gap-5 md:grid-cols-3">

@@ -39,3 +39,7 @@
 > Refactor Donation Part: Replace with my image and create a whole screen for donation + history of donations
 > Add A component button that call api GET /healthz
 > Create dummy content data.ts for blog posts (should be use server)
+
+<!-- Day 9 -->
+> Keep implements perfect UI/UX for donation page
+> Structure code for backend to handle apis of history & donations.
