@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon",
+    "dev": "set NODE_ENV=dev&& nodemon",
+    "test": "set NODE_ENV=test&& nodemon",
+    "staging": "set NODE_ENV=staging&& nodemon",
+    "prod": "set NODE_ENV=prod&& nodemon",
     "start": "npx tsx watch index.ts",
     "lint": "eslint . --ext .ts"
   },

@@ -43,3 +43,6 @@
 <!-- Day 9 -->
 > Keep implements perfect UI/UX for donation page
 > Structure code for backend to handle apis of history & donations.
+
+<!-- Day 10 -->
+> .env management

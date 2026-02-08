@@ -1,4 +1,5 @@
-import dotenv from 'dotenv'
+import { config } from 'dotenv'
+import { getEnvPath } from './utils/env'
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -10,7 +11,7 @@ import webhookRouter from './routes/webhook'
 import sseRouter from './routes/sse'
 import donationsRouter from './routes/donations'
 
-dotenv.config()
+config({ path: getEnvPath() })
 
 const port = Number(process.env.PORT ?? process.env.PAYMENT_SERVICE_PORT ?? 4001)
 
@@ -54,7 +55,7 @@ app.use('/api/sse', sseRouter)
 app.use('/api/donations', donationsRouter)
 
 app.get('/healthz', (_req, res) => {
-  res.json({ status: 'ok' })
+  res.json({ status: 'ok', message: "Payment service is healthy" })
 })
 
 // Global error handler
