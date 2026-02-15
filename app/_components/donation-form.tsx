@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { MIN_DONATION_AMOUNT } from '@/lib/donation-config'
 import { cn } from '@/lib/utils'
 import { getDonationContent, donationPresets } from '@/skeleton-data/portfolio'
 
@@ -26,8 +27,6 @@ type DonationFormProps = {
   onAnonymousChange: (checked: boolean) => void
   onDonate: () => void
 }
-
-const MIN_DONATION_AMOUNT = 10000
 
 export function DonationForm({
   amount,

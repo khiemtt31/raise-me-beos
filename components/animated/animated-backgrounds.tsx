@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 export type BackgroundStyle = 
   | 'matrix' 
@@ -29,7 +29,7 @@ export function AnimatedBackground({ style }: AnimatedBackgroundProps) {
     case 'terminal-glitch':
       return <TerminalGlitchBackground />
     default:
-      return <MatrixBackground />
+      return <CircuitBackground />
   }
 }
 
@@ -88,46 +88,72 @@ function MatrixBackground() {
 }
 
 function CircuitBackground() {
+  const elements = useMemo(
+    () =>
+      Array.from({ length: 20 }, () => ({
+        vertical: {
+          x1: `${Math.random() * 100}%`,
+          x2: `${Math.random() * 100}%`,
+          duration: 2 + Math.random() * 3,
+          delay: Math.random() * 2,
+        },
+        horizontal: {
+          y1: `${Math.random() * 100}%`,
+          y2: `${Math.random() * 100}%`,
+          duration: 2 + Math.random() * 3,
+          delay: Math.random() * 2,
+        },
+        node: {
+          cx: `${Math.random() * 100}%`,
+          cy: `${Math.random() * 100}%`,
+          r: 0.5,
+          duration: 1 + Math.random() * 2,
+          delay: Math.random() * 2,
+        },
+      })),
+    []
+  )
+
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden bg-background">
       <svg className="h-full w-full">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {elements.map((element, i) => (
           <g key={i}>
             <line
-              x1={Math.random() * 100 + '%'}
+              x1={element.vertical.x1}
               y1="0"
-              x2={Math.random() * 100 + '%'}
+              x2={element.vertical.x2}
               y2="100%"
               stroke="currentColor"
               strokeWidth="0.5"
               className="text-primary"
               style={{
-                animation: `fade-pulse ${2 + Math.random() * 3}s infinite`,
-                animationDelay: `${Math.random() * 2}s`,
+                animation: `fade-pulse ${element.vertical.duration}s infinite`,
+                animationDelay: `${element.vertical.delay}s`,
               }}
             />
             <line
               x1="0"
-              y1={Math.random() * 100 + '%'}
+              y1={element.horizontal.y1}
               x2="100%"
-              y2={Math.random() * 100 + '%'}
+              y2={element.horizontal.y2}
               stroke="currentColor"
               strokeWidth="0.5"
               className="text-secondary"
               style={{
-                animation: `fade-pulse ${2 + Math.random() * 3}s infinite`,
-                animationDelay: `${Math.random() * 2}s`,
+                animation: `fade-pulse ${element.horizontal.duration}s infinite`,
+                animationDelay: `${element.horizontal.delay}s`,
               }}
             />
             <circle
-              cx={Math.random() * 100 + '%'}
-              cy={Math.random() * 100 + '%'}
-              r="0.5"
+              cx={element.node.cx}
+              cy={element.node.cy}
+              r={element.node.r}
               fill="currentColor"
               className="text-accent"
               style={{
-                animation: `fade-pulse ${1 + Math.random() * 2}s infinite`,
-                animationDelay: `${Math.random() * 2}s`,
+                animation: `fade-pulse ${element.node.duration}s infinite`,
+                animationDelay: `${element.node.delay}s`,
               }}
             />
           </g>
@@ -167,6 +193,8 @@ function PixelRainBackground() {
       color: colors[Math.floor(Math.random() * colors.length)],
     }))
 
+    let animationFrameId = 0
+
     function animate() {
       if (!ctx || !canvas) return
       ctx.fillStyle = 'rgba(13, 17, 23, 0.1)'
@@ -183,7 +211,7 @@ function PixelRainBackground() {
         }
       })
 
-      requestAnimationFrame(animate)
+      animationFrameId = requestAnimationFrame(animate)
     }
 
     animate()
@@ -196,6 +224,7 @@ function PixelRainBackground() {
 
     return () => {
       window.removeEventListener('resize', handleResize)
+      cancelAnimationFrame(animationFrameId)
     }
   }, [])
 
@@ -218,7 +247,7 @@ function AsciiWavesBackground() {
     }
 
     generateWaves()
-    const interval = setInterval(generateWaves, 200)
+    const interval = setInterval(generateWaves, 500)
 
     return () => clearInterval(interval)
   }, [])
@@ -261,7 +290,7 @@ function BinaryGridBackground() {
     }
 
     generateGrid()
-    const interval = setInterval(generateGrid, 100)
+    const interval = setInterval(generateGrid, 300)
 
     return () => clearInterval(interval)
   }, [])

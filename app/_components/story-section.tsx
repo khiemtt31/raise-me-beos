@@ -12,7 +12,7 @@ export function StorySection() {
       id="story"
       data-section="story"
       data-sphere
-      className="sphere-section mt-32 grid min-h-[85vh] gap-10 py-16 lg:grid-cols-[0.9fr_1.1fr] lg:py-20"
+      className="sphere-section grid min-h-[85vh] gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:py-20"
     >
       <div data-reveal className="reveal space-y-6">
         <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">

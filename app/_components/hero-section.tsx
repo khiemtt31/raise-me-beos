@@ -14,11 +14,10 @@ export function HeroSection() {
       id="hero"
       data-section="hero"
       data-sphere
-      className="sphere-section grid min-h-[85vh] items-center gap-12 py-10 lg:grid-cols-[1.1fr_0.9fr]"
+      className="sphere-section grid min-h-[85vh] items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]"
     >
       <div data-reveal className="reveal space-y-8 max-w-2xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)] px-4 py-2 text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
-          <span className="h-2 w-2 rounded-full bg-[var(--hero-accent)] animate-pulse" />
+        <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
           {heroContent.pill}
         </div>
         <h1 className="text-4xl font-heading leading-tight text-glow md:text-6xl">
@@ -50,13 +49,36 @@ export function HeroSection() {
           <ArrowDown className="h-4 w-4 animate-bounce" />
         </div>
       </div>
-      <div data-reveal className="reveal">
-        <div className="glass-panel rounded-3xl overflow-hidden">
+      <div data-reveal className="reveal relative h-96 w-full">
+        {/* Cat - Bottom Left */}
+        <div className="absolute bottom-0 left-0 z-10 rounded-3xl overflow-hidden w-48 h-48 -rotate-12">
           <Image
-            src="/hanzo.png"
+            src="/cat.png"
+            alt="Cat"
+            width={400}
+            height={400}
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        {/* Dog - Middle Right */}
+        <div className="absolute top-1/2 right-0 z-20 rounded-3xl overflow-hidden w-56 h-56 rotate-6">
+          <Image
+            src="/dog.png"
+            alt="Dog"
+            width={500}
+            height={500}
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        {/* Me-Dog - Top Left (Highlighted) */}
+        <div className="absolute top-0 left-1/4 z-30 rounded-3xl overflow-hidden w-64 h-64 -rotate-3 shadow-2xl">
+          <Image
+            src="/me-dog.png"
             alt={t('HOME.IMAGE.ALT.001')}
-            width={800}
-            height={800}
+            width={600}
+            height={600}
             className="h-full w-full object-cover"
             priority
           />

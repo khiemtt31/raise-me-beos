@@ -1,56 +1,144 @@
 {
   "META": {
     "TITLE": {
-      "001": "Tu do va hoang da"
+      "001": "Hoàng Sa và Trường Sa là của Việt Nam"
     },
     "DESCRIPTION": {
-      "001": "Toi tu do va hoang da, nhung se khong tieu hao tuoi tre mot cach vo tan"
+      "001": "Tôi tự do và hoang dã, nhưng sẽ không tiêu hao tuổi trẻ một cách vô tận"
     }
   },
   "NAV": {
     "BRAND": {
-      "001": "Ð½Î±Ð¸zÏƒ"
+      "001": "HANZO"
     },
     "LINK": {
-      "001": "Trang chu",
-      "002": "Ung ho"
+      "001": "Trang chủ",
+      "002": "Ủng hộ"
     },
     "BUTTON": {
-      "001": "Ung ho"
+      "001": "Ủng hộ"
     }
   },
   "THEME": {
     "ARIA": {
-      "001": "Doi chu de",
-      "002": "Chuyen sang che do sang",
-      "003": "Chuyen sang che do toi"
+      "001": "Đổi chủ đề",
+      "002": "Chuyển sang chế độ sáng",
+      "003": "Chuyển sang chế độ tối"
+    }
+  },
+  "SETTINGS": {
+    "MENU": {
+      "ARIA": {
+        "001": "Cài đặt"
+      },
+      "TITLE": {
+        "001": "Cài đặt"
+      },
+      "ITEM": {
+        "BACKGROUND": {
+          "001": "Nền"
+        }
+      }
+    }
+  },
+  "BACKGROUND": {
+    "BACK": {
+      "001": "Quay lại Portfolio"
+    },
+    "BADGE": {
+      "001": "Điều khiển nền"
+    },
+    "TITLE": {
+      "001": "Tinh chỉnh tín hiệu sống"
+    },
+    "TEXT": {
+      "001": "Chọn bầu không khí chuyển động cho mọi màn hình. Lựa chọn của bạn được lưu cục bộ và áp dụng tức thì trên toàn bộ trang."
+    },
+    "STATUS": {
+      "LABEL": {
+        "001": "Chế độ đang hoạt động",
+        "002": "Tự động xoay"
+      },
+      "STATE": {
+        "001": "Bật",
+        "002": "Tắt"
+      }
+    },
+    "STYLE": {
+      "MATRIX": {
+        "NAME": "Ma trận",
+        "DESC": "Mưa mã rơi"
+      },
+      "CIRCUIT": {
+        "NAME": "Mạch",
+        "DESC": "Đường mạch điện tử"
+      },
+      "PIXEL_RAIN": {
+        "NAME": "Mưa pixel",
+        "DESC": "Khối pixel rơi"
+      },
+      "ASCII_WAVES": {
+        "NAME": "Sóng ASCII",
+        "DESC": "Dòng văn bản chảy"
+      },
+      "BINARY_GRID": {
+        "NAME": "Lưới nhị phân",
+        "DESC": "Ma trận 1 và 0"
+      },
+      "TERMINAL": {
+        "NAME": "Terminal",
+        "DESC": "Lệnh nhiễu loạn"
+      }
+    },
+    "MOTHERBOARD": {
+      "TITLE": {
+        "001": "Bo mạch chủ"
+      },
+      "SUBTITLE": {
+        "001": "Đơn vị điều khiển nền"
+      },
+      "MODE": {
+        "AUTO": "Tự động",
+        "MANUAL": "Thủ công"
+      },
+      "AUTO_ROTATE": {
+        "ENABLE": "Bật tự động xoay",
+        "DISABLE": "Tắt tự động xoay"
+      },
+      "INTERVAL": "{seconds}s mỗi lần",
+      "STATS": {
+        "STYLES": "Kiểu nền",
+        "ACTIVE": "Đang chọn",
+        "STATUS": "Trạng thái",
+        "ONLINE": "Trực tuyến"
+      }
     }
   },
   "HOME": {
     "SECTION": {
-      "001": "Mo dau",
-      "002": "Cau chuyen",
-      "003": "Bo suu tap"
+      "001": "Mở đầu",
+      "002": "Câu chuyện",
+      "003": "Bộ sưu tập"
     },
     "PILL": {
-      "001": "Tin hieu san sang"
+      "001": "Tín hiệu sẵn sàng"
     },
     "TITLE": {
-      "001": "Giam con ac quy trong toi khong phai dieu khon ngoan"
+      "001": "Giam cầm con quỷ bên trong tôi không phải điều khôn ngoan"
     },
     "TEXT": {
-      "001": "Toi thiet ke giao dien cyberpunk song dong, co chuyen dong, ro rang, va cong thanh toan nhanh de nguoi ung ho tiep suc cho ban tiep theo."
+      "001": "Tôi thiết kế giao diện cyberpunk sống động, có chuyển động, rõ ràng, và cổng thanh toán nhanh để người ủng hộ tiếp sức cho bản tiếp theo."
     },
     "BUTTON": {
-      "001": "Xem bo suu tap"
+      "001": "Xem bộ sưu tập"
     },
     "TAG": {
-      "001": "He thong UI",
-      "002": "Nghiep dieu chuyen dong",
-      "003": "QR tuc thi"
+      "001": "Hệ thống UI",
+      "002": "Nhịp điệu chuyển động",
+      "003": "QR tức thì"
     },
     "LABEL": {
-      "001": "Cuon de bat tin hieu"
+      "001": "Cuộn để bắt tín hiệu"
     },
     "IMAGE": {
       "ALT": {
@@ -59,51 +147,51 @@
     },
     "STORY": {
       "EYEBROW": {
-        "001": "Cau chuyen tin hieu"
+        "001": "Câu chuyện tín hiệu"
       },
       "TITLE": {
-        "001": "Mot portfolio cho anh sang ben bi va y do ro rang."
+        "001": "Một portfolio cho ánh sáng bền bỉ và ý đồ rõ ràng."
       },
       "TEXT": {
-        "001": "Day la kho luu tru song dong ve thu cong giao dien, vong chuyen dong, va su ro rang trong thanh toan. Moi phan la mot nut trong cung mot mang: manh me, nhanh, va duoc thiet ke de moi ung ho."
+        "001": "Đây là kho lưu trữ sống động về thủ công giao diện, vòng chuyển động, và sự rõ ràng trong thanh toán. Mỗi phần là một nút trong cùng một mạng: mạnh mẽ, nhanh, và được thiết kế để mời ủng hộ."
       }
     },
     "STATS": {
       "LABEL": {
-        "001": "Bo suu tap da ra",
-        "002": "Doi tac tin hieu",
-        "003": "Thanh pho duoc quet"
+        "001": "Bộ sưu tập đã ra",
+        "002": "Đối tác tín hiệu",
+        "003": "Thành phố được quét"
       }
     },
     "SIGNAL": {
       "TITLE": {
-        "001": "Chien luoc Neon",
-        "002": "He thong chuyen dong",
-        "003": "Kien truc giao dien",
-        "004": "Lop tin cay"
+        "001": "Chiến lược Neon",
+        "002": "Hệ thống chuyển động",
+        "003": "Kiến trúc giao diện",
+        "004": "Lớp tin cậy"
       },
       "TEXT": {
-        "001": "He thong thuong hieu gan ket voi ke chuyen cuong do cao, toi uu cho cuon dai.",
-        "002": "Nhip cuon va hover tao nhip dieu, ro rang, va ghi nho tuc thi.",
-        "003": "UI token hoa va kien truc bo cuc giu moi drop dong nhat va nhanh.",
-        "004": "Luong chuyen doi toi uu voi logic UX sach va ban giao thanh toan an toan."
+        "001": "Hệ thống thương hiệu gắn kết với kể chuyện cường độ cao, tối ưu cho cuộn dài.",
+        "002": "Nhịp cuộn và hover tạo nhịp điệu, rõ ràng, và ghi nhớ tức thì.",
+        "003": "UI token hoá và kiến trúc bố cục giữ mỗi drop đồng nhất và nhanh.",
+        "004": "Luồng chuyển đổi tối ưu với logic UX sạch và bàn giao thanh toán an toàn."
       },
       "DETAIL": {
-        "001": "01 Luoi tin hieu",
-        "002": "02 Loi chuyen dong",
-        "003": "03 Ma tran bo cuc",
-        "004": "04 Tin hieu tin cay"
+        "001": "01 Lưới tín hiệu",
+        "002": "02 Lõi chuyển động",
+        "003": "03 Ma trận bố cục",
+        "004": "04 Tín hiệu tin cậy"
       }
     },
     "PROJECTS": {
       "EYEBROW": {
-        "001": "Drop moi nhat"
+        "001": "Drop mới nhất"
       },
       "TITLE": {
-        "001": "Bo suu tap UI dien anh duoc chon loc."
+        "001": "Bộ sưu tập UI điện ảnh được chọn lọc."
       },
       "BUTTON": {
-        "001": "Tiep suc cho drop tiep theo"
+        "001": "Tiếp sức cho drop tiếp theo"
       }
     },
     "PROJECT": {
@@ -115,27 +203,27 @@
       "TYPE": {
         "001": "Fintech UI",
         "002": "Creator Hub",
-        "003": "Cong dong"
+        "003": "Cộng đồng"
       },
       "TEXT": {
-        "001": "Trai nghiem vi sang bong voi luong QR thanh toan tuc thi.",
-        "002": "Dong ke chuyen hinh anh voi chuyen dong manh me va ro rang.",
-        "003": "Bang dieu khien thanh vien cho quet nhanh va giu chan."
+        "001": "Trải nghiệm ví sáng bóng với luồng QR thanh toán tức thì.",
+        "002": "Dòng kể chuyện hình ảnh với chuyển động mạnh mẽ và rõ ràng.",
+        "003": "Bảng điều khiển thành viên cho quét nhanh và giữ chân."
       }
     },
     "CONTACT": {
       "EYEBROW": {
-        "001": "Ket noi"
+        "001": "Kết nối"
       },
       "TITLE": {
-        "001": "San sang xay dung dieu sang bong cung nhau?"
+        "001": "Sẵn sàng xây dựng điều sáng bóng cùng nhau?"
       },
       "TEXT": {
-        "001": "Lien he de hop tac, nhan du an, hoac tiep suc cho dong co neon voi mot lan quet QR nhanh."
+        "001": "Liên hệ để hợp tác, nhận dự án, hoặc tiếp sức cho động cơ neon với một lần quét QR nhanh."
       },
       "BUTTON": {
-        "001": "Bat dau du an",
-        "002": "Gui email"
+        "001": "Bắt đầu dự án",
+        "002": "Gửi email"
       },
       "EMAIL": {
         "001": "hello@neon.studio"
@@ -147,95 +235,95 @@
       "001": "Neon Portfolio"
     },
     "LABEL": {
-      "001": "Ung ho"
+      "001": "Ủng hộ"
     }
   },
   "PAYMENT": {
     "TITLE": {
-      "001": "Hoan tat thanh toan"
+      "001": "Hoàn tất thanh toán"
     },
     "TEXT": {
-      "001": "Quet ma QR bang ung dung ngan hang cua ban de hoan tat thanh toan."
+      "001": "Quét mã QR bằng ứng dụng ngân hàng của bạn để hoàn tất thanh toán."
     },
     "BUTTON": {
-      "001": "Dong",
-      "002": "Mo trang thanh toan",
-      "003": "Sao chep lien ket",
-      "004": "Da sao chep!"
+      "001": "Đóng",
+      "002": "Mở trang thanh toán",
+      "003": "Sao chép liên kết",
+      "004": "Đã sao chép!"
     },
     "LABEL": {
-      "001": "QR het han trong:"
+      "001": "QR hết hạn trong:"
     },
     "STEP": {
-      "001": "Mo ung dung ngan hang cua ban",
-      "002": "Quet ma QR ben tren",
-      "003": "Hoan tat thanh toan"
+      "001": "Mở ứng dụng ngân hàng của bạn",
+      "002": "Quét mã QR bên trên",
+      "003": "Hoàn tất thanh toán"
     },
     "SECURITY": {
-      "001": "Thanh toan an toan boi PayOS",
-      "002": "Khoan ung ho cua ban ho tro phat trien sang tao"
+      "001": "Thanh toán an toàn bởi PayOS",
+      "002": "Khoản ủng hộ của bạn hỗ trợ phát triển sáng tạo"
     },
     "TOAST": {
-      "001": "Da sao chep lien ket thanh toan!",
-      "002": "Khong the sao chep lien ket"
+      "001": "Đã sao chép liên kết thanh toán!",
+      "002": "Không thể sao chép liên kết"
     }
   },
   "DONATE": {
     "HERO": {
       "BADGE": {
-        "001": "Ung ho tam nhin"
+        "001": "Ủng hộ tầm nhìn"
       },
       "TITLE": {
-        "001": "Tiep suc cho",
-        "002": "Drop tiep theo"
+        "001": "Tiếp sức cho",
+        "002": "Drop tiếp theo"
       },
       "TEXT": {
-        "001": "Hay tiep suc cho lan song giao dien cyberpunk, thiet ke chuyen dong, va he thong thanh toan tuc thi. Su ung ho cua ban truc tiep nuoi duong phat trien sang tao va cong cu doi moi."
+        "001": "Hãy tiếp sức cho làn sóng giao diện cyberpunk, thiết kế chuyển động, và hệ thống thanh toán tức thì. Sự ủng hộ của bạn trực tiếp nuôi dưỡng phát triển sáng tạo và công cụ đổi mới."
       }
     },
     "EYEBROW": {
-      "001": "Nut ung ho"
+      "001": "Nút ủng hộ"
     },
     "TITLE": {
-      "001": "Ung ho QR tuc thi"
+      "001": "Ủng hộ QR tức thì"
     },
     "LABEL": {
       "AMOUNT": {
-        "001": "So tien"
+        "001": "Số tiền"
       },
       "CUSTOM_AMOUNT": {
-        "001": "So tien tuy chon (toi thieu {min} {currency})"
+        "001": "Số tiền tùy chọn (tối thiểu {min} {currency})"
       },
       "NAME": {
-        "001": "Ten cua ban"
+        "001": "Tên của bạn"
       },
       "MESSAGE": {
-        "001": "Loi nhan"
+        "001": "Lời nhắn"
       },
       "ANONYMOUS": {
-        "001": "Ung ho an danh"
+        "001": "Ủng hộ ẩn danh"
       },
       "QUICK_SELECT": {
-        "001": "Chon nhanh"
+        "001": "Chọn nhanh"
       }
     },
     "PLACEHOLDER": {
       "CUSTOM_AMOUNT": {
-        "001": "Nhap so tien"
+        "001": "Nhập số tiền"
       },
       "NAME": {
-        "001": "An danh"
+        "001": "Ẩn danh"
       },
       "MESSAGE": {
-        "001": "De lai loi nhan..."
+        "001": "Để lại lời nhắn..."
       }
     },
     "BUTTON": {
       "SUBMIT": {
-        "001": "Tao ma QR"
+        "001": "Tạo mã QR"
       },
       "PROCESSING": {
-        "001": "Dang xu ly..."
+        "001": "Đang xử lý..."
       }
     },
     "CURRENCY": {
@@ -243,107 +331,155 @@
     },
     "TIER": {
       "LABEL": {
-        "001": "Huyen thoai",
-        "002": "Nguoi ung ho",
-        "003": "Ban be",
-        "004": "Dong gop"
+        "001": "Huyền thoại",
+        "002": "Người ủng hộ",
+        "003": "Bạn bè",
+        "004": "Đóng góp"
       }
     },
     "STATS": {
       "LABEL": {
-        "001": "Drop da ra",
-        "002": "Doi tac tin hieu",
-        "003": "Cong dong lon manh"
+        "001": "Drop đã ra",
+        "002": "Đối tác tín hiệu",
+        "003": "Cộng đồng lớn mạnh"
       }
     },
     "TESTIMONIAL": {
       "TEXT": {
-        "001": "\"Portfolio nay la tuyet tac thiet ke web hien dai\""
+        "001": "\"Portfolio này là tuyệt tác thiết kế web hiện đại\""
       },
       "BYLINE": {
-        "001": "Nguoi ung ho gan day • Nha tai tro an danh"
+        "001": "Người ủng hộ gần đây • Nhà tài trợ ẩn danh"
       }
     },
     "IMPACT": {
       "TEXT": {
-        "001": "Su ung ho cua ban tiep suc cho lan song doi moi neon",
-        "002": "100% dung cho phat trien va cong cu sang tao"
+        "001": "Sự ủng hộ của bạn tiếp sức cho làn sóng đổi mới neon",
+        "002": "100% dùng cho phát triển và công cụ sáng tạo"
+      }
+    },
+    "HISTORY": {
+      "TITLE": {
+        "001": "Lịch sử ủng hộ"
+      },
+      "SUBTITLE": {
+        "001": "Ủng hộ gần đây"
+      },
+      "TEXT": {
+        "001": "Xem các đóng góp mới nhất và chạm vào từng mục để xem chi tiết."
+      },
+      "STATS": {
+        "TOTAL_ENTRIES": "Tổng lượt",
+        "PAGE_TOTAL": "Tổng trang"
+      },
+      "EMPTY": {
+        "001": "Chưa có ủng hộ nào. Hãy là người đầu tiên."
+      },
+      "ANONYMOUS": "Ẩn danh",
+      "MESSAGE": {
+        "NONE": "Chưa có lời nhắn."
+      },
+      "PAGINATION": {
+        "LABEL": "Trang {page} / {total}",
+        "PREV": "Trước",
+        "NEXT": "Sau"
+      },
+      "STATUS": {
+        "PAID": "Đã thanh toán",
+        "PENDING": "Đang chờ",
+        "CANCELLED": "Đã hủy",
+        "FAILED": "Thất bại"
+      },
+      "DETAILS": {
+        "TITLE": "Chi tiết ủng hộ",
+        "SUBTITLE": "Xem kỹ hơn đóng góp này.",
+        "LABEL": {
+          "AMOUNT": "Số tiền",
+          "DONOR": "Người ủng hộ",
+          "DONATION_ID": "Mã ủng hộ",
+          "DATE": "Ngày",
+          "METHOD": "Phương thức",
+          "MESSAGE": "Lời nhắn"
+        }
+      },
+      "METHOD": {
+        "PAYOS": "PayOS"
       }
     },
     "SECTION": {
       "TITLE": {
-        "001": "Vi sao su ung ho cua ban quan trong"
+        "001": "Vì sao sự ủng hộ của bạn quan trọng"
       },
       "TEXT": {
-        "001": "Moi dong gop truc tiep ho tro phat trien cong cu thiet ke tien tien, dong gop ma nguon mo, va tao ra trai nghiem nguoi dung doi moi."
+        "001": "Mỗi đóng góp trực tiếp hỗ trợ phát triển công cụ thiết kế tiên tiến, đóng góp mã nguồn mở, và tạo ra trải nghiệm người dùng đổi mới."
       }
     },
     "CARD": {
       "TITLE": {
-        "001": "Doi moi",
-        "002": "Cong cu",
-        "003": "Cong dong"
+        "001": "Đổi mới",
+        "002": "Công cụ",
+        "003": "Cộng đồng"
       },
       "TEXT": {
-        "001": "Tiep suc the he giao dien web va thiet ke chuyen dong tiep theo",
-        "002": "Phat trien va duy tri cong cu sang tao cho cong dong thiet ke",
-        "003": "Ket noi va ho tro cac nha sang tao"
+        "001": "Tiếp sức thế hệ giao diện web và thiết kế chuyển động tiếp theo",
+        "002": "Phát triển và duy trì công cụ sáng tạo cho cộng đồng thiết kế",
+        "003": "Kết nối và hỗ trợ các nhà sáng tạo"
       }
     },
     "LINK": {
       "BACK": {
-        "001": "Quay lai Portfolio"
+        "001": "Quay lại Portfolio"
       }
     },
     "TOAST": {
       "MIN_AMOUNT": {
         "TITLE": {
-          "001": "So tien toi thieu la {amount}"
+          "001": "Số tiền tối thiểu là {amount}"
         },
         "DESC": {
-          "001": "Vui long chon so tien cao hon de tiep tuc."
+          "001": "Vui lòng chọn số tiền cao hơn để tiếp tục."
         }
       },
       "MAX_AMOUNT": {
         "TITLE": {
-          "001": "So tien toi da la {amount}"
+          "001": "Số tiền tối đa là {amount}"
         },
         "DESC": {
-          "001": "Vui long chon so tien thap hon de tiep tuc."
+          "001": "Vui lòng chọn số tiền thấp hơn để tiếp tục."
         }
       },
       "QR_SUCCESS": {
         "TITLE": {
-          "001": "Da tao ma QR thanh toan!"
+          "001": "Đã tạo mã QR thanh toán!"
         },
         "DESC": {
-          "001": "Quet bang ung dung ngan hang de hoan tat ung ho."
+          "001": "Quét bằng ứng dụng ngân hàng để hoàn tất ủng hộ."
         }
       },
       "PAID": {
         "TITLE": {
-          "001": "🎉 Cam on ban da ung ho! Su ung ho cua ban that y nghia."
+          "001": "🎉 Cảm ơn bạn đã ủng hộ! Sự ủng hộ của bạn thật ý nghĩa."
         }
       },
       "CREATE_FAILED": {
         "TITLE": {
-          "001": "Tao ung ho that bai."
+          "001": "Tạo ủng hộ thất bại."
         },
         "DESC": {
-          "001": "Neu van gap van de, hay thu tai lai trang."
+          "001": "Nếu vẫn gặp vấn đề, hãy thử tải lại trang."
         }
       }
     }
   },
   "FOOTER": {
     "BRAND": {
-      "001": "Neon Signal Studio"
+      "001": "Hanzo Laboratory SUV"
     },
     "TAGLINE": {
-      "001": "Xay dung bang neon. Duoc tiep suc boi ung ho."
+      "001": "Xây dựng bằng neon. Được tiếp sức bởi ủng hộ."
     },
     "COPYRIGHT": {
-      "001": "Moi quyen duoc bao luu."
+      "001": "Mọi quyền được bảo lưu."
     },
     "LINE": {
       "001": "(c) {year} {brand}. {rights}"
@@ -355,14 +491,14 @@
         "001": "🎉"
       },
       "TITLE": {
-        "001": "Thanh toan thanh cong!"
+        "001": "Thanh toán thành công!"
       },
       "TEXT": {
-        "001": "Cam on ban da ung ho hau phong. Su ung ho cua ban that y nghia!",
-        "002": "Ban se nhan email xac nhan trong it phut."
+        "001": "Cảm ơn bạn đã ủng hộ hào phóng. Sự ủng hộ của bạn thật ý nghĩa!",
+        "002": "Bạn sẽ nhận email xác nhận trong ít phút."
       },
       "BUTTON": {
-        "001": "Ung ho lan nua"
+        "001": "Ủng hộ lần nữa"
       }
     },
     "CANCEL": {
@@ -370,23 +506,23 @@
         "001": "❌"
       },
       "TITLE": {
-        "001": "Thanh toan da huy"
+        "001": "Thanh toán đã hủy"
       },
       "TEXT": {
-        "001": "Khoan ung ho chua hoan tat. Khong co khoan phi nao duoc tinh.",
-        "002": "Neu gap su co, hay thu lai hoac lien he ho tro."
+        "001": "Khoản ủng hộ chưa hoàn tất. Không có khoản phí nào được tính.",
+        "002": "Nếu gặp sự cố, hãy thử lại hoặc liên hệ hỗ trợ."
       },
       "BUTTON": {
-        "001": "Ve trang chu",
-        "002": "Thu lai"
+        "001": "Về trang chủ",
+        "002": "Thử lại"
       }
     }
   },
   "ERROR": {
     "MESSAGE": {
-      "001": "Kiem tra he thong that bai.",
-      "002": "Yeu cau thanh toan that bai.",
-      "003": "Yeu cau lich su ung ho that bai."
+      "001": "Kiểm tra hệ thống thất bại.",
+      "002": "Yêu cầu thanh toán thất bại.",
+      "003": "Yêu cầu lịch sử ủng hộ thất bại."
     }
   }
 }

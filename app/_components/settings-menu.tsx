@@ -80,6 +80,9 @@ export function SettingsMenu() {
       : t("THEME.ARIA.003")
     : t("THEME.ARIA.001")
   const supportLabel = t("NAV.BUTTON.001")
+  const settingsLabel = t("SETTINGS.MENU.TITLE.001")
+  const settingsAria = t("SETTINGS.MENU.ARIA.001")
+  const backgroundLabel = t("SETTINGS.MENU.ITEM.BACKGROUND.001")
 
   const handleThemeToggle = () => {
     if (!mounted) return
@@ -108,7 +111,7 @@ export function SettingsMenu() {
         className="h-9 w-9 border-[var(--hero-border)] bg-transparent text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)]"
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Settings"
+        aria-label={settingsAria}
       >
         <Settings className="h-4 w-4" />
       </Button>
@@ -120,7 +123,7 @@ export function SettingsMenu() {
           className="absolute right-0 z-50 mt-3 w-60 rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface-strong)]/95 p-2 shadow-xl backdrop-blur"
         >
           <div className="mb-2 px-3 pt-2 text-[10px] uppercase tracking-[0.4em] text-[var(--hero-muted)]">
-            Settings
+            {settingsLabel}
           </div>
           <MenuItem
             icon={isDark ? Sun : Moon}
@@ -128,7 +131,7 @@ export function SettingsMenu() {
             onClick={handleThemeToggle}
           />
           <MenuItem icon={Heart} label={supportLabel} onClick={handleSupport} />
-          <MenuItem icon={Layers} label="Background" onClick={handleBackground} />
+          <MenuItem icon={Layers} label={backgroundLabel} onClick={handleBackground} />
         </div>
       )}
     </div>

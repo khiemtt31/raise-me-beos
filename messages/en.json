@@ -1,7 +1,7 @@
 {
   "META": {
     "TITLE": {
-      "001": "Free & Wild"
+      "001": "Hoang sa and Truong sa belong to Vietnam"
     },
     "DESCRIPTION": {
       "001": "I'm free and wild, but I will not relentlessly spend my youth"
@@ -9,7 +9,7 @@
   },
   "NAV": {
     "BRAND": {
-      "001": "Ð½Î±Ð¸zÏƒ"
+      "001": "Hanzo"
     },
     "LINK": {
       "001": "Home",
@@ -26,6 +26,94 @@
       "003": "Switch to dark theme"
     }
   },
+  "SETTINGS": {
+    "MENU": {
+      "ARIA": {
+        "001": "Settings"
+      },
+      "TITLE": {
+        "001": "Settings"
+      },
+      "ITEM": {
+        "BACKGROUND": {
+          "001": "Background"
+        }
+      }
+    }
+  },
+  "BACKGROUND": {
+    "BACK": {
+      "001": "Back to Portfolio"
+    },
+    "BADGE": {
+      "001": "Background Control"
+    },
+    "TITLE": {
+      "001": "Tune the live signal"
+    },
+    "TEXT": {
+      "001": "Choose the animated atmosphere for every screen. Your selection is saved locally and instantly applied across the site."
+    },
+    "STATUS": {
+      "LABEL": {
+        "001": "Active mode",
+        "002": "Auto rotate"
+      },
+      "STATE": {
+        "001": "Enabled",
+        "002": "Disabled"
+      }
+    },
+    "STYLE": {
+      "MATRIX": {
+        "NAME": "Matrix",
+        "DESC": "Cascading code rain"
+      },
+      "CIRCUIT": {
+        "NAME": "Circuit",
+        "DESC": "Electronic pathways"
+      },
+      "PIXEL_RAIN": {
+        "NAME": "Pixel Rain",
+        "DESC": "Falling pixel blocks"
+      },
+      "ASCII_WAVES": {
+        "NAME": "Ascii Waves",
+        "DESC": "Flowing text patterns"
+      },
+      "BINARY_GRID": {
+        "NAME": "Binary Grid",
+        "DESC": "Matrix of 1s and 0s"
+      },
+      "TERMINAL": {
+        "NAME": "Terminal",
+        "DESC": "Glitching commands"
+      }
+    },
+    "MOTHERBOARD": {
+      "TITLE": {
+        "001": "Motherboard"
+      },
+      "SUBTITLE": {
+        "001": "Background Control Unit"
+      },
+      "MODE": {
+        "AUTO": "Auto",
+        "MANUAL": "Manual"
+      },
+      "AUTO_ROTATE": {
+        "ENABLE": "Enable auto-rotate",
+        "DISABLE": "Disable auto-rotate"
+      },
+      "INTERVAL": "{seconds}s interval",
+      "STATS": {
+        "STYLES": "Styles",
+        "ACTIVE": "Active",
+        "STATUS": "Status",
+        "ONLINE": "Online"
+      }
+    }
+  },
   "HOME": {
     "SECTION": {
       "001": "Hero",
@@ -33,13 +121,13 @@
       "003": "Drops"
     },
     "PILL": {
-      "001": "Signal ready"
+      "001": "Hello stranger, welcome to my world"
     },
     "TITLE": {
-      "001": "Caging the demon inside me is not wise"
+      "001": "Always keep myself away from Evil & Distractions"
     },
     "TEXT": {
-      "001": "I design cyberpunk interfaces that feel alive, with motion, clarity, and instant payment portals that let supporters fuel the next build."
+      "001": "I'm a software engineer in Vietnam, with a passion for crafting clean, efficient code and building innovative solutions. I thrive on tackling complex problems and turning ideas into reality through technology."
     },
     "BUTTON": {
       "001": "View drops"
@@ -100,7 +188,7 @@
         "001": "Latest drops"
       },
       "TITLE": {
-        "001": "A curated feed of cinematic UI work."
+        "001": "Check out my blogs and projects, my beacon of creativity and code."
       },
       "BUTTON": {
         "001": "Fuel the next drop"
@@ -186,8 +274,8 @@
         "001": "Support the Vision"
       },
       "TITLE": {
-        "001": "Fuel the",
-        "002": "Next Drop"
+        "001": "Youngster",
+        "002": "Ultimate Fire"
       },
       "TEXT": {
         "001": "Help power the next wave of cyberpunk interfaces, motion design, and instant payment systems. Your support directly fuels creative development and innovative tools."
@@ -270,6 +358,54 @@
         "002": "100% goes to development and creative tools"
       }
     },
+    "HISTORY": {
+      "TITLE": {
+        "001": "Donation History"
+      },
+      "SUBTITLE": {
+        "001": "Recent Support"
+      },
+      "TEXT": {
+        "001": "See the latest contributions and tap any entry to view the full details."
+      },
+      "STATS": {
+        "TOTAL_ENTRIES": "Total entries",
+        "PAGE_TOTAL": "Page total"
+      },
+      "EMPTY": {
+        "001": "No donations yet. Be the first to support."
+      },
+      "ANONYMOUS": "Anonymous",
+      "MESSAGE": {
+        "NONE": "No message shared."
+      },
+      "PAGINATION": {
+        "LABEL": "Page {page} of {total}",
+        "PREV": "Prev",
+        "NEXT": "Next"
+      },
+      "STATUS": {
+        "PAID": "Paid",
+        "PENDING": "Pending",
+        "CANCELLED": "Cancelled",
+        "FAILED": "Failed"
+      },
+      "DETAILS": {
+        "TITLE": "Donation Details",
+        "SUBTITLE": "A closer look at this contribution.",
+        "LABEL": {
+          "AMOUNT": "Amount",
+          "DONOR": "Donor",
+          "DONATION_ID": "Donation ID",
+          "DATE": "Date",
+          "METHOD": "Method",
+          "MESSAGE": "Message"
+        }
+      },
+      "METHOD": {
+        "PAYOS": "PayOS"
+      }
+    },
     "SECTION": {
       "TITLE": {
         "001": "Why Your Support Matters"
@@ -337,10 +473,10 @@
   },
   "FOOTER": {
     "BRAND": {
-      "001": "Neon Signal Studio"
+      "001": "Hanzo Laboratory SUV"
     },
     "TAGLINE": {
-      "001": "Built in neon. Powered by support."
+      "001": "Built with love. Powered by heart."
     },
     "COPYRIGHT": {
       "001": "All rights reserved."

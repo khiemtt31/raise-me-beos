@@ -3,13 +3,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import confetti from 'canvas-confetti'
 import { toast } from 'sonner'
-import { ArrowLeft, DollarSign, Heart, Sparkles, Users, Zap } from 'lucide-react'
+import { ArrowLeft, Heart, Sparkles, Users, Zap } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
 import { useLocale, useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -17,15 +17,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
+import { DonationForm } from '../_components/donation-form'
 import { PaymentDialog } from '../_components/payment-dialog'
 import { PortfolioFooter } from '../_components/portfolio-footer'
 import { PortfolioHeader } from '../_components/portfolio-header'
+import { MAX_DONATION_AMOUNT, MIN_DONATION_AMOUNT } from '@/lib/donation-config'
 import { cn } from '@/lib/utils'
 import {
-  donationPresets,
   getDonationContent,
 } from '@/skeleton-data/portfolio'
 import {
@@ -37,8 +35,6 @@ import {
 } from '@/app/services/queries'
 import type { DonationHistoryItemDTO } from '@/types/api'
 
-const MIN_DONATION_AMOUNT = 10000
-const MAX_DONATION_AMOUNT = 5000000
 const HISTORY_PAGE_SIZE = 6
 
 
@@ -46,6 +42,7 @@ export default function DonatePage() {
   const t = useTranslations()
   const locale = useLocale()
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   const currencyLabel = t('DONATE.CURRENCY.001')
   const minAmountLabel = useMemo(
@@ -68,7 +65,6 @@ export default function DonatePage() {
   const [message, setMessage] = useState<string>('')
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false)
   const [showQR, setShowQR] = useState<boolean>(false)
-  const [focusedField, setFocusedField] = useState<string | null>(null)
   const [selectedHistory, setSelectedHistory] =
     useState<DonationHistoryItemDTO | null>(null)
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false)
@@ -141,32 +137,46 @@ export default function DonatePage() {
   }, [])
 
   useEffect(() => {
-    if (!paymentStatusQuery.data || paymentStatusQuery.data.status !== 'PAID') {
+    const status = paymentStatusQuery.data?.status
+    if (!status) return
+
+    if (status === 'PAID') {
+      confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ['#00ff88', '#00aaff', '#ff0088', '#ffaa00'],
+      })
+      toast.success(t('DONATE.TOAST.PAID.TITLE.001'), {
+        duration: 5000,
+      })
+
+      setShowQR(false)
+      createPaymentMutation.reset()
+      queryClient.removeQueries({ queryKey: queryKeys.payment })
+      if (orderCode) {
+        queryClient.removeQueries({ queryKey: queryKeys.paymentStatus(orderCode) })
+      }
+      queryClient.invalidateQueries({ queryKey: queryKeys.donationHistoryBase })
+      router.push('/donation/success')
       return
     }
 
-    confetti({
-      particleCount: 150,
-      spread: 100,
-      origin: { y: 0.6 },
-      colors: ['#00ff88', '#00aaff', '#ff0088', '#ffaa00'],
-    })
-    toast.success(t('DONATE.TOAST.PAID.TITLE.001'), {
-      duration: 5000,
-    })
-
-    setShowQR(false)
-    createPaymentMutation.reset()
-    queryClient.removeQueries({ queryKey: queryKeys.payment })
-    if (orderCode) {
-      queryClient.removeQueries({ queryKey: queryKeys.paymentStatus(orderCode) })
+    if (status === 'CANCELLED' || status === 'FAILED') {
+      setShowQR(false)
+      createPaymentMutation.reset()
+      queryClient.removeQueries({ queryKey: queryKeys.payment })
+      if (orderCode) {
+        queryClient.removeQueries({ queryKey: queryKeys.paymentStatus(orderCode) })
+      }
+      router.push('/donation/cancel')
     }
-    queryClient.invalidateQueries({ queryKey: queryKeys.donationHistoryBase })
   }, [
     createPaymentMutation,
     orderCode,
-    paymentStatusQuery.data,
+    paymentStatusQuery.data?.status,
     queryClient,
+    router,
     t,
   ])
 
@@ -233,13 +243,6 @@ export default function DonatePage() {
     }
   }
 
-  const getTierLabel = (value: number) => {
-    if (value >= 500000) return t('DONATE.TIER.LABEL.001')
-    if (value >= 100000) return t('DONATE.TIER.LABEL.002')
-    if (value >= 50000) return t('DONATE.TIER.LABEL.003')
-    return t('DONATE.TIER.LABEL.004')
-  }
-
   const isLoading = createPaymentMutation.isPending
   const isDialogOpen = showQR && Boolean(payment?.qrCode)
 
@@ -254,6 +257,18 @@ export default function DonatePage() {
       hour: '2-digit',
       minute: '2-digit',
     }).format(new Date(value))
+
+  const statusLabels = useMemo(
+    () => ({
+      PAID: t('DONATE.HISTORY.STATUS.PAID'),
+      PENDING: t('DONATE.HISTORY.STATUS.PENDING'),
+      CANCELLED: t('DONATE.HISTORY.STATUS.CANCELLED'),
+      FAILED: t('DONATE.HISTORY.STATUS.FAILED'),
+    }),
+    [t]
+  )
+  const getStatusLabel = (status: string) =>
+    statusLabels[status as keyof typeof statusLabels] ?? status
 
   const totalEntries = historyPagination?.total ?? 0
   const totalPages = historyPagination?.totalPages ?? 1
@@ -361,219 +376,20 @@ export default function DonatePage() {
                 data-reveal
                 className="reveal scroll-mt-28 xl:col-span-3 h-full"
               >
-                <div className="glass-panel neon-border rounded-3xl p-8 relative overflow-hidden h-full">
-                {/* Background decoration */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--hero-accent)]/5 via-transparent to-[var(--hero-accent)]/10 pointer-events-none" />
-
-                <div className="relative space-y-8">
-                  {/* Header with tier badge */}
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
-                        {donationContent.eyebrow}
-                      </p>
-                      <h2 className="text-2xl font-heading text-glow">{donationContent.title}</h2>
-                    </div>
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)] shadow-lg">
-                        {amount >= 500000 ? (
-                          <Sparkles className="h-6 w-6 text-yellow-400" />
-                        ) : amount >= 100000 ? (
-                          <Zap className="h-6 w-6 text-blue-400" />
-                        ) : amount >= 50000 ? (
-                          <Heart className="h-6 w-6 text-pink-400" />
-                        ) : (
-                          <Users className="h-6 w-6 text-green-400" />
-                        )}
-                      </div>
-                      <span
-                        className={cn(
-                          'text-xs font-medium uppercase tracking-wide',
-                          amount >= 500000
-                            ? 'text-yellow-400'
-                            : amount >= 100000
-                              ? 'text-blue-400'
-                              : amount >= 50000
-                                ? 'text-pink-400'
-                                : 'text-green-400'
-                        )}
-                      >
-                        {getTierLabel(amount)}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Amount display with animation */}
-                  <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/50 p-4 backdrop-blur-sm">
-                    <div className="flex items-center justify-between text-sm uppercase tracking-[0.2em]">
-                      <span className="text-[var(--hero-muted)]">{donationContent.amountLabel}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl font-heading text-glow font-bold">
-                          {amount.toLocaleString(locale)}
-                        </span>
-                        <span className="text-[var(--hero-muted)] text-sm">{currencyLabel}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Preset amounts with better styling */}
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)] mb-3">
-                      {t('DONATE.LABEL.QUICK_SELECT.001')}
-                    </p>
-                    <div className="grid grid-cols-3 gap-3">
-                      {donationPresets.map((preset, index) => (
-                        <Button
-                          key={preset}
-                          variant="outline"
-                          onClick={() => handleAmountSelect(preset)}
-                          className={cn(
-                            'h-12 rounded-xl border transition-all duration-300 hover:scale-105 hover:shadow-lg',
-                            amount === preset && !customAmount
-                              ? 'border-[var(--hero-accent)] bg-[var(--hero-accent)] text-[var(--hero-accent-contrast)] shadow-[0_0_20px_var(--hero-accent)]'
-                              : 'border-[var(--hero-border)] bg-[var(--hero-surface)]/50 text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)] backdrop-blur-sm'
-                          )}
-                          style={{ animationDelay: `${index * 50}ms` }}
-                        >
-                          <span className="text-sm font-medium">{preset.toLocaleString(locale)}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Custom amount with better UX */}
-                  <div className="space-y-3">
-                    <Label
-                      htmlFor="custom-amount"
-                      className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]"
-                    >
-                      {donationContent.customAmountLabel}
-                    </Label>
-                    <div className="relative">
-                      <DollarSign className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--hero-muted)]" />
-                      <Input
-                        id="custom-amount"
-                        type="number"
-                        placeholder={donationContent.customAmountPlaceholder}
-                        value={customAmount}
-                        onChange={(e) => handleCustomAmountChange(e.target.value)}
-                        onFocus={() => setFocusedField('custom-amount')}
-                        onBlur={() => setFocusedField(null)}
-                        min={MIN_DONATION_AMOUNT}
-                        className={cn(
-                          'pl-12 h-12 border transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm',
-                          focusedField === 'custom-amount'
-                            ? 'border-[var(--hero-accent)] shadow-[0_0_20px_var(--hero-accent)]'
-                            : 'border-[var(--hero-border)]'
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Personal info section */}
-                  <div className="space-y-6">
-                    <div className="space-y-3">
-                      <Label
-                        htmlFor="sender-name"
-                        className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]"
-                      >
-                        {donationContent.nameLabel}
-                      </Label>
-                      <Input
-                        id="sender-name"
-                        placeholder={donationContent.namePlaceholder}
-                        value={senderName}
-                        onChange={(e) => setSenderName(e.target.value)}
-                        onFocus={() => setFocusedField('sender-name')}
-                        onBlur={() => setFocusedField(null)}
-                        className={cn(
-                          'h-12 transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm',
-                          focusedField === 'sender-name'
-                            ? 'border-[var(--hero-accent)] shadow-[0_0_20px_var(--hero-accent)]'
-                            : 'border-[var(--hero-border)]'
-                        )}
-                      />
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label
-                        htmlFor="message"
-                        className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]"
-                      >
-                        {donationContent.messageLabel}
-                      </Label>
-                      <Textarea
-                        id="message"
-                        placeholder={donationContent.messagePlaceholder}
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        onFocus={() => setFocusedField('message')}
-                        onBlur={() => setFocusedField(null)}
-                        className={cn(
-                          'min-h-[100px] transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm resize-none',
-                          focusedField === 'message'
-                            ? 'border-[var(--hero-accent)] shadow-[0_0_20px_var(--hero-accent)]'
-                            : 'border-[var(--hero-border)]'
-                        )}
-                        rows={3}
-                      />
-                    </div>
-
-                    {/* Anonymous toggle with better styling */}
-                    <div className="flex items-center gap-4 p-4 rounded-xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/30 backdrop-blur-sm">
-                      <Checkbox
-                        id="anonymous"
-                        checked={isAnonymous}
-                        onCheckedChange={(checked) => setIsAnonymous(checked as boolean)}
-                        className="border-[var(--hero-border)] data-[state=checked]:bg-[var(--hero-accent)] data-[state=checked]:text-[var(--hero-accent-contrast)] h-5 w-5"
-                      />
-                      <Label
-                        htmlFor="anonymous"
-                        className="text-sm text-[var(--hero-foreground)] cursor-pointer"
-                      >
-                        {donationContent.anonymousLabel}
-                      </Label>
-                    </div>
-                  </div>
-
-                  {/* Enhanced donate button */}
-                  <Button
-                    onClick={handleDonate}
-                    disabled={isLoading}
-                    className={cn(
-                      'neon-border h-14 w-full text-lg font-heading transition-all duration-300 rounded-xl relative overflow-hidden group',
-                      isLoading
-                        ? 'bg-[var(--hero-surface)] text-[var(--hero-muted)] cursor-not-allowed'
-                        : 'bg-[var(--hero-accent)] text-[var(--hero-accent-contrast)] hover:bg-[var(--hero-accent-strong)] hover:scale-[1.02] hover:shadow-[0_0_30px_var(--hero-accent)]'
-                    )}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                    <div className="relative flex items-center justify-center gap-3">
-                      {isLoading ? (
-                        <>
-                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--hero-accent-contrast)] border-t-transparent" />
-                          {donationContent.processingLabel}
-                        </>
-                      ) : (
-                        <>
-                          <DollarSign className="h-5 w-5" />
-                          <span>{donationContent.buttonLabel}</span>
-                          <Sparkles className="h-4 w-4 opacity-70" />
-                        </>
-                      )}
-                    </div>
-                  </Button>
-
-                  {/* Impact message */}
-                  <div className="text-center text-xs text-[var(--hero-muted)] space-y-1">
-                    <p>{t('DONATE.IMPACT.TEXT.001')}</p>
-                    <p className="flex items-center justify-center gap-1">
-                      <Heart className="h-3 w-3 text-red-400" />
-                      <span>{t('DONATE.IMPACT.TEXT.002')}</span>
-                    </p>
-                  </div>
-                </div>
-                </div>
+                <DonationForm
+                  amount={amount}
+                  customAmount={customAmount}
+                  senderName={senderName}
+                  message={message}
+                  isAnonymous={isAnonymous}
+                  isLoading={isLoading}
+                  onAmountSelect={handleAmountSelect}
+                  onCustomAmountChange={handleCustomAmountChange}
+                  onSenderNameChange={setSenderName}
+                  onMessageChange={setMessage}
+                  onAnonymousChange={setIsAnonymous}
+                  onDonate={handleDonate}
+                />
               </div>
 
               {/* Donation history */}
@@ -584,33 +400,63 @@ export default function DonatePage() {
                     <div className="flex flex-wrap items-center justify-between gap-4">
                       <div className="space-y-2">
                         <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
-                          Donation History
+                          {t('DONATE.HISTORY.TITLE.001')}
                         </p>
-                        <h2 className="text-3xl font-heading text-glow">Recent Support</h2>
+                        <h2 className="text-3xl font-heading text-glow">
+                          {t('DONATE.HISTORY.SUBTITLE.001')}
+                        </h2>
                         <p className="text-sm text-[var(--hero-muted)] max-w-2xl">
-                          See the latest contributions and tap any entry to view the full details.
+                          {t('DONATE.HISTORY.TEXT.001')}
                         </p>
                       </div>
                       <div className="flex items-center gap-4 text-sm">
                         <div className="rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)]/60 px-4 py-2">
-                          <span className="text-[var(--hero-muted)]">Total entries</span>
-                          <span className="ml-2 text-[var(--hero-foreground)] font-semibold">
-                            {isHistoryLoading ? '...' : totalEntries}
+                          <span className="text-[var(--hero-muted)]">
+                            {t('DONATE.HISTORY.STATS.TOTAL_ENTRIES')}
                           </span>
+                          {isHistoryLoading ? (
+                            <span className="ml-2 inline-block h-4 w-10 rounded-full bg-[var(--hero-border)]/40 align-middle animate-pulse" />
+                          ) : (
+                            <span className="ml-2 text-[var(--hero-foreground)] font-semibold">
+                              {totalEntries}
+                            </span>
+                          )}
                         </div>
                         <div className="rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)]/60 px-4 py-2">
-                          <span className="text-[var(--hero-muted)]">Page total</span>
-                          <span className="ml-2 text-[var(--hero-foreground)] font-semibold">
-                            {isHistoryLoading ? '...' : formatAmount(historyTotalAmount)}
+                          <span className="text-[var(--hero-muted)]">
+                            {t('DONATE.HISTORY.STATS.PAGE_TOTAL')}
                           </span>
+                          {isHistoryLoading ? (
+                            <span className="ml-2 inline-block h-4 w-16 rounded-full bg-[var(--hero-border)]/40 align-middle animate-pulse" />
+                          ) : (
+                            <span className="ml-2 text-[var(--hero-foreground)] font-semibold">
+                              {formatAmount(historyTotalAmount)}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
 
                     <div className="flex-1 space-y-3">
                       {isHistoryLoading && (
-                        <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 text-sm text-[var(--hero-muted)]">
-                          Loading donation history...
+                        <div className="space-y-3">
+                          {Array.from({ length: 3 }).map((_, index) => (
+                            <div
+                              key={`history-skeleton-${index}`}
+                              className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4"
+                            >
+                              <div className="flex flex-wrap items-center justify-between gap-3">
+                                <div className="space-y-2">
+                                  <div className="h-4 w-36 rounded-full bg-[var(--hero-border)]/40 animate-pulse" />
+                                  <div className="h-3 w-48 rounded-full bg-[var(--hero-border)]/30 animate-pulse" />
+                                </div>
+                                <div className="space-y-2 text-right">
+                                  <div className="h-4 w-24 rounded-full bg-[var(--hero-border)]/40 animate-pulse" />
+                                  <div className="h-3 w-20 rounded-full bg-[var(--hero-border)]/30 animate-pulse ml-auto" />
+                                </div>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       )}
 
@@ -624,7 +470,7 @@ export default function DonatePage() {
                         !donationHistoryQuery.isError &&
                         donationHistory.length === 0 && (
                           <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 text-sm text-[var(--hero-muted)]">
-                            No donations yet. Be the first to support.
+                            {t('DONATE.HISTORY.EMPTY.001')}
                           </div>
                         )}
 
@@ -632,8 +478,8 @@ export default function DonatePage() {
                         !donationHistoryQuery.isError &&
                         donationHistory.map((entry) => {
                           const displayName = entry.isAnonymous
-                            ? 'Anonymous'
-                            : entry.senderName || 'Anonymous'
+                            ? t('DONATE.HISTORY.ANONYMOUS')
+                            : entry.senderName || t('DONATE.HISTORY.ANONYMOUS')
 
                           return (
                             <button
@@ -661,11 +507,11 @@ export default function DonatePage() {
                                             : 'bg-red-500/15 text-red-300'
                                       )}
                                     >
-                                      {entry.status}
+                                      {getStatusLabel(entry.status)}
                                     </span>
                                   </div>
                                   <p className="text-xs text-[var(--hero-muted)] line-clamp-1">
-                                    {entry.message || 'No message shared.'}
+                                    {entry.message || t('DONATE.HISTORY.MESSAGE.NONE')}
                                   </p>
                                 </div>
                                 <div className="text-right space-y-1">
@@ -684,7 +530,10 @@ export default function DonatePage() {
 
                     <div className="flex items-center justify-between border-t border-[var(--hero-border)] pt-4 text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
                       <span>
-                        Page {historyPage} of {totalPages}
+                        {t('DONATE.HISTORY.PAGINATION.LABEL', {
+                          page: historyPage,
+                          total: totalPages,
+                        })}
                       </span>
                       <div className="flex items-center gap-2">
                         <Button
@@ -694,7 +543,7 @@ export default function DonatePage() {
                           onClick={() => setHistoryPage((prev) => Math.max(1, prev - 1))}
                           className="text-[10px]"
                         >
-                          Prev
+                          {t('DONATE.HISTORY.PAGINATION.PREV')}
                         </Button>
                         <Button
                           variant="outline"
@@ -703,7 +552,7 @@ export default function DonatePage() {
                           onClick={() => setHistoryPage((prev) => prev + 1)}
                           className="text-[10px]"
                         >
-                          Next
+                          {t('DONATE.HISTORY.PAGINATION.NEXT')}
                         </Button>
                       </div>
                     </div>
@@ -765,9 +614,11 @@ export default function DonatePage() {
       <Dialog open={isHistoryOpen} onOpenChange={handleHistoryOpenChange}>
         <DialogContent className="border-[var(--hero-border)] bg-[var(--hero-surface-strong)] text-[var(--hero-foreground)] max-w-lg">
           <DialogHeader className="space-y-2">
-            <DialogTitle className="text-glow text-2xl">Donation Details</DialogTitle>
+            <DialogTitle className="text-glow text-2xl">
+              {t('DONATE.HISTORY.DETAILS.TITLE')}
+            </DialogTitle>
             <DialogDescription className="text-[var(--hero-muted)]">
-              A closer look at this contribution.
+              {t('DONATE.HISTORY.DETAILS.SUBTITLE')}
             </DialogDescription>
           </DialogHeader>
           {selectedHistory && (
@@ -776,7 +627,7 @@ export default function DonatePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
-                      Amount
+                      {t('DONATE.HISTORY.DETAILS.LABEL.AMOUNT')}
                     </p>
                     <p className="text-3xl font-heading text-glow">
                       {formatAmount(selectedHistory.amount)}
@@ -792,44 +643,52 @@ export default function DonatePage() {
                           : 'bg-red-500/15 text-red-300'
                     )}
                   >
-                    {selectedHistory.status}
+                    {getStatusLabel(selectedHistory.status)}
                   </span>
                 </div>
               </div>
 
               <div className="grid gap-3 text-sm">
                 <div className="flex items-center justify-between border-b border-[var(--hero-border)] pb-2">
-                  <span className="text-[var(--hero-muted)]">Donor</span>
+                  <span className="text-[var(--hero-muted)]">
+                    {t('DONATE.HISTORY.DETAILS.LABEL.DONOR')}
+                  </span>
                   <span className="font-medium">
                     {selectedHistory.isAnonymous
-                      ? 'Anonymous'
-                      : selectedHistory.senderName || 'Anonymous'}
+                      ? t('DONATE.HISTORY.ANONYMOUS')
+                      : selectedHistory.senderName || t('DONATE.HISTORY.ANONYMOUS')}
                   </span>
                 </div>
                 <div className="flex items-center justify-between border-b border-[var(--hero-border)] pb-2">
-                  <span className="text-[var(--hero-muted)]">Donation ID</span>
+                  <span className="text-[var(--hero-muted)]">
+                    {t('DONATE.HISTORY.DETAILS.LABEL.DONATION_ID')}
+                  </span>
                   <span className="font-medium">{selectedHistory.id}</span>
                 </div>
                 <div className="flex items-center justify-between border-b border-[var(--hero-border)] pb-2">
-                  <span className="text-[var(--hero-muted)]">Date</span>
+                  <span className="text-[var(--hero-muted)]">
+                    {t('DONATE.HISTORY.DETAILS.LABEL.DATE')}
+                  </span>
                   <span className="font-medium">
                     {formatDate(selectedHistory.createdAt)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between border-b border-[var(--hero-border)] pb-2">
-                  <span className="text-[var(--hero-muted)]">Method</span>
+                  <span className="text-[var(--hero-muted)]">
+                    {t('DONATE.HISTORY.DETAILS.LABEL.METHOD')}
+                  </span>
                   <span className="font-medium">
-                    {selectedHistory.method || 'PayOS'}
+                    {selectedHistory.method || t('DONATE.HISTORY.METHOD.PAYOS')}
                   </span>
                 </div>
               </div>
 
               <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 p-4 text-sm">
                 <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)] mb-2">
-                  Message
+                  {t('DONATE.HISTORY.DETAILS.LABEL.MESSAGE')}
                 </p>
                 <p className="text-[var(--hero-foreground)]">
-                  {selectedHistory.message || 'No message shared.'}
+                  {selectedHistory.message || t('DONATE.HISTORY.MESSAGE.NONE')}
                 </p>
               </div>
             </div>

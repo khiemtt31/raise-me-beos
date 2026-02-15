@@ -2,6 +2,9 @@
   "name": "raise-me-beos",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "dev:staging": "cross-env NODE_ENV=staging next dev",
@@ -28,9 +31,6 @@
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "framer-motion": "^12.34.0",
     "lucide-react": "^0.561.0",
     "next": "16.0.10",
     "next-intl": "^4.8.2",

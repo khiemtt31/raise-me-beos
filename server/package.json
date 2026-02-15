@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "nodemon --exec \"tsx --env-file=.env.dev index.ts\"",
     "test": "nodemon --exec \"tsx --env-file=.env.test index.ts\"",
-    "staging": "node --env-file=.env.staging index.js",
-    "prod": "node --env-file=.env.prod index.js",
-    "start": "npx tsx watch index.ts",
+    "staging": "node --env-file=.env.staging dist/index.js",
+    "prod": "node --env-file=.env.prod dist/index.js",
+    "start": "node --env-file=.env.prod dist/index.js",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {

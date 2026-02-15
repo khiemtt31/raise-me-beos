@@ -27,27 +27,28 @@ export function PaymentDialog({
   const [timeLeft, setTimeLeft] = useState(300) // 5 minutes
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout
+    let intervalId: NodeJS.Timeout | undefined
 
-    if (open) {
+    if (!open) {
       setTimeLeft(300)
-      intervalId = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(intervalId)
-            return 0
-          }
-          return prev - 1
-        })
-      }, 1000)
-    } else {
-      setTimeLeft(300)
+      return undefined
     }
+
+    setTimeLeft(300)
+    intervalId = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          if (intervalId) clearInterval(intervalId)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
 
     return () => {
       if (intervalId) clearInterval(intervalId)
     }
-  }, [open])
+  }, [open, qrCode])
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)

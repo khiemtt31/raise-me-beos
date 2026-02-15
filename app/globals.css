@@ -86,8 +86,8 @@
   --hero-accent-strong: #540863;
   --hero-accent-contrast: #FFE9ED;
   --hero-muted: rgba(84, 8, 99, 0.55);
-  --hero-surface: rgba(255, 211, 213, 0.65);
-  --hero-surface-strong: rgba(255, 211, 213, 0.82);
+  --hero-surface: #FFD3D5;
+  --hero-surface-strong: #FFD3D5;
   --hero-border: rgba(146, 72, 122, 0.35);
   --hero-grid: rgba(146, 72, 122, 0.12);
   --hero-scan: rgba(146, 72, 122, 0.06);
@@ -133,8 +133,8 @@
   --hero-accent-strong: #FFD3D5;
   --hero-accent-contrast: #2A0A2F;
   --hero-muted: rgba(255, 211, 213, 0.65);
-  --hero-surface: rgba(84, 8, 99, 0.35);
-  --hero-surface-strong: rgba(84, 8, 99, 0.55);
+  --hero-surface: #540863;
+  --hero-surface-strong: #540863;
   --hero-border: rgba(146, 72, 122, 0.45);
   --hero-grid: rgba(228, 155, 166, 0.14);
   --hero-scan: rgba(146, 72, 122, 0.12);
@@ -196,11 +196,9 @@
     font-family: var(--font-rajdhani), sans-serif;
     font-weight: 400;
     letter-spacing: 0.02em;
-    width: 100vw;
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-orbitron), sans-serif;
@@ -262,7 +260,6 @@
   .glass-panel {
     background: var(--hero-surface);
     border: 1px solid var(--hero-border);
-    backdrop-filter: blur(16px);
   }
 
   .reveal {

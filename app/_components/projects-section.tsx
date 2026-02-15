@@ -18,7 +18,7 @@ export function ProjectsSection() {
       id="projects"
       data-section="projects"
       data-sphere
-      className="sphere-section mt-32 min-h-[85vh] space-y-10 py-16 lg:py-20"
+      className="sphere-section min-h-[85vh] space-y-10 lg:py-20"
     >
       <div data-reveal className="reveal flex flex-wrap items-center justify-between gap-4">
         <div>

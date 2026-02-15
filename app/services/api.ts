@@ -1,17 +1,19 @@
 import type { DonationHistoryQueryDTO, DonationHistoryResponseDTO } from '@/types/api'
 
 type ApiRequestOptions = RequestInit & {
-  errorKey: string
+  i18nKey: string
   parseJson?: boolean
 }
 
 export class ApiError extends Error {
-  code: string
+  errorCode: string
+  i18nKey: string
   status?: number
 
-  constructor(code: string, message: string, status?: number) {
+  constructor(errorCode: string, i18nKey: string, message: string, status?: number) {
     super(message)
-    this.code = code
+    this.errorCode = errorCode
+    this.i18nKey = i18nKey
     this.status = status
   }
 }
@@ -30,7 +32,7 @@ const getEndpoint = (path: string): string => {
 
 const apiRequest = async <T>(
   path: string,
-  { errorKey, parseJson = true, headers, ...options }: ApiRequestOptions
+  { i18nKey, parseJson = true, headers, ...options }: ApiRequestOptions
 ): Promise<T> => {
   const response = await fetch(getEndpoint(path), {
     ...options,
@@ -42,16 +44,24 @@ const apiRequest = async <T>(
   })
 
   if (!response.ok) {
-    let message = errorKey
+    let message = i18nKey
+    let errorCode = `HTTP_${response.status}`
     try {
       const data = await response.json()
+      if (data && typeof data.errorCode === 'string') {
+        errorCode = data.errorCode
+      } else if (data && typeof data.code === 'string') {
+        errorCode = data.code
+      } else if (data && typeof data.error === 'string') {
+        errorCode = data.error
+      }
       if (data && typeof data.message === 'string') {
         message = data.message
       }
     } catch {
-      message = errorKey
+      message = i18nKey
     }
-    throw new ApiError(errorKey, message, response.status)
+    throw new ApiError(errorCode, i18nKey, message, response.status)
   }
 
   if (!parseJson) {
@@ -89,7 +99,7 @@ export async function createPayment(
   return apiRequest<CreatePaymentResponse>('/api/payment/create', {
     method: 'POST',
     body: JSON.stringify(request),
-    errorKey: 'ERROR.MESSAGE.002',
+    i18nKey: 'ERROR.MESSAGE.002',
   })
 }
 
@@ -149,7 +159,7 @@ export async function healthCheck(): Promise<void> {
   await apiRequest<void>('/healthz', {
     method: 'GET',
     parseJson: false,
-    errorKey: 'ERROR.MESSAGE.001',
+    i18nKey: 'ERROR.MESSAGE.001',
   })
 }
 
@@ -184,6 +194,6 @@ export async function getDonationHistory(
 
   return apiRequest<DonationHistoryResponseDTO>(path, {
     method: 'GET',
-    errorKey: 'ERROR.MESSAGE.003',
+    i18nKey: 'ERROR.MESSAGE.003',
   })
 }

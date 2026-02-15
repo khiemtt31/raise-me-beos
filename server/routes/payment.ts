@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import { payos } from '../services/payos'
 import { supabase } from '../services/supabase'
+import { MAX_DONATION_AMOUNT, MIN_DONATION_AMOUNT } from '../utils/donation-config'
+import { broadcastDonationUpdate } from './sse'
 
 const router = Router()
 
@@ -17,19 +19,19 @@ router.post('/create', async (req, res) => {
     }
 
     // Validate amount
-    if (!amount || amount < 10000.00) {
+    if (!amount || amount < MIN_DONATION_AMOUNT) {
       console.log(`[PAYMENT CREATE] Invalid amount: ${amount}`)
       return res.status(400).json({
         error: 'Invalid amount',
-        message: 'Minimum donation amount is 10,000.00đ'
+        message: `Minimum donation amount is ${MIN_DONATION_AMOUNT.toLocaleString()} VND`
       })
     }
 
-    if (amount > 50000000.00) { // 50 million VND limit
+    if (amount > MAX_DONATION_AMOUNT) {
       console.log(`[PAYMENT CREATE] Amount too large: ${amount}`)
       return res.status(400).json({
         error: 'Amount too large',
-        message: 'Maximum donation amount is 50,000,000.00đ'
+        message: `Maximum donation amount is ${MAX_DONATION_AMOUNT.toLocaleString()} VND`
       })
     }
 
@@ -210,6 +212,8 @@ router.post('/:orderCode/cancel', async (req, res) => {
       console.error('Failed to cancel donation:', error)
       return res.status(500).json({ error: 'Failed to cancel donation' })
     }
+
+    broadcastDonationUpdate(orderCode, 'CANCELLED')
 
     return res.json({
       data: cancelledPaymentLink,
