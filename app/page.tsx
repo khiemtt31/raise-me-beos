@@ -3,7 +3,6 @@
 import { useEffect } from 'react'
 
 import { HeroSection } from './_components/hero-section'
-import { PortfolioBackground } from './_components/portfolio-background'
 import { PortfolioFooter } from './_components/portfolio-footer'
 import { PortfolioHeader } from './_components/portfolio-header'
 import { ProjectsSection } from './_components/projects-section'
@@ -40,9 +39,7 @@ export default function PortfolioPage() {
   }, [])
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[var(--hero-bg)] text-[var(--hero-foreground)]">
-      <PortfolioBackground />
-
+    <div className="relative min-h-screen overflow-x-hidden bg-transparent text-[var(--hero-foreground)]">
       <div className="relative z-10 font-mono">
         <PortfolioHeader />
 

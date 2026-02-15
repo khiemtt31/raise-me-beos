@@ -1,0 +1,392 @@
+{
+  "META": {
+    "TITLE": {
+      "001": "Free & Wild"
+    },
+    "DESCRIPTION": {
+      "001": "I'm free and wild, but I will not relentlessly spend my youth"
+    }
+  },
+  "NAV": {
+    "BRAND": {
+      "001": "Ð½Î±Ð¸zÏƒ"
+    },
+    "LINK": {
+      "001": "Home",
+      "002": "Donate"
+    },
+    "BUTTON": {
+      "001": "Support"
+    }
+  },
+  "THEME": {
+    "ARIA": {
+      "001": "Toggle theme",
+      "002": "Switch to light theme",
+      "003": "Switch to dark theme"
+    }
+  },
+  "HOME": {
+    "SECTION": {
+      "001": "Hero",
+      "002": "Story",
+      "003": "Drops"
+    },
+    "PILL": {
+      "001": "Signal ready"
+    },
+    "TITLE": {
+      "001": "Caging the demon inside me is not wise"
+    },
+    "TEXT": {
+      "001": "I design cyberpunk interfaces that feel alive, with motion, clarity, and instant payment portals that let supporters fuel the next build."
+    },
+    "BUTTON": {
+      "001": "View drops"
+    },
+    "TAG": {
+      "001": "UI systems",
+      "002": "Motion rituals",
+      "003": "Instant QR"
+    },
+    "LABEL": {
+      "001": "Scroll for the signal"
+    },
+    "IMAGE": {
+      "ALT": {
+        "001": "Hanzo"
+      }
+    },
+    "STORY": {
+      "EYEBROW": {
+        "001": "Signal story"
+      },
+      "TITLE": {
+        "001": "A portfolio built for relentless glow and clear intent."
+      },
+      "TEXT": {
+        "001": "This is a living archive of interface craft, motion loops, and payment clarity. Every section is a node in the same network: bold, fast, and designed to invite support."
+      }
+    },
+    "STATS": {
+      "LABEL": {
+        "001": "Drops shipped",
+        "002": "Signal partners",
+        "003": "Cities scanned"
+      }
+    },
+    "SIGNAL": {
+      "TITLE": {
+        "001": "Neon Strategy",
+        "002": "Motion Systems",
+        "003": "Interface Architecture",
+        "004": "Trust Layer"
+      },
+      "TEXT": {
+        "001": "Brand systems mapped to high-intensity storytelling, tuned for the long scroll.",
+        "002": "Scroll and hover choreography built for rhythm, clarity, and instant recall.",
+        "003": "Tokenized UI and layout engineering to keep every drop consistent and fast.",
+        "004": "Conversion-first flows with clean UX logic and secure payment handoffs."
+      },
+      "DETAIL": {
+        "001": "01 Signal grid",
+        "002": "02 Motion core",
+        "003": "03 Layout matrix",
+        "004": "04 Trust signal"
+      }
+    },
+    "PROJECTS": {
+      "EYEBROW": {
+        "001": "Latest drops"
+      },
+      "TITLE": {
+        "001": "A curated feed of cinematic UI work."
+      },
+      "BUTTON": {
+        "001": "Fuel the next drop"
+      }
+    },
+    "PROJECT": {
+      "TITLE": {
+        "001": "Ghost Wallet",
+        "002": "Pulse Gallery",
+        "003": "Signal Vault"
+      },
+      "TYPE": {
+        "001": "Fintech UI",
+        "002": "Creator Hub",
+        "003": "Community"
+      },
+      "TEXT": {
+        "001": "A luminous wallet experience with instant QR pay flow.",
+        "002": "A visual story feed with aggressive motion and clarity.",
+        "003": "Membership dashboard built for fast scanning and retention."
+      }
+    },
+    "CONTACT": {
+      "EYEBROW": {
+        "001": "Let us sync"
+      },
+      "TITLE": {
+        "001": "Ready to build something luminous together?"
+      },
+      "TEXT": {
+        "001": "Reach out for collaborations, commissions, or to keep the neon engine alive with a quick QR scan."
+      },
+      "BUTTON": {
+        "001": "Start a project",
+        "002": "Send an email"
+      },
+      "EMAIL": {
+        "001": "hello@neon.studio"
+      }
+    }
+  },
+  "SITE": {
+    "NAME": {
+      "001": "Neon Portfolio"
+    },
+    "LABEL": {
+      "001": "Support"
+    }
+  },
+  "PAYMENT": {
+    "TITLE": {
+      "001": "Complete your payment"
+    },
+    "TEXT": {
+      "001": "Scan this QR code with your banking app to complete payment."
+    },
+    "BUTTON": {
+      "001": "Close",
+      "002": "Open payment page",
+      "003": "Copy Link",
+      "004": "Copied!"
+    },
+    "LABEL": {
+      "001": "QR expires in:"
+    },
+    "STEP": {
+      "001": "Open your banking app",
+      "002": "Scan the QR code above",
+      "003": "Complete the payment"
+    },
+    "SECURITY": {
+      "001": "Secure payment powered by PayOS",
+      "002": "Your donation supports creative development"
+    },
+    "TOAST": {
+      "001": "Payment link copied to clipboard!",
+      "002": "Failed to copy link"
+    }
+  },
+  "DONATE": {
+    "HERO": {
+      "BADGE": {
+        "001": "Support the Vision"
+      },
+      "TITLE": {
+        "001": "Fuel the",
+        "002": "Next Drop"
+      },
+      "TEXT": {
+        "001": "Help power the next wave of cyberpunk interfaces, motion design, and instant payment systems. Your support directly fuels creative development and innovative tools."
+      }
+    },
+    "EYEBROW": {
+      "001": "Support node"
+    },
+    "TITLE": {
+      "001": "Instant donation"
+    },
+    "LABEL": {
+      "AMOUNT": {
+        "001": "Amount"
+      },
+      "CUSTOM_AMOUNT": {
+        "001": "Custom amount (min {min} {currency})"
+      },
+      "NAME": {
+        "001": "Your name"
+      },
+      "MESSAGE": {
+        "001": "Message"
+      },
+      "ANONYMOUS": {
+        "001": "Donate anonymously"
+      },
+      "QUICK_SELECT": {
+        "001": "Quick select"
+      }
+    },
+    "PLACEHOLDER": {
+      "CUSTOM_AMOUNT": {
+        "001": "Enter amount"
+      },
+      "NAME": {
+        "001": "Anonymous"
+      },
+      "MESSAGE": {
+        "001": "Leave a message..."
+      }
+    },
+    "BUTTON": {
+      "SUBMIT": {
+        "001": "Generate QR"
+      },
+      "PROCESSING": {
+        "001": "Processing..."
+      }
+    },
+    "CURRENCY": {
+      "001": "VND"
+    },
+    "TIER": {
+      "LABEL": {
+        "001": "Legend",
+        "002": "Supporter",
+        "003": "Friend",
+        "004": "Contributor"
+      }
+    },
+    "STATS": {
+      "LABEL": {
+        "001": "Drops Shipped",
+        "002": "Signal Partners",
+        "003": "Growing Community"
+      }
+    },
+    "TESTIMONIAL": {
+      "TEXT": {
+        "001": "\"This portfolio is a masterpiece of modern web design\""
+      },
+      "BYLINE": {
+        "001": "Recent supporter • Anonymous donor"
+      }
+    },
+    "IMPACT": {
+      "TEXT": {
+        "001": "Your support helps fuel the next wave of neon-powered innovation",
+        "002": "100% goes to development and creative tools"
+      }
+    },
+    "SECTION": {
+      "TITLE": {
+        "001": "Why Your Support Matters"
+      },
+      "TEXT": {
+        "001": "Every donation directly supports the development of cutting-edge design tools, open-source contributions, and the creation of innovative user experiences."
+      }
+    },
+    "CARD": {
+      "TITLE": {
+        "001": "Innovation",
+        "002": "Tools",
+        "003": "Community"
+      },
+      "TEXT": {
+        "001": "Fueling the next generation of web interfaces and motion design",
+        "002": "Developing and maintaining creative tools for the design community",
+        "003": "Building connections and supporting fellow creators"
+      }
+    },
+    "LINK": {
+      "BACK": {
+        "001": "Back to Portfolio"
+      }
+    },
+    "TOAST": {
+      "MIN_AMOUNT": {
+        "TITLE": {
+          "001": "Minimum donation amount is {amount}"
+        },
+        "DESC": {
+          "001": "Please select a higher amount to continue."
+        }
+      },
+      "MAX_AMOUNT": {
+        "TITLE": {
+          "001": "Maximum donation amount is {amount}"
+        },
+        "DESC": {
+          "001": "Please select a lower amount to continue."
+        }
+      },
+      "QR_SUCCESS": {
+        "TITLE": {
+          "001": "Payment QR code generated!"
+        },
+        "DESC": {
+          "001": "Scan with your banking app to complete the donation."
+        }
+      },
+      "PAID": {
+        "TITLE": {
+          "001": "🎉 Thank you for your donation! Your support means everything."
+        }
+      },
+      "CREATE_FAILED": {
+        "TITLE": {
+          "001": "Failed to create donation."
+        },
+        "DESC": {
+          "001": "If the problem persists, try refreshing the page."
+        }
+      }
+    }
+  },
+  "FOOTER": {
+    "BRAND": {
+      "001": "Neon Signal Studio"
+    },
+    "TAGLINE": {
+      "001": "Built in neon. Powered by support."
+    },
+    "COPYRIGHT": {
+      "001": "All rights reserved."
+    },
+    "LINE": {
+      "001": "(c) {year} {brand}. {rights}"
+    }
+  },
+  "DONATION": {
+    "SUCCESS": {
+      "ICON": {
+        "001": "🎉"
+      },
+      "TITLE": {
+        "001": "Payment Successful!"
+      },
+      "TEXT": {
+        "001": "Thank you for your generous donation. Your support means the world to us!",
+        "002": "You will receive a confirmation email shortly."
+      },
+      "BUTTON": {
+        "001": "Make Another Donation"
+      }
+    },
+    "CANCEL": {
+      "ICON": {
+        "001": "❌"
+      },
+      "TITLE": {
+        "001": "Payment Cancelled"
+      },
+      "TEXT": {
+        "001": "Your donation was not completed. No charges were made.",
+        "002": "If you experienced any issues, please try again or contact support."
+      },
+      "BUTTON": {
+        "001": "Go Home",
+        "002": "Try Again"
+      }
+    }
+  },
+  "ERROR": {
+    "MESSAGE": {
+      "001": "Health check failed.",
+      "002": "Payment request failed.",
+      "003": "Server is currently unvailable."
+    }
+  }
+}

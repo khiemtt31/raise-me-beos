@@ -1,12 +1,18 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { useTranslations } from 'next-intl'
 import {
-  contactContent,
-  projects,
-  projectsContent,
+  getContactContent,
+  getProjects,
+  getProjectsContent,
 } from '@/skeleton-data/portfolio'
 
 export function ProjectsSection() {
+  const t = useTranslations()
+  const projectsContent = getProjectsContent(t)
+  const projects = getProjects(t)
+  const contactContent = getContactContent(t)
+
   return (
     <section
       id="projects"

@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "set NODE_ENV=dev&& nodemon",
-    "test": "set NODE_ENV=test&& nodemon",
-    "staging": "set NODE_ENV=staging&& nodemon",
-    "prod": "set NODE_ENV=prod&& nodemon",
+    "dev": "nodemon --exec \"tsx --env-file=.env.dev index.ts\"",
+    "test": "nodemon --exec \"tsx --env-file=.env.test index.ts\"",
+    "staging": "node --env-file=.env.staging index.js",
+    "prod": "node --env-file=.env.prod index.js",
     "start": "npx tsx watch index.ts",
     "lint": "eslint . --ext .ts"
   },
@@ -22,9 +22,11 @@
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
     "hpp": "^0.2.3",
-    "winston": "^3.19.0"
+    "winston": "^3.19.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@express-rate-limit/tsconfig": "^1.0.2",
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",

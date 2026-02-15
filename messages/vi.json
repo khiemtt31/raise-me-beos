@@ -1,0 +1,392 @@
+{
+  "META": {
+    "TITLE": {
+      "001": "Tu do va hoang da"
+    },
+    "DESCRIPTION": {
+      "001": "Toi tu do va hoang da, nhung se khong tieu hao tuoi tre mot cach vo tan"
+    }
+  },
+  "NAV": {
+    "BRAND": {
+      "001": "Ð½Î±Ð¸zÏƒ"
+    },
+    "LINK": {
+      "001": "Trang chu",
+      "002": "Ung ho"
+    },
+    "BUTTON": {
+      "001": "Ung ho"
+    }
+  },
+  "THEME": {
+    "ARIA": {
+      "001": "Doi chu de",
+      "002": "Chuyen sang che do sang",
+      "003": "Chuyen sang che do toi"
+    }
+  },
+  "HOME": {
+    "SECTION": {
+      "001": "Mo dau",
+      "002": "Cau chuyen",
+      "003": "Bo suu tap"
+    },
+    "PILL": {
+      "001": "Tin hieu san sang"
+    },
+    "TITLE": {
+      "001": "Giam con ac quy trong toi khong phai dieu khon ngoan"
+    },
+    "TEXT": {
+      "001": "Toi thiet ke giao dien cyberpunk song dong, co chuyen dong, ro rang, va cong thanh toan nhanh de nguoi ung ho tiep suc cho ban tiep theo."
+    },
+    "BUTTON": {
+      "001": "Xem bo suu tap"
+    },
+    "TAG": {
+      "001": "He thong UI",
+      "002": "Nghiep dieu chuyen dong",
+      "003": "QR tuc thi"
+    },
+    "LABEL": {
+      "001": "Cuon de bat tin hieu"
+    },
+    "IMAGE": {
+      "ALT": {
+        "001": "Hanzo"
+      }
+    },
+    "STORY": {
+      "EYEBROW": {
+        "001": "Cau chuyen tin hieu"
+      },
+      "TITLE": {
+        "001": "Mot portfolio cho anh sang ben bi va y do ro rang."
+      },
+      "TEXT": {
+        "001": "Day la kho luu tru song dong ve thu cong giao dien, vong chuyen dong, va su ro rang trong thanh toan. Moi phan la mot nut trong cung mot mang: manh me, nhanh, va duoc thiet ke de moi ung ho."
+      }
+    },
+    "STATS": {
+      "LABEL": {
+        "001": "Bo suu tap da ra",
+        "002": "Doi tac tin hieu",
+        "003": "Thanh pho duoc quet"
+      }
+    },
+    "SIGNAL": {
+      "TITLE": {
+        "001": "Chien luoc Neon",
+        "002": "He thong chuyen dong",
+        "003": "Kien truc giao dien",
+        "004": "Lop tin cay"
+      },
+      "TEXT": {
+        "001": "He thong thuong hieu gan ket voi ke chuyen cuong do cao, toi uu cho cuon dai.",
+        "002": "Nhip cuon va hover tao nhip dieu, ro rang, va ghi nho tuc thi.",
+        "003": "UI token hoa va kien truc bo cuc giu moi drop dong nhat va nhanh.",
+        "004": "Luong chuyen doi toi uu voi logic UX sach va ban giao thanh toan an toan."
+      },
+      "DETAIL": {
+        "001": "01 Luoi tin hieu",
+        "002": "02 Loi chuyen dong",
+        "003": "03 Ma tran bo cuc",
+        "004": "04 Tin hieu tin cay"
+      }
+    },
+    "PROJECTS": {
+      "EYEBROW": {
+        "001": "Drop moi nhat"
+      },
+      "TITLE": {
+        "001": "Bo suu tap UI dien anh duoc chon loc."
+      },
+      "BUTTON": {
+        "001": "Tiep suc cho drop tiep theo"
+      }
+    },
+    "PROJECT": {
+      "TITLE": {
+        "001": "Ghost Wallet",
+        "002": "Pulse Gallery",
+        "003": "Signal Vault"
+      },
+      "TYPE": {
+        "001": "Fintech UI",
+        "002": "Creator Hub",
+        "003": "Cong dong"
+      },
+      "TEXT": {
+        "001": "Trai nghiem vi sang bong voi luong QR thanh toan tuc thi.",
+        "002": "Dong ke chuyen hinh anh voi chuyen dong manh me va ro rang.",
+        "003": "Bang dieu khien thanh vien cho quet nhanh va giu chan."
+      }
+    },
+    "CONTACT": {
+      "EYEBROW": {
+        "001": "Ket noi"
+      },
+      "TITLE": {
+        "001": "San sang xay dung dieu sang bong cung nhau?"
+      },
+      "TEXT": {
+        "001": "Lien he de hop tac, nhan du an, hoac tiep suc cho dong co neon voi mot lan quet QR nhanh."
+      },
+      "BUTTON": {
+        "001": "Bat dau du an",
+        "002": "Gui email"
+      },
+      "EMAIL": {
+        "001": "hello@neon.studio"
+      }
+    }
+  },
+  "SITE": {
+    "NAME": {
+      "001": "Neon Portfolio"
+    },
+    "LABEL": {
+      "001": "Ung ho"
+    }
+  },
+  "PAYMENT": {
+    "TITLE": {
+      "001": "Hoan tat thanh toan"
+    },
+    "TEXT": {
+      "001": "Quet ma QR bang ung dung ngan hang cua ban de hoan tat thanh toan."
+    },
+    "BUTTON": {
+      "001": "Dong",
+      "002": "Mo trang thanh toan",
+      "003": "Sao chep lien ket",
+      "004": "Da sao chep!"
+    },
+    "LABEL": {
+      "001": "QR het han trong:"
+    },
+    "STEP": {
+      "001": "Mo ung dung ngan hang cua ban",
+      "002": "Quet ma QR ben tren",
+      "003": "Hoan tat thanh toan"
+    },
+    "SECURITY": {
+      "001": "Thanh toan an toan boi PayOS",
+      "002": "Khoan ung ho cua ban ho tro phat trien sang tao"
+    },
+    "TOAST": {
+      "001": "Da sao chep lien ket thanh toan!",
+      "002": "Khong the sao chep lien ket"
+    }
+  },
+  "DONATE": {
+    "HERO": {
+      "BADGE": {
+        "001": "Ung ho tam nhin"
+      },
+      "TITLE": {
+        "001": "Tiep suc cho",
+        "002": "Drop tiep theo"
+      },
+      "TEXT": {
+        "001": "Hay tiep suc cho lan song giao dien cyberpunk, thiet ke chuyen dong, va he thong thanh toan tuc thi. Su ung ho cua ban truc tiep nuoi duong phat trien sang tao va cong cu doi moi."
+      }
+    },
+    "EYEBROW": {
+      "001": "Nut ung ho"
+    },
+    "TITLE": {
+      "001": "Ung ho QR tuc thi"
+    },
+    "LABEL": {
+      "AMOUNT": {
+        "001": "So tien"
+      },
+      "CUSTOM_AMOUNT": {
+        "001": "So tien tuy chon (toi thieu {min} {currency})"
+      },
+      "NAME": {
+        "001": "Ten cua ban"
+      },
+      "MESSAGE": {
+        "001": "Loi nhan"
+      },
+      "ANONYMOUS": {
+        "001": "Ung ho an danh"
+      },
+      "QUICK_SELECT": {
+        "001": "Chon nhanh"
+      }
+    },
+    "PLACEHOLDER": {
+      "CUSTOM_AMOUNT": {
+        "001": "Nhap so tien"
+      },
+      "NAME": {
+        "001": "An danh"
+      },
+      "MESSAGE": {
+        "001": "De lai loi nhan..."
+      }
+    },
+    "BUTTON": {
+      "SUBMIT": {
+        "001": "Tao ma QR"
+      },
+      "PROCESSING": {
+        "001": "Dang xu ly..."
+      }
+    },
+    "CURRENCY": {
+      "001": "VND"
+    },
+    "TIER": {
+      "LABEL": {
+        "001": "Huyen thoai",
+        "002": "Nguoi ung ho",
+        "003": "Ban be",
+        "004": "Dong gop"
+      }
+    },
+    "STATS": {
+      "LABEL": {
+        "001": "Drop da ra",
+        "002": "Doi tac tin hieu",
+        "003": "Cong dong lon manh"
+      }
+    },
+    "TESTIMONIAL": {
+      "TEXT": {
+        "001": "\"Portfolio nay la tuyet tac thiet ke web hien dai\""
+      },
+      "BYLINE": {
+        "001": "Nguoi ung ho gan day • Nha tai tro an danh"
+      }
+    },
+    "IMPACT": {
+      "TEXT": {
+        "001": "Su ung ho cua ban tiep suc cho lan song doi moi neon",
+        "002": "100% dung cho phat trien va cong cu sang tao"
+      }
+    },
+    "SECTION": {
+      "TITLE": {
+        "001": "Vi sao su ung ho cua ban quan trong"
+      },
+      "TEXT": {
+        "001": "Moi dong gop truc tiep ho tro phat trien cong cu thiet ke tien tien, dong gop ma nguon mo, va tao ra trai nghiem nguoi dung doi moi."
+      }
+    },
+    "CARD": {
+      "TITLE": {
+        "001": "Doi moi",
+        "002": "Cong cu",
+        "003": "Cong dong"
+      },
+      "TEXT": {
+        "001": "Tiep suc the he giao dien web va thiet ke chuyen dong tiep theo",
+        "002": "Phat trien va duy tri cong cu sang tao cho cong dong thiet ke",
+        "003": "Ket noi va ho tro cac nha sang tao"
+      }
+    },
+    "LINK": {
+      "BACK": {
+        "001": "Quay lai Portfolio"
+      }
+    },
+    "TOAST": {
+      "MIN_AMOUNT": {
+        "TITLE": {
+          "001": "So tien toi thieu la {amount}"
+        },
+        "DESC": {
+          "001": "Vui long chon so tien cao hon de tiep tuc."
+        }
+      },
+      "MAX_AMOUNT": {
+        "TITLE": {
+          "001": "So tien toi da la {amount}"
+        },
+        "DESC": {
+          "001": "Vui long chon so tien thap hon de tiep tuc."
+        }
+      },
+      "QR_SUCCESS": {
+        "TITLE": {
+          "001": "Da tao ma QR thanh toan!"
+        },
+        "DESC": {
+          "001": "Quet bang ung dung ngan hang de hoan tat ung ho."
+        }
+      },
+      "PAID": {
+        "TITLE": {
+          "001": "🎉 Cam on ban da ung ho! Su ung ho cua ban that y nghia."
+        }
+      },
+      "CREATE_FAILED": {
+        "TITLE": {
+          "001": "Tao ung ho that bai."
+        },
+        "DESC": {
+          "001": "Neu van gap van de, hay thu tai lai trang."
+        }
+      }
+    }
+  },
+  "FOOTER": {
+    "BRAND": {
+      "001": "Neon Signal Studio"
+    },
+    "TAGLINE": {
+      "001": "Xay dung bang neon. Duoc tiep suc boi ung ho."
+    },
+    "COPYRIGHT": {
+      "001": "Moi quyen duoc bao luu."
+    },
+    "LINE": {
+      "001": "(c) {year} {brand}. {rights}"
+    }
+  },
+  "DONATION": {
+    "SUCCESS": {
+      "ICON": {
+        "001": "🎉"
+      },
+      "TITLE": {
+        "001": "Thanh toan thanh cong!"
+      },
+      "TEXT": {
+        "001": "Cam on ban da ung ho hau phong. Su ung ho cua ban that y nghia!",
+        "002": "Ban se nhan email xac nhan trong it phut."
+      },
+      "BUTTON": {
+        "001": "Ung ho lan nua"
+      }
+    },
+    "CANCEL": {
+      "ICON": {
+        "001": "❌"
+      },
+      "TITLE": {
+        "001": "Thanh toan da huy"
+      },
+      "TEXT": {
+        "001": "Khoan ung ho chua hoan tat. Khong co khoan phi nao duoc tinh.",
+        "002": "Neu gap su co, hay thu lai hoac lien he ho tro."
+      },
+      "BUTTON": {
+        "001": "Ve trang chu",
+        "002": "Thu lai"
+      }
+    }
+  },
+  "ERROR": {
+    "MESSAGE": {
+      "001": "Kiem tra he thong that bai.",
+      "002": "Yeu cau thanh toan that bai.",
+      "003": "Yeu cau lich su ung ho that bai."
+    }
+  }
+}

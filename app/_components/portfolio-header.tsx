@@ -1,18 +1,23 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ThemeToggle } from '@/components/theme-toggle'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
+import { useHealthCheckQuery } from '@/app/services/queries'
+import { SettingsMenu } from './settings-menu'
 
 export function PortfolioHeader() {
   const router = useRouter()
+  const t = useTranslations()
+  const healthCheckQuery = useHealthCheckQuery()
 
   const handleHomeClick = async () => {
     try {
-      const apiBase = process.env.NEXT_PUBLIC_PAYMENT_SERVICE_URL?.replace(/\/$/, '') ?? ''
-      const healthzUrl = apiBase ? `${apiBase}/healthz` : '/healthz'
-      await fetch(healthzUrl)
+      const result = await healthCheckQuery.refetch()
+      if (result.error) {
+        console.error(result.error)
+      }
     } catch (error) {
-      console.error('Health check failed:', error)
+      console.error(error)
     }
     router.push('/')
   }
@@ -27,7 +32,7 @@ export function PortfolioHeader() {
         >
           <span className="h-3 w-3 rounded-full bg-[var(--hero-accent)] shadow-[0_0_8px_var(--hero-glow-strong)]" />
           <span className="text-xs uppercase tracking-[0.4em] text-[var(--hero-accent)]">
-            нαиzσ
+            {t('NAV.BRAND.001')}
           </span>
         </Button>
 
@@ -36,24 +41,18 @@ export function PortfolioHeader() {
             href="/"
             className="transition duration-300 hover:text-[var(--hero-foreground)]"
           >
-            Home
+            {t('NAV.LINK.001')}
           </Link>
           <Link
             href="/donate"
             className="transition duration-300 hover:text-[var(--hero-foreground)]"
           >
-            Donate
+            {t('NAV.LINK.002')}
           </Link>
         </nav>
 
         <div className="flex items-center gap-3">
-          <ThemeToggle />
-          <Button
-            asChild
-            className="neon-border bg-[var(--hero-accent)] text-[var(--hero-accent-contrast)] hover:bg-[var(--hero-accent-strong)]"
-          >
-            <Link href="/donate">Support</Link>
-          </Button>
+          <SettingsMenu />
         </div>
       </div>
     </header>

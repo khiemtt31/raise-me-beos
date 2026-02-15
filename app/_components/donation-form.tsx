@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { DollarSign, Heart, Sparkles, Users, Zap } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -9,10 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
-import {
-  donationContent,
-  donationPresets,
-} from '@/skeleton-data/portfolio'
+import { getDonationContent, donationPresets } from '@/skeleton-data/portfolio'
 
 type DonationFormProps = {
   amount: number
@@ -29,6 +27,8 @@ type DonationFormProps = {
   onDonate: () => void
 }
 
+const MIN_DONATION_AMOUNT = 10000
+
 export function DonationForm({
   amount,
   customAmount,
@@ -43,13 +43,44 @@ export function DonationForm({
   onAnonymousChange,
   onDonate,
 }: DonationFormProps) {
+  const t = useTranslations()
+  const locale = useLocale()
   const [focusedField, setFocusedField] = useState<string | null>(null)
 
-  const getAmountTier = (amount: number) => {
-    if (amount >= 500000) return { icon: Sparkles, label: 'Legend', color: 'text-yellow-400' }
-    if (amount >= 100000) return { icon: Zap, label: 'Supporter', color: 'text-blue-400' }
-    if (amount >= 50000) return { icon: Heart, label: 'Friend', color: 'text-pink-400' }
-    return { icon: Users, label: 'Contributor', color: 'text-green-400' }
+  const currencyLabel = t('DONATE.CURRENCY.001')
+  const minAmountLabel = useMemo(
+    () => MIN_DONATION_AMOUNT.toLocaleString(locale),
+    [locale]
+  )
+  const donationContent = getDonationContent(t, {
+    minAmountLabel,
+    currencyLabel,
+  })
+
+  const getAmountTier = (value: number) => {
+    if (value >= 500000)
+      return {
+        icon: Sparkles,
+        label: t('DONATE.TIER.LABEL.001'),
+        color: 'text-yellow-400',
+      }
+    if (value >= 100000)
+      return {
+        icon: Zap,
+        label: t('DONATE.TIER.LABEL.002'),
+        color: 'text-blue-400',
+      }
+    if (value >= 50000)
+      return {
+        icon: Heart,
+        label: t('DONATE.TIER.LABEL.003'),
+        color: 'text-pink-400',
+      }
+    return {
+      icon: Users,
+      label: t('DONATE.TIER.LABEL.004'),
+      color: 'text-green-400',
+    }
   }
 
   const tier = getAmountTier(amount)
@@ -70,9 +101,9 @@ export function DonationForm({
           </div>
           <div className="flex flex-col items-center gap-2">
             <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)] shadow-lg">
-              <tier.icon className={cn("h-6 w-6", tier.color)} />
+              <tier.icon className={cn('h-6 w-6', tier.color)} />
             </div>
-            <span className={cn("text-xs font-medium uppercase tracking-wide", tier.color)}>
+            <span className={cn('text-xs font-medium uppercase tracking-wide', tier.color)}>
               {tier.label}
             </span>
           </div>
@@ -84,9 +115,9 @@ export function DonationForm({
             <span className="text-[var(--hero-muted)]">{donationContent.amountLabel}</span>
             <div className="flex items-center gap-2">
               <span className="text-2xl font-heading text-glow font-bold">
-                {amount.toLocaleString()}
+                {amount.toLocaleString(locale)}
               </span>
-              <span className="text-[var(--hero-muted)] text-sm">VND</span>
+              <span className="text-[var(--hero-muted)] text-sm">{currencyLabel}</span>
             </div>
           </div>
         </div>
@@ -94,7 +125,7 @@ export function DonationForm({
         {/* Preset amounts with better styling */}
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)] mb-3">
-            Quick select
+            {t('DONATE.LABEL.QUICK_SELECT.001')}
           </p>
           <div className="grid grid-cols-3 gap-3">
             {donationPresets.map((preset, index) => (
@@ -110,7 +141,7 @@ export function DonationForm({
                 )}
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <span className="text-sm font-medium">{preset.toLocaleString()}</span>
+                <span className="text-sm font-medium">{preset.toLocaleString(locale)}</span>
               </Button>
             ))}
           </div>
@@ -134,7 +165,7 @@ export function DonationForm({
               onChange={(e) => onCustomAmountChange(e.target.value)}
               onFocus={() => setFocusedField('custom-amount')}
               onBlur={() => setFocusedField(null)}
-              min="10000"
+              min={MIN_DONATION_AMOUNT}
               className={cn(
                 'pl-12 h-12 border transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm',
                 focusedField === 'custom-amount'
@@ -241,10 +272,10 @@ export function DonationForm({
 
         {/* Impact message */}
         <div className="text-center text-xs text-[var(--hero-muted)] space-y-1">
-          <p>Your support helps fuel the next wave of neon-powered innovation</p>
+          <p>{t('DONATE.IMPACT.TEXT.001')}</p>
           <p className="flex items-center justify-center gap-1">
             <Heart className="h-3 w-3 text-red-400" />
-            <span>100% goes to development and creative tools</span>
+            <span>{t('DONATE.IMPACT.TEXT.002')}</span>
           </p>
         </div>
       </div>

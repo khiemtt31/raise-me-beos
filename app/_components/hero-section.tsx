@@ -2,9 +2,13 @@ import { ArrowDown } from 'lucide-react'
 import Image from 'next/image'
 
 import { Button } from '@/components/ui/button'
-import { heroContent } from '@/skeleton-data/portfolio'
+import { useTranslations } from 'next-intl'
+import { getHeroContent } from '@/skeleton-data/portfolio'
 
 export function HeroSection() {
+  const t = useTranslations()
+  const heroContent = getHeroContent(t)
+
   return (
     <section
       id="hero"
@@ -50,7 +54,7 @@ export function HeroSection() {
         <div className="glass-panel rounded-3xl overflow-hidden">
           <Image
             src="/hanzo.png"
-            alt="Hanzo"
+            alt={t('HOME.IMAGE.ALT.001')}
             width={800}
             height={800}
             className="h-full w-full object-cover"

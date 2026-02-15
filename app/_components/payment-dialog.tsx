@@ -4,7 +4,8 @@ import { Copy, ExternalLink, Smartphone, CheckCircle, Clock } from 'lucide-react
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { siteContent } from '@/skeleton-data/portfolio'
+import { useTranslations } from 'next-intl'
+import { getSiteContent } from '@/skeleton-data/portfolio'
 import { toast } from 'sonner'
 
 type PaymentDialogProps = {
@@ -20,6 +21,8 @@ export function PaymentDialog({
   qrCode,
   checkoutUrl,
 }: PaymentDialogProps) {
+  const t = useTranslations()
+  const siteContent = getSiteContent(t)
   const [copied, setCopied] = useState(false)
   const [timeLeft, setTimeLeft] = useState(300) // 5 minutes
 
@@ -56,10 +59,10 @@ export function PaymentDialog({
     try {
       await navigator.clipboard.writeText(checkoutUrl)
       setCopied(true)
-      toast.success('Payment link copied to clipboard!')
+      toast.success(t('PAYMENT.TOAST.001'))
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      toast.error('Failed to copy link')
+      toast.error(t('PAYMENT.TOAST.002'))
     }
   }
 
@@ -93,7 +96,12 @@ export function PaymentDialog({
             {/* Timer */}
             <div className="flex items-center gap-2 text-sm text-[var(--hero-muted)]">
               <Clock className="h-4 w-4" />
-              <span>QR expires in: <span className="font-mono text-[var(--hero-accent)]">{formatTime(timeLeft)}</span></span>
+              <span>
+                {t('PAYMENT.LABEL.001')}{' '}
+                <span className="font-mono text-[var(--hero-accent)]">
+                  {formatTime(timeLeft)}
+                </span>
+              </span>
             </div>
           </div>
 
@@ -107,15 +115,15 @@ export function PaymentDialog({
             <div className="space-y-2 text-xs text-[var(--hero-muted)]">
               <div className="flex items-center gap-2 justify-center">
                 <CheckCircle className="h-3 w-3 text-green-400" />
-                <span>Open your banking app</span>
+                <span>{t('PAYMENT.STEP.001')}</span>
               </div>
               <div className="flex items-center gap-2 justify-center">
                 <CheckCircle className="h-3 w-3 text-green-400" />
-                <span>Scan the QR code above</span>
+                <span>{t('PAYMENT.STEP.002')}</span>
               </div>
               <div className="flex items-center gap-2 justify-center">
                 <CheckCircle className="h-3 w-3 text-green-400" />
-                <span>Complete the payment</span>
+                <span>{t('PAYMENT.STEP.003')}</span>
               </div>
             </div>
           </div>
@@ -144,12 +152,12 @@ export function PaymentDialog({
                 {copied ? (
                   <>
                     <CheckCircle className="mr-2 h-4 w-4 text-green-400" />
-                    Copied!
+                    {t('PAYMENT.BUTTON.004')}
                   </>
                 ) : (
                   <>
                     <Copy className="mr-2 h-4 w-4" />
-                    Copy Link
+                    {t('PAYMENT.BUTTON.003')}
                   </>
                 )}
               </Button>
@@ -166,8 +174,8 @@ export function PaymentDialog({
 
           {/* Security note */}
           <div className="text-center text-xs text-[var(--hero-muted)] border-t border-[var(--hero-border)] pt-4">
-            <p>🔒 Secure payment powered by PayOS</p>
-            <p>Your donation supports creative development</p>
+            <p>{t('PAYMENT.SECURITY.001')}</p>
+            <p>{t('PAYMENT.SECURITY.002')}</p>
           </div>
         </div>
       </DialogContent>

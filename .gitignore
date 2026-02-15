@@ -32,7 +32,18 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+# Ignore local overrides (not committed)
+.env.local
+.env.*.local
+*.env
+.env.*
+
+# Committed env files for different environments
+# .env - committed (base configuration)
+# .env.development - committed (development defaults)
+# .env.staging - committed (staging defaults)
+# .env.production - committed (production defaults)
+# .env.*.example - committed (templates for local overrides)
 
 # vercel
 .vercel

@@ -1,38 +1,99 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import confetti from 'canvas-confetti'
 import { toast } from 'sonner'
 import { ArrowLeft, DollarSign, Heart, Sparkles, Users, Zap } from 'lucide-react'
 import Link from 'next/link'
+import { useQueryClient } from '@tanstack/react-query'
+import { useLocale, useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { PaymentDialog } from '../_components/payment-dialog'
-import { PortfolioBackground } from '../_components/portfolio-background'
 import { PortfolioFooter } from '../_components/portfolio-footer'
 import { PortfolioHeader } from '../_components/portfolio-header'
 import { cn } from '@/lib/utils'
 import {
-  donationContent,
   donationPresets,
+  getDonationContent,
 } from '@/skeleton-data/portfolio'
+import {
+  queryKeys,
+  useCreatePaymentMutation,
+  useDonationHistory,
+  useLatestPayment,
+  usePaymentStatus,
+} from '@/app/services/queries'
+import type { DonationHistoryItemDTO } from '@/types/api'
+
+const MIN_DONATION_AMOUNT = 10000
+const MAX_DONATION_AMOUNT = 5000000
+const HISTORY_PAGE_SIZE = 6
+
 
 export default function DonatePage() {
-  const [amount, setAmount] = useState<number>(10000)
+  const t = useTranslations()
+  const locale = useLocale()
+  const queryClient = useQueryClient()
+
+  const currencyLabel = t('DONATE.CURRENCY.001')
+  const minAmountLabel = useMemo(
+    () => MIN_DONATION_AMOUNT.toLocaleString(locale),
+    [locale]
+  )
+  const maxAmountLabel = useMemo(
+    () => MAX_DONATION_AMOUNT.toLocaleString(locale),
+    [locale]
+  )
+
+  const donationContent = getDonationContent(t, {
+    minAmountLabel,
+    currencyLabel,
+  })
+
+  const [amount, setAmount] = useState<number>(MIN_DONATION_AMOUNT)
   const [customAmount, setCustomAmount] = useState<string>('')
-  const [senderName, setSenderName] = useState<string>('Anonymous')
+  const [senderName, setSenderName] = useState<string>('')
   const [message, setMessage] = useState<string>('')
   const [isAnonymous, setIsAnonymous] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [qrCode, setQrCode] = useState<string>('')
   const [showQR, setShowQR] = useState<boolean>(false)
-  const [checkoutUrl, setCheckoutUrl] = useState<string>('')
-  const [orderCode, setOrderCode] = useState<string>('')
   const [focusedField, setFocusedField] = useState<string | null>(null)
+  const [selectedHistory, setSelectedHistory] =
+    useState<DonationHistoryItemDTO | null>(null)
+  const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false)
+  const [historyPage, setHistoryPage] = useState<number>(1)
+
+  const createPaymentMutation = useCreatePaymentMutation()
+  const latestPaymentQuery = useLatestPayment()
+  const payment = latestPaymentQuery.data
+  const orderCode = payment?.orderCode ?? null
+
+  const paymentStatusQuery = usePaymentStatus(
+    orderCode,
+    Boolean(orderCode) && showQR
+  )
+
+  const donationHistoryQuery = useDonationHistory({
+    page: historyPage,
+    limit: HISTORY_PAGE_SIZE,
+  })
+  const donationHistory = donationHistoryQuery.data?.data ?? []
+  const historyPagination = donationHistoryQuery.data?.pagination
+  const historyTotalAmount = donationHistory.reduce(
+    (sum, entry) => sum + entry.amount,
+    0
+  )
 
   useEffect(() => {
     const revealNodes = Array.from(
@@ -64,40 +125,50 @@ export default function DonatePage() {
   }, [])
 
   useEffect(() => {
-    if (!orderCode) return
-
-    const paymentServiceBase =
-      process.env.NEXT_PUBLIC_PAYMENT_SERVICE_URL?.replace(/\/$/, '') ?? ''
-
-    const eventSource = new EventSource(`${paymentServiceBase}/api/sse/status/${orderCode}`)
-
-    eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data)
-      if (data.status === 'PAID') {
-        confetti({
-          particleCount: 150,
-          spread: 100,
-          origin: { y: 0.6 },
-          colors: ['#00ff88', '#00aaff', '#ff0088', '#ffaa00'],
-        })
-        toast.success('🎉 Thank you for your donation! Your support means everything.', {
-          duration: 5000,
-        })
-        setShowQR(false)
-        setQrCode('')
-        setOrderCode('')
-        eventSource.close()
+    const scrollToHash = () => {
+      const hash = window.location.hash
+      if (!hash) return
+      const target = document.querySelector(hash)
+      if (target instanceof HTMLElement) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
     }
 
-    eventSource.onerror = () => {
-      eventSource.close()
+    scrollToHash()
+    window.addEventListener('hashchange', scrollToHash)
+
+    return () => window.removeEventListener('hashchange', scrollToHash)
+  }, [])
+
+  useEffect(() => {
+    if (!paymentStatusQuery.data || paymentStatusQuery.data.status !== 'PAID') {
+      return
     }
 
-    return () => {
-      eventSource.close()
+    confetti({
+      particleCount: 150,
+      spread: 100,
+      origin: { y: 0.6 },
+      colors: ['#00ff88', '#00aaff', '#ff0088', '#ffaa00'],
+    })
+    toast.success(t('DONATE.TOAST.PAID.TITLE.001'), {
+      duration: 5000,
+    })
+
+    setShowQR(false)
+    createPaymentMutation.reset()
+    queryClient.removeQueries({ queryKey: queryKeys.payment })
+    if (orderCode) {
+      queryClient.removeQueries({ queryKey: queryKeys.paymentStatus(orderCode) })
     }
-  }, [orderCode])
+    queryClient.invalidateQueries({ queryKey: queryKeys.donationHistoryBase })
+  }, [
+    createPaymentMutation,
+    orderCode,
+    paymentStatusQuery.data,
+    queryClient,
+    t,
+  ])
 
   const handleAmountSelect = (preset: number) => {
     setAmount(preset)
@@ -107,76 +178,98 @@ export default function DonatePage() {
   const handleCustomAmountChange = (value: string) => {
     setCustomAmount(value)
     const num = parseInt(value)
-    if (!isNaN(num) && num >= 10000) {
+    if (!isNaN(num) && num >= MIN_DONATION_AMOUNT) {
       setAmount(num)
     }
   }
 
-  const paymentServiceBase =
-    process.env.NEXT_PUBLIC_PAYMENT_SERVICE_URL?.replace(/\/$/, '') ?? ''
-
-  const getCreateEndpoint = () =>
-    paymentServiceBase ? `${paymentServiceBase}/api/payment/create` : '/api/payment/create'
-
   const handleDonate = async () => {
-    if (amount < 10000) {
-      toast.error('Minimum donation amount is 10,000 VND', {
-        description: 'Please select a higher amount to continue.',
-      })
-      return
-    }
-
-    if (amount > 5000000) {
-      toast.error('Maximum donation amount is 5,000,000 VND', {
-        description: 'Please select a lower amount to continue.',
-      })
-      return
-    }
-
-    setIsLoading(true)
-    try {
-      const response = await fetch(getCreateEndpoint(), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount,
-          senderName,
-          message,
-          isAnonymous,
+    if (amount < MIN_DONATION_AMOUNT) {
+      toast.error(
+        t('DONATE.TOAST.MIN_AMOUNT.TITLE.001', {
+          amount: `${minAmountLabel} ${currencyLabel}`,
         }),
+        {
+          description: t('DONATE.TOAST.MIN_AMOUNT.DESC.001'),
+        }
+      )
+      return
+    }
+
+    if (amount > MAX_DONATION_AMOUNT) {
+      toast.error(
+        t('DONATE.TOAST.MAX_AMOUNT.TITLE.001', {
+          amount: `${maxAmountLabel} ${currencyLabel}`,
+        }),
+        {
+          description: t('DONATE.TOAST.MAX_AMOUNT.DESC.001'),
+        }
+      )
+      return
+    }
+
+    try {
+      const resolvedSenderName = isAnonymous
+        ? donationContent.namePlaceholder
+        : senderName.trim() || donationContent.namePlaceholder
+
+      await createPaymentMutation.mutateAsync({
+        amount,
+        senderName: resolvedSenderName,
+        message,
+        isAnonymous,
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Failed to create payment')
-      }
-
-      const data = await response.json()
-      setQrCode(data.qrCode)
-      setOrderCode(data.orderCode)
-      setCheckoutUrl(data.checkoutUrl)
       setShowQR(true)
 
-      toast.success('Payment QR code generated!', {
-        description: 'Scan with your banking app to complete the donation.',
+      toast.success(t('DONATE.TOAST.QR_SUCCESS.TITLE.001'), {
+        description: t('DONATE.TOAST.QR_SUCCESS.DESC.001'),
       })
     } catch (error: unknown) {
-      console.error('Donation creation error:', error)
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create donation. Please try again.'
-      toast.error(errorMessage, {
-        description: 'If the problem persists, try refreshing the page.',
+      console.error(error)
+      toast.error(t('DONATE.TOAST.CREATE_FAILED.TITLE.001'), {
+        description: t('DONATE.TOAST.CREATE_FAILED.DESC.001'),
       })
-    } finally {
-      setIsLoading(false)
+    }
+  }
+
+  const getTierLabel = (value: number) => {
+    if (value >= 500000) return t('DONATE.TIER.LABEL.001')
+    if (value >= 100000) return t('DONATE.TIER.LABEL.002')
+    if (value >= 50000) return t('DONATE.TIER.LABEL.003')
+    return t('DONATE.TIER.LABEL.004')
+  }
+
+  const isLoading = createPaymentMutation.isPending
+  const isDialogOpen = showQR && Boolean(payment?.qrCode)
+
+  const formatAmount = (value: number) =>
+    `${value.toLocaleString(locale)} ${currencyLabel}`
+
+  const formatDate = (value: string) =>
+    new Intl.DateTimeFormat(locale, {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date(value))
+
+  const totalEntries = historyPagination?.total ?? 0
+  const totalPages = historyPagination?.totalPages ?? 1
+  const hasPrevPage = historyPagination?.hasPrevPage ?? false
+  const hasNextPage = historyPagination?.hasNextPage ?? false
+  const isHistoryLoading = donationHistoryQuery.isLoading
+
+  const handleHistoryOpenChange = (open: boolean) => {
+    setIsHistoryOpen(open)
+    if (!open) {
+      setSelectedHistory(null)
     }
   }
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[var(--hero-bg)] text-[var(--hero-foreground)]">
-      <PortfolioBackground />
-
+    <div className="relative min-h-screen overflow-x-hidden bg-transparent text-[var(--hero-foreground)]">
       <div className="relative z-10 font-mono">
         <PortfolioHeader />
 
@@ -190,7 +283,7 @@ export default function DonatePage() {
             >
               <Link href="/" className="flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
-                Back to Portfolio
+                {t('DONATE.LINK.BACK.001')}
               </Link>
             </Button>
           </div>
@@ -201,20 +294,21 @@ export default function DonatePage() {
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)]/50 px-4 py-2 backdrop-blur-sm">
                   <Heart className="h-4 w-4 text-red-400" />
-                  <span className="text-sm font-medium text-[var(--hero-foreground)]">Support the Vision</span>
+                  <span className="text-sm font-medium text-[var(--hero-foreground)]">
+                    {t('DONATE.HERO.BADGE.001')}
+                  </span>
                 </div>
 
                 <h1 className="text-5xl font-heading leading-tight text-glow md:text-7xl xl:text-8xl">
-                  Fuel the
+                  {t('DONATE.HERO.TITLE.001')}
                   <br />
                   <span className="bg-gradient-to-r from-[var(--hero-accent)] to-blue-400 bg-clip-text text-transparent">
-                    Next Drop
+                    {t('DONATE.HERO.TITLE.002')}
                   </span>
                 </h1>
 
                 <p className="text-xl text-[var(--hero-muted)] leading-relaxed max-w-2xl">
-                  Help power the next wave of cyberpunk interfaces, motion design, and instant payment systems.
-                  Your support directly fuels creative development and innovative tools.
+                  {t('DONATE.HERO.TEXT.001')}
                 </p>
               </div>
 
@@ -222,15 +316,21 @@ export default function DonatePage() {
               <div className="grid grid-cols-3 gap-6">
                 <div className="text-center space-y-2">
                   <div className="text-2xl font-heading text-glow">28</div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-[var(--hero-muted)]">Drops Shipped</div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-[var(--hero-muted)]">
+                    {t('DONATE.STATS.LABEL.001')}
+                  </div>
                 </div>
                 <div className="text-center space-y-2">
                   <div className="text-2xl font-heading text-glow">16</div>
-                  <div className="text-xs uppercase tracking-[0.2em] text-[var(--hero-muted)]">Signal Partners</div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-[var(--hero-muted)]">
+                    {t('DONATE.STATS.LABEL.002')}
+                  </div>
                 </div>
                 <div className="text-center space-y-2">
                   <Users className="h-6 w-6 mx-auto text-[var(--hero-accent)]" />
-                  <div className="text-xs uppercase tracking-[0.2em] text-[var(--hero-muted)]">Growing Community</div>
+                  <div className="text-xs uppercase tracking-[0.2em] text-[var(--hero-muted)]">
+                    {t('DONATE.STATS.LABEL.003')}
+                  </div>
                 </div>
               </div>
 
@@ -244,19 +344,24 @@ export default function DonatePage() {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm text-[var(--hero-foreground)] font-medium">
-                      &ldquo;This portfolio is a masterpiece of modern web design&rdquo;
+                      {t('DONATE.TESTIMONIAL.TEXT.001')}
                     </p>
                     <p className="text-xs text-[var(--hero-muted)] mt-1">
-                      Recent supporter • Anonymous donor
+                      {t('DONATE.TESTIMONIAL.BYLINE.001')}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Right side - Donation form */}
-            <div data-reveal className="reveal">
-              <div className="glass-panel neon-border rounded-3xl p-8 relative overflow-hidden">
+            <div className="grid gap-6 xl:grid-cols-10">
+              {/* Donation form */}
+              <div
+                id="support"
+                data-reveal
+                className="reveal scroll-mt-28 xl:col-span-3 h-full"
+              >
+                <div className="glass-panel neon-border rounded-3xl p-8 relative overflow-hidden h-full">
                 {/* Background decoration */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[var(--hero-accent)]/5 via-transparent to-[var(--hero-accent)]/10 pointer-events-none" />
 
@@ -281,14 +386,19 @@ export default function DonatePage() {
                           <Users className="h-6 w-6 text-green-400" />
                         )}
                       </div>
-                      <span className={cn("text-xs font-medium uppercase tracking-wide",
-                        amount >= 500000 ? "text-yellow-400" :
-                        amount >= 100000 ? "text-blue-400" :
-                        amount >= 50000 ? "text-pink-400" : "text-green-400"
-                      )}>
-                        {amount >= 500000 ? "Legend" :
-                         amount >= 100000 ? "Supporter" :
-                         amount >= 50000 ? "Friend" : "Contributor"}
+                      <span
+                        className={cn(
+                          'text-xs font-medium uppercase tracking-wide',
+                          amount >= 500000
+                            ? 'text-yellow-400'
+                            : amount >= 100000
+                              ? 'text-blue-400'
+                              : amount >= 50000
+                                ? 'text-pink-400'
+                                : 'text-green-400'
+                        )}
+                      >
+                        {getTierLabel(amount)}
                       </span>
                     </div>
                   </div>
@@ -299,9 +409,9 @@ export default function DonatePage() {
                       <span className="text-[var(--hero-muted)]">{donationContent.amountLabel}</span>
                       <div className="flex items-center gap-2">
                         <span className="text-2xl font-heading text-glow font-bold">
-                          {amount.toLocaleString()}
+                          {amount.toLocaleString(locale)}
                         </span>
-                        <span className="text-[var(--hero-muted)] text-sm">VND</span>
+                        <span className="text-[var(--hero-muted)] text-sm">{currencyLabel}</span>
                       </div>
                     </div>
                   </div>
@@ -309,7 +419,7 @@ export default function DonatePage() {
                   {/* Preset amounts with better styling */}
                   <div>
                     <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)] mb-3">
-                      Quick select
+                      {t('DONATE.LABEL.QUICK_SELECT.001')}
                     </p>
                     <div className="grid grid-cols-3 gap-3">
                       {donationPresets.map((preset, index) => (
@@ -325,7 +435,7 @@ export default function DonatePage() {
                           )}
                           style={{ animationDelay: `${index * 50}ms` }}
                         >
-                          <span className="text-sm font-medium">{preset.toLocaleString()}</span>
+                          <span className="text-sm font-medium">{preset.toLocaleString(locale)}</span>
                         </Button>
                       ))}
                     </div>
@@ -349,7 +459,7 @@ export default function DonatePage() {
                         onChange={(e) => handleCustomAmountChange(e.target.value)}
                         onFocus={() => setFocusedField('custom-amount')}
                         onBlur={() => setFocusedField(null)}
-                        min="10000"
+                        min={MIN_DONATION_AMOUNT}
                         className={cn(
                           'pl-12 h-12 border transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm',
                           focusedField === 'custom-amount'
@@ -456,49 +566,186 @@ export default function DonatePage() {
 
                   {/* Impact message */}
                   <div className="text-center text-xs text-[var(--hero-muted)] space-y-1">
-                    <p>Your support helps fuel the next wave of neon-powered innovation</p>
+                    <p>{t('DONATE.IMPACT.TEXT.001')}</p>
                     <p className="flex items-center justify-center gap-1">
                       <Heart className="h-3 w-3 text-red-400" />
-                      <span>100% goes to development and creative tools</span>
+                      <span>{t('DONATE.IMPACT.TEXT.002')}</span>
                     </p>
                   </div>
                 </div>
+                </div>
               </div>
-            </div>
+
+              {/* Donation history */}
+              <div data-reveal className="reveal xl:col-span-7 h-full">
+                <div className="glass-panel neon-border rounded-3xl p-8 relative overflow-hidden h-full flex flex-col">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-[var(--hero-accent)]/10 pointer-events-none" />
+                  <div className="relative flex h-full flex-col gap-8">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                      <div className="space-y-2">
+                        <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
+                          Donation History
+                        </p>
+                        <h2 className="text-3xl font-heading text-glow">Recent Support</h2>
+                        <p className="text-sm text-[var(--hero-muted)] max-w-2xl">
+                          See the latest contributions and tap any entry to view the full details.
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm">
+                        <div className="rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)]/60 px-4 py-2">
+                          <span className="text-[var(--hero-muted)]">Total entries</span>
+                          <span className="ml-2 text-[var(--hero-foreground)] font-semibold">
+                            {isHistoryLoading ? '...' : totalEntries}
+                          </span>
+                        </div>
+                        <div className="rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)]/60 px-4 py-2">
+                          <span className="text-[var(--hero-muted)]">Page total</span>
+                          <span className="ml-2 text-[var(--hero-foreground)] font-semibold">
+                            {isHistoryLoading ? '...' : formatAmount(historyTotalAmount)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 space-y-3">
+                      {isHistoryLoading && (
+                        <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 text-sm text-[var(--hero-muted)]">
+                          Loading donation history...
+                        </div>
+                      )}
+
+                      {!isHistoryLoading && donationHistoryQuery.isError && (
+                        <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 text-sm text-[var(--hero-muted)]">
+                          {t('ERROR.MESSAGE.003')}
+                        </div>
+                      )}
+
+                      {!isHistoryLoading &&
+                        !donationHistoryQuery.isError &&
+                        donationHistory.length === 0 && (
+                          <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 text-sm text-[var(--hero-muted)]">
+                            No donations yet. Be the first to support.
+                          </div>
+                        )}
+
+                      {!isHistoryLoading &&
+                        !donationHistoryQuery.isError &&
+                        donationHistory.map((entry) => {
+                          const displayName = entry.isAnonymous
+                            ? 'Anonymous'
+                            : entry.senderName || 'Anonymous'
+
+                          return (
+                            <button
+                              key={entry.id}
+                              type="button"
+                              onClick={() => {
+                                setSelectedHistory(entry)
+                                setIsHistoryOpen(true)
+                              }}
+                              className="w-full text-left rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 transition-all duration-300 hover:scale-[1.01] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)]/70"
+                            >
+                              <div className="flex flex-wrap items-center justify-between gap-3">
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm font-semibold text-[var(--hero-foreground)]">
+                                      {displayName}
+                                    </span>
+                                    <span
+                                      className={cn(
+                                        'rounded-full px-2 py-0.5 text-xs uppercase tracking-[0.2em]',
+                                        entry.status === 'PAID'
+                                          ? 'bg-emerald-500/15 text-emerald-300'
+                                          : entry.status === 'PENDING'
+                                            ? 'bg-yellow-500/15 text-yellow-300'
+                                            : 'bg-red-500/15 text-red-300'
+                                      )}
+                                    >
+                                      {entry.status}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-[var(--hero-muted)] line-clamp-1">
+                                    {entry.message || 'No message shared.'}
+                                  </p>
+                                </div>
+                                <div className="text-right space-y-1">
+                                  <div className="text-lg font-heading text-glow">
+                                    {formatAmount(entry.amount)}
+                                  </div>
+                                  <div className="text-xs text-[var(--hero-muted)]">
+                                    {formatDate(entry.createdAt)}
+                                  </div>
+                                </div>
+                              </div>
+                            </button>
+                          )
+                        })}
+                    </div>
+
+                    <div className="flex items-center justify-between border-t border-[var(--hero-border)] pt-4 text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
+                      <span>
+                        Page {historyPage} of {totalPages}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={!hasPrevPage || isHistoryLoading}
+                          onClick={() => setHistoryPage((prev) => Math.max(1, prev - 1))}
+                          className="text-[10px]"
+                        >
+                          Prev
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={!hasNextPage || isHistoryLoading}
+                          onClick={() => setHistoryPage((prev) => prev + 1)}
+                          className="text-[10px]"
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
           </section>
 
           {/* Additional info section */}
           <section className="mt-20 space-y-8">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl font-heading text-glow">Why Your Support Matters</h2>
+              <h2 className="text-3xl font-heading text-glow">
+                {t('DONATE.SECTION.TITLE.001')}
+              </h2>
               <p className="text-[var(--hero-muted)] max-w-2xl mx-auto">
-                Every donation directly supports the development of cutting-edge design tools,
-                open-source contributions, and the creation of innovative user experiences.
+                {t('DONATE.SECTION.TEXT.001')}
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
               <div className="glass-panel rounded-2xl p-6 text-center space-y-3">
                 <Zap className="h-8 w-8 mx-auto text-yellow-400" />
-                <h3 className="font-heading text-lg">Innovation</h3>
+                <h3 className="font-heading text-lg">{t('DONATE.CARD.TITLE.001')}</h3>
                 <p className="text-sm text-[var(--hero-muted)]">
-                  Fueling the next generation of web interfaces and motion design
+                  {t('DONATE.CARD.TEXT.001')}
                 </p>
               </div>
 
               <div className="glass-panel rounded-2xl p-6 text-center space-y-3">
                 <Sparkles className="h-8 w-8 mx-auto text-blue-400" />
-                <h3 className="font-heading text-lg">Tools</h3>
+                <h3 className="font-heading text-lg">{t('DONATE.CARD.TITLE.002')}</h3>
                 <p className="text-sm text-[var(--hero-muted)]">
-                  Developing and maintaining creative tools for the design community
+                  {t('DONATE.CARD.TEXT.002')}
                 </p>
               </div>
 
               <div className="glass-panel rounded-2xl p-6 text-center space-y-3">
                 <Heart className="h-8 w-8 mx-auto text-pink-400" />
-                <h3 className="font-heading text-lg">Community</h3>
+                <h3 className="font-heading text-lg">{t('DONATE.CARD.TITLE.003')}</h3>
                 <p className="text-sm text-[var(--hero-muted)]">
-                  Building connections and supporting fellow creators
+                  {t('DONATE.CARD.TEXT.003')}
                 </p>
               </div>
             </div>
@@ -509,11 +756,86 @@ export default function DonatePage() {
       </div>
 
       <PaymentDialog
-        open={showQR}
+        open={isDialogOpen}
         onOpenChange={setShowQR}
-        qrCode={qrCode}
-        checkoutUrl={checkoutUrl}
+        qrCode={payment?.qrCode ?? ''}
+        checkoutUrl={payment?.checkoutUrl ?? ''}
       />
+
+      <Dialog open={isHistoryOpen} onOpenChange={handleHistoryOpenChange}>
+        <DialogContent className="border-[var(--hero-border)] bg-[var(--hero-surface-strong)] text-[var(--hero-foreground)] max-w-lg">
+          <DialogHeader className="space-y-2">
+            <DialogTitle className="text-glow text-2xl">Donation Details</DialogTitle>
+            <DialogDescription className="text-[var(--hero-muted)]">
+              A closer look at this contribution.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedHistory && (
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
+                      Amount
+                    </p>
+                    <p className="text-3xl font-heading text-glow">
+                      {formatAmount(selectedHistory.amount)}
+                    </p>
+                  </div>
+                  <span
+                    className={cn(
+                      'rounded-full px-3 py-1 text-xs uppercase tracking-[0.2em]',
+                      selectedHistory.status === 'PAID'
+                        ? 'bg-emerald-500/15 text-emerald-300'
+                        : selectedHistory.status === 'PENDING'
+                          ? 'bg-yellow-500/15 text-yellow-300'
+                          : 'bg-red-500/15 text-red-300'
+                    )}
+                  >
+                    {selectedHistory.status}
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid gap-3 text-sm">
+                <div className="flex items-center justify-between border-b border-[var(--hero-border)] pb-2">
+                  <span className="text-[var(--hero-muted)]">Donor</span>
+                  <span className="font-medium">
+                    {selectedHistory.isAnonymous
+                      ? 'Anonymous'
+                      : selectedHistory.senderName || 'Anonymous'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between border-b border-[var(--hero-border)] pb-2">
+                  <span className="text-[var(--hero-muted)]">Donation ID</span>
+                  <span className="font-medium">{selectedHistory.id}</span>
+                </div>
+                <div className="flex items-center justify-between border-b border-[var(--hero-border)] pb-2">
+                  <span className="text-[var(--hero-muted)]">Date</span>
+                  <span className="font-medium">
+                    {formatDate(selectedHistory.createdAt)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between border-b border-[var(--hero-border)] pb-2">
+                  <span className="text-[var(--hero-muted)]">Method</span>
+                  <span className="font-medium">
+                    {selectedHistory.method || 'PayOS'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 p-4 text-sm">
+                <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)] mb-2">
+                  Message
+                </p>
+                <p className="text-[var(--hero-foreground)]">
+                  {selectedHistory.message || 'No message shared.'}
+                </p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

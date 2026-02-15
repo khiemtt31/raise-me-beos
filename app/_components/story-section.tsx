@@ -1,6 +1,12 @@
-import { signals, stats, storyContent } from '@/skeleton-data/portfolio'
+import { useTranslations } from 'next-intl'
+import { getSignals, getStats, getStoryContent } from '@/skeleton-data/portfolio'
 
 export function StorySection() {
+  const t = useTranslations()
+  const storyContent = getStoryContent(t)
+  const stats = getStats(t)
+  const signals = getSignals(t)
+
   return (
     <section
       id="story"
@@ -22,7 +28,9 @@ export function StorySection() {
               key={stat.label}
               className="glass-panel neon-border rounded-2xl p-4 text-center"
             >
-              <p className="text-2xl font-heading text-glow">{stat.value}</p>
+              <p className="text-2xl font-heading text-glow">
+                {stat.value.toString().padStart(2, '0')}
+              </p>
               <p className="mt-2 text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
                 {stat.label}
               </p>

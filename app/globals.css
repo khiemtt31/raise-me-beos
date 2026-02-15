@@ -178,6 +178,14 @@
 
 @layer base {
   html {
+    font-size: 93.5%;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  html[data-scroll-behavior='smooth'] {
     scroll-behavior: smooth;
   }
   * {
@@ -188,6 +196,11 @@
     font-family: var(--font-rajdhani), sans-serif;
     font-weight: 400;
     letter-spacing: 0.02em;
+    width: 100vw;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-orbitron), sans-serif;
