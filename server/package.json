@@ -13,7 +13,7 @@
     "test:unit": "vitest run",
     "staging": "node --env-file=.env.staging dist/index.js",
     "prod": "node --env-file=.env.prod dist/index.js",
-    "start": "node dist/index.js",
+    "start": "node index.js",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
