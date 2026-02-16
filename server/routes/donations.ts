@@ -64,7 +64,7 @@ router.get('/history', async (req, res) => {
         'id, amount, message, senderName:sender_name, createdAt:created_at, status, isAnonymous:is_anonymous',
         { count: 'exact' }
       )
-      .in('status', ['PAID', 'PENDING'])
+      .eq('status', 'PAID')
       .order('created_at', { ascending: false })
       .range(from, to)
 

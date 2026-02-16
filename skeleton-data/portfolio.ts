@@ -6,7 +6,7 @@ type Translator = (
   values?: Record<string, string | number>
 ) => string
 
-export type SectionId = 'hero' | 'story' | 'projects'
+export type SectionId = 'hero' | 'story' | 'blogs'
 
 export type Section = {
   id: SectionId
@@ -55,16 +55,10 @@ export type Signal = {
   icon: LucideIcon
 }
 
-export type ProjectsContent = {
+export type BlogsContent = {
   eyebrow: string
   title: string
   cta: string
-}
-
-export type Project = {
-  title: string
-  type: string
-  description: string
 }
 
 export type ContactContent = {
@@ -99,7 +93,7 @@ type DonationContentOptions = {
 export const getSections = (t: Translator): Section[] => [
   { id: 'hero', label: t('HOME.SECTION.001') },
   { id: 'story', label: t('HOME.SECTION.002') },
-  { id: 'projects', label: t('HOME.SECTION.003') },
+  { id: 'blogs', label: t('HOME.SECTION.003') },
 ]
 
 export const getHeroContent = (t: Translator): HeroContent => ({
@@ -182,29 +176,11 @@ export const getSignals = (t: Translator): Signal[] => [
   },
 ]
 
-export const getProjectsContent = (t: Translator): ProjectsContent => ({
+export const getBlogsContent = (t: Translator): BlogsContent => ({
   eyebrow: t('HOME.PROJECTS.EYEBROW.001'),
   title: t('HOME.PROJECTS.TITLE.001'),
   cta: t('HOME.PROJECTS.BUTTON.001'),
 })
-
-export const getProjects = (t: Translator): Project[] => [
-  {
-    title: t('HOME.PROJECT.TITLE.001'),
-    type: t('HOME.PROJECT.TYPE.001'),
-    description: t('HOME.PROJECT.TEXT.001'),
-  },
-  {
-    title: t('HOME.PROJECT.TITLE.002'),
-    type: t('HOME.PROJECT.TYPE.002'),
-    description: t('HOME.PROJECT.TEXT.002'),
-  },
-  {
-    title: t('HOME.PROJECT.TITLE.003'),
-    type: t('HOME.PROJECT.TYPE.003'),
-    description: t('HOME.PROJECT.TEXT.003'),
-  },
-]
 
 export const getContactContent = (t: Translator): ContactContent => ({
   eyebrow: t('HOME.CONTACT.EYEBROW.001'),

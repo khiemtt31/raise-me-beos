@@ -29,7 +29,7 @@ export function HeroSection() {
             asChild
             className="neon-border bg-[var(--hero-accent)] text-[var(--hero-accent-contrast)] hover:bg-[var(--hero-accent-strong)]"
           >
-            <a href="#projects">{heroContent.primaryCta}</a>
+            <a href="#blogs">{heroContent.primaryCta}</a>
           </Button>
 
         </div>

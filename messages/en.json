@@ -118,7 +118,7 @@
     "SECTION": {
       "001": "Hero",
       "002": "Story",
-      "003": "Drops"
+      "003": "Blogs"
     },
     "PILL": {
       "001": "Hello stranger, welcome to my world"
@@ -130,7 +130,7 @@
       "001": "I'm a software engineer in Vietnam, with a passion for crafting clean, efficient code and building innovative solutions. I thrive on tackling complex problems and turning ideas into reality through technology."
     },
     "BUTTON": {
-      "001": "View drops"
+      "001": "View blogs"
     },
     "TAG": {
       "001": "UI systems",
@@ -185,13 +185,13 @@
     },
     "PROJECTS": {
       "EYEBROW": {
-        "001": "Latest drops"
+        "001": "Latest blogs"
       },
       "TITLE": {
-        "001": "Check out my blogs and projects, my beacon of creativity and code."
+        "001": "A live archive of product notes, design rituals, and launch updates."
       },
       "BUTTON": {
-        "001": "Fuel the next drop"
+        "001": "Read all blogs"
       }
     },
     "PROJECT": {

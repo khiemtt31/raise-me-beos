@@ -10,9 +10,10 @@
     "build": "tsc",
     "dev": "nodemon --exec \"tsx --env-file=.env.dev index.ts\"",
     "test": "nodemon --exec \"tsx --env-file=.env.test index.ts\"",
+    "test:unit": "vitest run",
     "staging": "node --env-file=.env.staging dist/index.js",
     "prod": "node --env-file=.env.prod dist/index.js",
-    "start": "node --env-file=.env.prod dist/index.js",
+    "start": "node dist/index.js",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
@@ -34,8 +35,11 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/hpp": "^0.2.7",
+    "@types/supertest": "^2.0.16",
     "nodemon": "^3.1.11",
+    "supertest": "^7.1.1",
     "tsx": "^4.21.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.4"
   }
 }

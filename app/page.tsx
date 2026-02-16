@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { HeroSection } from './_components/hero-section'
 import { PortfolioFooter } from './_components/portfolio-footer'
 import { PortfolioHeader } from './_components/portfolio-header'
-import { ProjectsSection } from './_components/projects-section'
+import { BlogsSection } from './_components/blogs-section'
 import { StorySection } from './_components/story-section'
 
 export default function PortfolioPage() {
@@ -46,7 +46,7 @@ export default function PortfolioPage() {
         <main className="mx-auto w-full px-6 pb-14 pt-10 md:px-10 md:pt-24 xl:px-16">
           <HeroSection />
           <StorySection />
-          <ProjectsSection />
+          <BlogsSection />
         </main>
 
         <PortfolioFooter />
