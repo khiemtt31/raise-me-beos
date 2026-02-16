@@ -12,8 +12,8 @@
     "test": "nodemon --exec \"tsx --env-file=.env.test index.ts\"",
     "test:unit": "vitest run",
     "staging": "node --env-file=.env.staging dist/index.js",
-    "prod": "node --env-file=.env.prod dist/index.js",
-    "start": "node index.js",
+    "prod": "node --env-file=.env.prod dist/index.ts",
+    "start": "node index.ts",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
