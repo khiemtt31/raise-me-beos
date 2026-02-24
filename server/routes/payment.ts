@@ -17,6 +17,10 @@ router.post('/create', async (req, res) => {
       message?: string
       isAnonymous?: boolean
     }
+    const resolvedMessage =
+      typeof message === 'string' && message.trim().length > 0
+        ? message.trim()
+        : 'With all the supports!!!'
 
     // Validate amount
     if (!amount || amount < MIN_DONATION_AMOUNT) {
@@ -93,7 +97,7 @@ router.post('/create', async (req, res) => {
           order_code: orderCode.toString(),
           amount,
           sender_name: senderName,
-          message,
+          message: resolvedMessage,
           is_anonymous: isAnonymous,
           status: 'PENDING',
           // user_id: null, // No user system
@@ -178,6 +182,21 @@ router.get('/:orderCode', async (req, res) => {
 
     if (!paymentLinkInfo) {
       return res.status(404).json({ error: 'Payment not found' })
+    }
+
+    if (paymentLinkInfo.status === 'PAID') {
+      const { data: updated, error: updateError } = await supabase
+        .from('donations')
+        .update({ status: 'PAID' })
+        .eq('order_code', orderCode)
+        .neq('status', 'PAID')
+        .select('order_code')
+
+      if (updateError) {
+        console.error('Failed to sync paid donation status:', updateError)
+      } else if (updated && updated.length > 0) {
+        broadcastDonationUpdate(orderCode, 'PAID')
+      }
     }
 
     return res.json({

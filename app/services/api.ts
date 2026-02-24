@@ -108,6 +108,31 @@ export interface PaymentStatusData {
   [key: string]: unknown
 }
 
+type PaymentLinkResponse = {
+  data?: {
+    status?: string
+  }
+}
+
+/**
+ * Get payment status from PayOS (via payment service)
+ * @param orderCode Order code to check
+ * @returns Payment status data if available
+ */
+export async function getPaymentStatus(
+  orderCode: string
+): Promise<PaymentStatusData | null> {
+  const response = await apiRequest<PaymentLinkResponse>(`/api/payment/${orderCode}`, {
+    method: 'GET',
+    i18nKey: 'ERROR.MESSAGE.003',
+  })
+
+  const status = response?.data?.status
+  if (!status) return null
+
+  return { status }
+}
+
 /**
  * Subscribe to payment status updates via Server-Sent Events
  * @param orderCode Order code to monitor

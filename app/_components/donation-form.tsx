@@ -5,7 +5,6 @@ import { DollarSign, Heart, Sparkles, Users, Zap } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -19,13 +18,11 @@ type DonationFormProps = {
   customAmount: string
   senderName: string
   message: string
-  isAnonymous: boolean
   isLoading: boolean
   onAmountSelect: (preset: number) => void
   onCustomAmountChange: (value: string) => void
   onSenderNameChange: (value: string) => void
   onMessageChange: (value: string) => void
-  onAnonymousChange: (checked: boolean) => void
   onDonate: () => void
 }
 
@@ -35,13 +32,11 @@ export function DonationForm({
   customAmount,
   senderName,
   message,
-  isAnonymous,
   isLoading,
   onAmountSelect,
   onCustomAmountChange,
   onSenderNameChange,
   onMessageChange,
-  onAnonymousChange,
   onDonate,
 }: DonationFormProps) {
   const t = useTranslations()
@@ -89,14 +84,14 @@ export function DonationForm({
   return (
     <div
       className={cn(
-        'glass-panel neon-border rounded-3xl relative overflow-hidden flex h-full min-h-0 flex-col',
+        'glass-panel neon-border rounded-3xl relative overflow-hidden flex flex-col',
         className
       )}
     >
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--hero-accent)]/5 via-transparent to-[var(--hero-accent)]/10 pointer-events-none" />
 
-      <div className="relative flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-5 py-5 sm:px-6 sm:py-6 md:gap-8 md:px-8 md:py-8">
+      <div className="relative flex min-h-0 flex-1 flex-col gap-6 px-5 py-5 sm:px-6 sm:py-6 md:gap-8 md:px-8 md:py-8">
         {/* Header with tier badge */}
         <div className="flex items-start justify-between">
           <div className="space-y-2">
@@ -235,21 +230,6 @@ export function DonationForm({
             />
           </div>
 
-          {/* Anonymous toggle with better styling */}
-          <div className="flex items-center gap-4 p-4 rounded-xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/30 backdrop-blur-sm">
-            <Checkbox
-              id="anonymous"
-              checked={isAnonymous}
-              onCheckedChange={(checked) => onAnonymousChange(checked as boolean)}
-              className="border-[var(--hero-border)] data-[state=checked]:bg-[var(--hero-accent)] data-[state=checked]:text-[var(--hero-accent-contrast)] h-5 w-5"
-            />
-            <Label
-              htmlFor="anonymous"
-              className="text-sm text-[var(--hero-foreground)] cursor-pointer"
-            >
-              {donationContent.anonymousLabel}
-            </Label>
-          </div>
         </div>
 
         {/* Enhanced donate button */}

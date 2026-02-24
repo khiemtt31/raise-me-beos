@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { ArrowLeft, Heart, Sparkles, Users, Zap } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
@@ -19,8 +17,6 @@ import {
 } from "@/components/ui/dialog";
 import { DonationForm } from "../_components/donation-form";
 import { PaymentDialog } from "../_components/payment-dialog";
-import { PortfolioFooter } from "../_components/portfolio-footer";
-import { PortfolioHeader } from "../_components/portfolio-header";
 import {
   MAX_DONATION_AMOUNT,
   MIN_DONATION_AMOUNT,
@@ -63,7 +59,6 @@ export default function DonatePage() {
   const [customAmount, setCustomAmount] = useState<string>("");
   const [senderName, setSenderName] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
   const [showQR, setShowQR] = useState<boolean>(false);
   const [selectedHistory, setSelectedHistory] =
     useState<DonationHistoryItemDTO | null>(null);
@@ -77,7 +72,7 @@ export default function DonatePage() {
 
   const paymentStatusQuery = usePaymentStatus(
     orderCode,
-    Boolean(orderCode) && showQR,
+    Boolean(orderCode),
   );
 
   const donationHistoryQuery = useDonationHistory({
@@ -225,9 +220,11 @@ export default function DonatePage() {
     }
 
     try {
+      const trimmedSenderName = senderName.trim();
+      const isAnonymous = trimmedSenderName.length === 0;
       const resolvedSenderName = isAnonymous
         ? donationContent.namePlaceholder
-        : senderName.trim() || donationContent.namePlaceholder;
+        : trimmedSenderName;
 
       await createPaymentMutation.mutateAsync({
         amount,
@@ -292,14 +289,14 @@ export default function DonatePage() {
   return (
     <div className="relative min-h-[calc(100svh-var(--footer-h))] overflow-x-hidden bg-transparent text-[var(--hero-foreground)]">
       <div className="relative z-10 font-mono">
-        <main className="mx-auto flex h-[calc(100svh-var(--footer-h))] w-full flex-col px-6 pb-6 pt-[calc(var(--header-h)+0.75rem)] md:px-10 md:pb-8 xl:px-16">
+        <main className="mx-auto flex h-full w-full flex-col px-6 pb-6 pt-[calc(var(--header-h)+0.75rem)] md:px-10 md:pb-8 xl:px-16">
           <section className="flex min-h-0 flex-1 flex-col gap-6 xl:gap-8">
-            <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-6 xl:grid-cols-10 xl:grid-rows-1">
+            <div className="grid min-h-0 flex-1 grid-rows gap-6 xl:grid-cols-10 xl:grid-rows-1">
               {/* Donation form */}
               <div
                 id="support"
                 data-reveal
-                className="reveal scroll-mt-28 h-full min-h-0 xl:col-span-3"
+                className="reveal xl:col-span-3"
               >
                 <DonationForm
                   className="h-full min-h-0"
@@ -307,13 +304,11 @@ export default function DonatePage() {
                   customAmount={customAmount}
                   senderName={senderName}
                   message={message}
-                  isAnonymous={isAnonymous}
                   isLoading={isLoading}
                   onAmountSelect={handleAmountSelect}
                   onCustomAmountChange={handleCustomAmountChange}
                   onSenderNameChange={setSenderName}
                   onMessageChange={setMessage}
-                  onAnonymousChange={setIsAnonymous}
                   onDonate={handleDonate}
                 />
               </div>

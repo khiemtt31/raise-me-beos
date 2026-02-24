@@ -51,3 +51,8 @@
 > Improve source code structure for better maintainability and scalability.
 > Refactor backend code to separate concerns and improve readability.
 > Refactor frontend code to enhance component organization and reusability.
+
+<!-- Day 12 -->
+> Minimize frontend code base
+
+<!-- Day 13 -->

@@ -10,9 +10,24 @@ import {
   createPayment,
   healthCheck,
   getDonationHistory,
+  getPaymentStatus,
   subscribeToPaymentStatus,
 } from '@/app/services/api'
 import type { DonationHistoryQueryDTO } from '@/types/api'
+
+const normalizePaymentStatus = (status?: string | null) => {
+  if (!status) return null
+  const normalized = status.toUpperCase()
+
+  if (normalized === 'PROCESSING') return 'PENDING'
+  if (normalized === 'EXPIRED') return 'CANCELLED'
+  if (normalized === 'UNDERPAID') return 'FAILED'
+
+  return normalized
+}
+
+const isTerminalStatus = (status?: string | null) =>
+  status === 'PAID' || status === 'CANCELLED' || status === 'FAILED'
 
 export const queryKeys = {
   health: ['healthz'] as const,
@@ -67,7 +82,11 @@ export const usePaymentStatus = (orderCode: string | null, enabled: boolean) => 
     const unsubscribe = subscribeToPaymentStatus(
       orderCode,
       (data) => {
-        queryClient.setQueryData(queryKeys.paymentStatus(orderCode), data)
+        const normalizedStatus = normalizePaymentStatus(data.status)
+        queryClient.setQueryData(queryKeys.paymentStatus(orderCode), {
+          ...data,
+          status: normalizedStatus ?? data.status,
+        })
       },
       () => {
         queryClient.setQueryData(queryKeys.paymentStatus(orderCode), {
@@ -77,6 +96,59 @@ export const usePaymentStatus = (orderCode: string | null, enabled: boolean) => 
     )
 
     return unsubscribe
+  }, [orderCode, enabled, queryClient])
+
+  useEffect(() => {
+    if (!orderCode || !enabled) return
+
+    let intervalId: ReturnType<typeof setInterval> | undefined
+    let isActive = true
+    const startedAt = Date.now()
+    const maxDurationMs = 5 * 60 * 1000
+
+    const poll = async () => {
+      if (Date.now() - startedAt > maxDurationMs) {
+        if (intervalId) clearInterval(intervalId)
+        return
+      }
+
+      const currentStatus = queryClient.getQueryData<PaymentStatusData>(
+        queryKeys.paymentStatus(orderCode)
+      )?.status
+
+      const normalizedCurrent = normalizePaymentStatus(currentStatus)
+      if (isTerminalStatus(normalizedCurrent)) {
+        if (intervalId) clearInterval(intervalId)
+        return
+      }
+
+      try {
+        const response = await getPaymentStatus(orderCode)
+        if (!isActive || !response?.status) return
+
+        const normalizedStatus = normalizePaymentStatus(response.status)
+        if (!normalizedStatus) return
+
+        queryClient.setQueryData(queryKeys.paymentStatus(orderCode), {
+          ...response,
+          status: normalizedStatus,
+        })
+
+        if (isTerminalStatus(normalizedStatus) && intervalId) {
+          clearInterval(intervalId)
+        }
+      } catch {
+        // Ignore polling errors - SSE may still be active.
+      }
+    }
+
+    poll()
+    intervalId = setInterval(poll, 10000)
+
+    return () => {
+      isActive = false
+      if (intervalId) clearInterval(intervalId)
+    }
   }, [orderCode, enabled, queryClient])
 
   return useQuery<PaymentStatusData | null>({
