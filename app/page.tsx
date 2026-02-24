@@ -5,8 +5,6 @@ import { useEffect } from 'react'
 import { HeroSection } from './_components/hero-section'
 import { PortfolioFooter } from './_components/portfolio-footer'
 import { PortfolioHeader } from './_components/portfolio-header'
-import { BlogsSection } from './_components/blogs-section'
-import { StorySection } from './_components/story-section'
 
 export default function PortfolioPage() {
   useEffect(() => {
@@ -39,17 +37,13 @@ export default function PortfolioPage() {
   }, [])
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-transparent text-[var(--hero-foreground)]">
+    <div className="relative min-h-[calc(100svh-var(--footer-h))] overflow-x-hidden bg-transparent text-[var(--hero-foreground)]">
       <div className="relative z-10 font-mono">
-        <PortfolioHeader />
-
-        <main className="mx-auto w-full px-6 pb-14 pt-10 md:px-10 md:pt-24 xl:px-16">
-          <HeroSection />
-          <StorySection />
-          <BlogsSection />
+        <main className="mx-auto flex h-[calc(100svh-var(--footer-h))] w-full flex-col px-6 pb-6 pt-[calc(var(--header-h)+0.75rem)] md:px-10 md:pb-8 xl:px-16">
+          <div className="min-h-0 flex-1">
+            <HeroSection />
+          </div>
         </main>
-
-        <PortfolioFooter />
       </div>
     </div>
   )

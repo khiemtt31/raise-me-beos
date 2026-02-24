@@ -4,6 +4,8 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { AppProviders } from "@/app/_components/app-providers";
 import "./globals.css";
+import { PortfolioHeader } from "./_components/portfolio-header";
+import { PortfolioFooter } from "./_components/portfolio-footer";
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -44,7 +46,11 @@ export default async function RootLayout({
         className={`${orbitron.variable} ${rajdhani.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <AppProviders>{children}</AppProviders>
+          <AppProviders>
+            <PortfolioHeader />
+            {children}
+            <PortfolioFooter />
+          </AppProviders>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -49,6 +49,8 @@
 
 :root {
   --radius: 0.625rem;
+  --header-h: 72px;
+  --footer-h: 132px;
   --background: #FFD3D5;
   --foreground: #540863;
   --card: #FFD3D5;
@@ -93,6 +95,13 @@
   --hero-scan: rgba(146, 72, 122, 0.06);
   --hero-glow: rgba(146, 72, 122, 0.2);
   --hero-glow-strong: rgba(146, 72, 122, 0.28);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-h: 80px;
+    --footer-h: 96px;
+  }
 }
 
 .dark {
@@ -197,6 +206,7 @@
     font-weight: 400;
     letter-spacing: 0.02em;
     min-height: 100vh;
+    min-height: 100svh;
     margin: 0;
     padding: 0;
   }

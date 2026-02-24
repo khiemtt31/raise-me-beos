@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils'
 import { getDonationContent, donationPresets } from '@/skeleton-data/portfolio'
 
 type DonationFormProps = {
+  className?: string
   amount: number
   customAmount: string
   senderName: string
@@ -29,6 +30,7 @@ type DonationFormProps = {
 }
 
 export function DonationForm({
+  className,
   amount,
   customAmount,
   senderName,
@@ -85,18 +87,25 @@ export function DonationForm({
   const tier = getAmountTier(amount)
 
   return (
-    <div className="glass-panel neon-border rounded-3xl p-8 relative overflow-hidden">
+    <div
+      className={cn(
+        'glass-panel neon-border rounded-3xl relative overflow-hidden flex h-full min-h-0 flex-col',
+        className
+      )}
+    >
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--hero-accent)]/5 via-transparent to-[var(--hero-accent)]/10 pointer-events-none" />
 
-      <div className="relative space-y-8">
+      <div className="relative flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-5 py-5 sm:px-6 sm:py-6 md:gap-8 md:px-8 md:py-8">
         {/* Header with tier badge */}
         <div className="flex items-start justify-between">
           <div className="space-y-2">
             <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
               {donationContent.eyebrow}
             </p>
-            <h2 className="text-2xl font-heading text-glow">{donationContent.title}</h2>
+            <h2 className="text-xl font-heading text-glow sm:text-2xl">
+              {donationContent.title}
+            </h2>
           </div>
           <div className="flex flex-col items-center gap-2">
             <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)] shadow-lg">
@@ -113,7 +122,7 @@ export function DonationForm({
           <div className="flex items-center justify-between text-sm uppercase tracking-[0.2em]">
             <span className="text-[var(--hero-muted)]">{donationContent.amountLabel}</span>
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-heading text-glow font-bold">
+              <span className="text-xl font-heading text-glow font-bold sm:text-2xl">
                 {amount.toLocaleString(locale)}
               </span>
               <span className="text-[var(--hero-muted)] text-sm">{currencyLabel}</span>
@@ -133,14 +142,16 @@ export function DonationForm({
                 variant="outline"
                 onClick={() => onAmountSelect(preset)}
                 className={cn(
-                  'h-12 rounded-xl border transition-all duration-300 hover:scale-105 hover:shadow-lg',
+                  'h-10 rounded-xl border transition-all duration-300 hover:scale-105 hover:shadow-lg sm:h-12',
                   amount === preset && !customAmount
                     ? 'border-[var(--hero-accent)] bg-[var(--hero-accent)] text-[var(--hero-accent-contrast)] shadow-[0_0_20px_var(--hero-accent)]'
                     : 'border-[var(--hero-border)] bg-[var(--hero-surface)]/50 text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)] backdrop-blur-sm'
                 )}
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <span className="text-sm font-medium">{preset.toLocaleString(locale)}</span>
+                <span className="text-xs font-medium sm:text-sm">
+                  {preset.toLocaleString(locale)}
+                </span>
               </Button>
             ))}
           </div>
@@ -166,7 +177,7 @@ export function DonationForm({
               onBlur={() => setFocusedField(null)}
               min={MIN_DONATION_AMOUNT}
               className={cn(
-                'pl-12 h-12 border transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm',
+                'pl-12 h-11 border transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm sm:h-12',
                 focusedField === 'custom-amount'
                   ? 'border-[var(--hero-accent)] shadow-[0_0_20px_var(--hero-accent)]'
                   : 'border-[var(--hero-border)]'
@@ -176,8 +187,8 @@ export function DonationForm({
         </div>
 
         {/* Personal info section */}
-        <div className="space-y-6">
-          <div className="space-y-3">
+        <div className="space-y-4 md:space-y-6">
+          <div className="space-y-2">
             <Label
               htmlFor="sender-name"
               className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]"
@@ -192,7 +203,7 @@ export function DonationForm({
               onFocus={() => setFocusedField('sender-name')}
               onBlur={() => setFocusedField(null)}
               className={cn(
-                'h-12 transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm',
+                'h-11 transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm sm:h-12',
                 focusedField === 'sender-name'
                   ? 'border-[var(--hero-accent)] shadow-[0_0_20px_var(--hero-accent)]'
                   : 'border-[var(--hero-border)]'
@@ -200,7 +211,7 @@ export function DonationForm({
             />
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Label
               htmlFor="message"
               className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]"
@@ -215,7 +226,7 @@ export function DonationForm({
               onFocus={() => setFocusedField('message')}
               onBlur={() => setFocusedField(null)}
               className={cn(
-                'min-h-[100px] transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm resize-none',
+                'min-h-[72px] transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm resize-none sm:min-h-[100px]',
                 focusedField === 'message'
                   ? 'border-[var(--hero-accent)] shadow-[0_0_20px_var(--hero-accent)]'
                   : 'border-[var(--hero-border)]'
@@ -246,7 +257,7 @@ export function DonationForm({
           onClick={onDonate}
           disabled={isLoading}
           className={cn(
-            'neon-border h-14 w-full text-lg font-heading transition-all duration-300 rounded-xl relative overflow-hidden group',
+            'neon-border h-12 w-full text-base font-heading transition-all duration-300 rounded-xl relative overflow-hidden group sm:h-14 sm:text-lg',
             isLoading
               ? 'bg-[var(--hero-surface)] text-[var(--hero-muted)] cursor-not-allowed'
               : 'bg-[var(--hero-accent)] text-[var(--hero-accent-contrast)] hover:bg-[var(--hero-accent-strong)] hover:scale-[1.02] hover:shadow-[0_0_30px_var(--hero-accent)]'
