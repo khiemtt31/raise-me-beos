@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { BackgroundProvider } from "@/components/background-provider";
 import { PortfolioBackground } from "@/app/_components/portfolio-background";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -29,16 +28,15 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     <ThemeProvider
       attribute="class"
       defaultTheme="dark"
+      forcedTheme="dark"
       enableSystem={false}
       disableTransitionOnChange
     >
-      <BackgroundProvider>
-        <PortfolioBackground />
-        <QueryClientProvider client={queryClient}>
-          {children}
-          <Toaster />
-        </QueryClientProvider>
-      </BackgroundProvider>
+      <PortfolioBackground />
+      <QueryClientProvider client={queryClient}>
+        {children}
+        <Toaster />
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

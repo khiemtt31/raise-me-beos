@@ -1,7 +1,6 @@
-import { ArrowDown } from 'lucide-react'
 import Image from 'next/image'
+import { FaInstagram, FaFacebook, FaLinkedin, FaGithub } from 'react-icons/fa'
 
-import { Button } from '@/components/ui/button'
 import { useTranslations } from 'next-intl'
 import { getHeroContent } from '@/skeleton-data/portfolio'
 
@@ -27,15 +26,43 @@ export function HeroSection() {
           {heroContent.subtitle}
         </p>
 
-        <div className="flex flex-wrap items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-[var(--hero-muted)] sm:text-xs">
-          {heroContent.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-[var(--hero-border)] px-3 py-1"
-            >
-              {tag}
-            </span>
-          ))}
+        <div className="flex items-center gap-5">
+          <a
+            href="https://www.instagram.com/hanzo_hekim/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="transition-all duration-300 ease-out hover:scale-[1.2] hover:drop-shadow-[0_0_10px_#E1306C]"
+          >
+            <FaInstagram size={28} style={{ color: '#E1306C' }} />
+          </a>
+          <a
+            href="https://www.facebook.com/khiem.tran.16718979"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            className="transition-all duration-300 ease-out hover:scale-[1.2] hover:drop-shadow-[0_0_10px_#1877F2]"
+          >
+            <FaFacebook size={28} style={{ color: '#1877F2' }} />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/khiem-hanzo-tran/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            className="transition-all duration-300 ease-out hover:scale-[1.2] hover:drop-shadow-[0_0_10px_#0A66C2]"
+          >
+            <FaLinkedin size={28} style={{ color: '#0A66C2' }} />
+          </a>
+          <a
+            href="https://github.com/khiemtt31"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            className="transition-all duration-300 ease-out hover:scale-[1.2] hover:drop-shadow-[0_0_10px_#c9d1d9]"
+          >
+            <FaGithub size={28} style={{ color: '#c9d1d9' }} />
+          </a>
         </div>
       </div>
       <div
