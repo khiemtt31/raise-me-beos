@@ -161,7 +161,6 @@ export function DonationForm({
             {donationContent.customAmountLabel}
           </Label>
           <div className="relative">
-            <DollarSign className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--hero-muted)]" />
             <Input
               id="custom-amount"
               type="number"
@@ -172,7 +171,7 @@ export function DonationForm({
               onBlur={() => setFocusedField(null)}
               min={MIN_DONATION_AMOUNT}
               className={cn(
-                'pl-12 h-11 border transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm sm:h-12',
+                'no-spinner h-11 border transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm sm:h-12',
                 focusedField === 'custom-amount'
                   ? 'border-[var(--hero-accent)] shadow-[0_0_20px_var(--hero-accent)]'
                   : 'border-[var(--hero-border)]'

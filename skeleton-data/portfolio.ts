@@ -121,10 +121,7 @@ export const getDonationContent = (
   eyebrow: t('DONATE.EYEBROW.001'),
   title: t('DONATE.TITLE.001'),
   amountLabel: t('DONATE.LABEL.AMOUNT.001'),
-  customAmountLabel: t('DONATE.LABEL.CUSTOM_AMOUNT.001', {
-    min: options.minAmountLabel,
-    currency: options.currencyLabel,
-  }),
+  customAmountLabel: t('DONATE.LABEL.CUSTOM_AMOUNT.002'),
   customAmountPlaceholder: t('DONATE.PLACEHOLDER.CUSTOM_AMOUNT.001'),
   nameLabel: t('DONATE.LABEL.NAME.001'),
   namePlaceholder: t('DONATE.PLACEHOLDER.NAME.001'),

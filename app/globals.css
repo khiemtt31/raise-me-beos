@@ -142,7 +142,7 @@
   --hero-foreground: #FFD3D5;
   --hero-accent: #E49BA6;
   --hero-accent-strong: #FFD3D5;
-  --hero-accent-contrast: #2A0A2F;
+  --hero-accent-contrast: rgb(165, 255, 216);
   --hero-accent-glow: rgba(228, 155, 166, 0.7);
   --hero-accent-strong-glow: rgba(255, 211, 213, 0.7);
   --hero-muted: rgba(255, 211, 213, 0.65);
@@ -500,4 +500,6 @@
   }
 }
 
-
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}

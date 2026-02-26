@@ -296,7 +296,8 @@
         "001": "Amount"
       },
       "CUSTOM_AMOUNT": {
-        "001": "Custom amount (min {min} {currency})"
+        "001": "Custom amount (min {min} {currency})",
+        "002": "Custom amount (VND)"
       },
       "NAME": {
         "001": "Your name"
