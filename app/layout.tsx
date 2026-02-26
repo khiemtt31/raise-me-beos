@@ -42,6 +42,14 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
+      <head>
+        {/* Polyfill esbuild's __name helper which @opennextjs/cloudflare may omit from some chunks */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `var __name=(t,v)=>(Object.defineProperty(t,"name",{value:v,configurable:true}),t);`,
+          }}
+        />
+      </head>
       <body
         className={`${orbitron.variable} ${rajdhani.variable} ${geistMono.variable} antialiased`}
       >
