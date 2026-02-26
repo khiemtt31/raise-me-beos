@@ -266,6 +266,10 @@
     "TOAST": {
       "001": "Payment link copied to clipboard!",
       "002": "Failed to copy link"
+    },
+    "PROCESSING": {
+      "001": "Processing your payment...",
+      "002": "Please wait while we confirm your transaction."
     }
   },
   "DONATE": {

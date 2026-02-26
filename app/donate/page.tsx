@@ -29,6 +29,7 @@ import {
   useDonationHistory,
   useLatestPayment,
   usePaymentStatus,
+  cancelPayment,
 } from "@/app/services/queries";
 import type { DonationHistoryItemDTO } from "@/types/api";
 
@@ -60,6 +61,7 @@ export default function DonatePage() {
   const [senderName, setSenderName] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [showQR, setShowQR] = useState<boolean>(false);
+  const [isPaymentProcessing, setIsPaymentProcessing] = useState<boolean>(false);
   const [selectedHistory, setSelectedHistory] =
     useState<DonationHistoryItemDTO | null>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
@@ -135,7 +137,8 @@ export default function DonatePage() {
     const status = paymentStatusQuery.data?.status;
     if (!status) return;
 
-    if (status === "PAID") {
+    if (status === "SUCCESS") {
+      setIsPaymentProcessing(true);
       confetti({
         particleCount: 150,
         spread: 100,
@@ -147,6 +150,7 @@ export default function DonatePage() {
       });
 
       setShowQR(false);
+      setIsPaymentProcessing(false);
       createPaymentMutation.reset();
       queryClient.removeQueries({ queryKey: queryKeys.payment });
       if (orderCode) {
@@ -161,8 +165,9 @@ export default function DonatePage() {
       return;
     }
 
-    if (status === "CANCELLED" || status === "FAILED") {
+    if (status === "FAIL") {
       setShowQR(false);
+      setIsPaymentProcessing(false);
       createPaymentMutation.reset();
       queryClient.removeQueries({ queryKey: queryKeys.payment });
       if (orderCode) {
@@ -263,10 +268,9 @@ export default function DonatePage() {
 
   const statusLabels = useMemo(
     () => ({
-      PAID: t("DONATE.HISTORY.STATUS.PAID"),
+      SUCCESS: t("DONATE.HISTORY.STATUS.PAID"),
       PENDING: t("DONATE.HISTORY.STATUS.PENDING"),
-      CANCELLED: t("DONATE.HISTORY.STATUS.CANCELLED"),
-      FAILED: t("DONATE.HISTORY.STATUS.FAILED"),
+      FAIL: t("DONATE.HISTORY.STATUS.CANCELLED"),
     }),
     [t],
   );
@@ -421,7 +425,7 @@ export default function DonatePage() {
                                     <span
                                       className={cn(
                                         "rounded-full px-2 py-0.5 text-xs uppercase tracking-[0.2em]",
-                                        entry.status === "PAID"
+                                      entry.status === "SUCCESS"
                                           ? "bg-emerald-500/15 text-emerald-300"
                                           : entry.status === "PENDING"
                                             ? "bg-yellow-500/15 text-yellow-300"
@@ -493,6 +497,24 @@ export default function DonatePage() {
         onOpenChange={setShowQR}
         qrCode={payment?.qrCode ?? ""}
         checkoutUrl={payment?.checkoutUrl ?? ""}
+        isProcessing={isPaymentProcessing}
+        onCancel={async () => {
+          if (!orderCode) {
+            setShowQR(false);
+            return;
+          }
+          try {
+            await cancelPayment(orderCode, 'User cancelled');
+          } catch {
+            // best-effort cancel
+          }
+          setShowQR(false);
+          setIsPaymentProcessing(false);
+          createPaymentMutation.reset();
+          queryClient.removeQueries({ queryKey: queryKeys.payment });
+          queryClient.removeQueries({ queryKey: queryKeys.paymentStatus(orderCode) });
+          router.push("/donation/cancel");
+        }}
       />
 
       <Dialog open={isHistoryOpen} onOpenChange={handleHistoryOpenChange}>
@@ -520,7 +542,7 @@ export default function DonatePage() {
                   <span
                     className={cn(
                       "rounded-full px-3 py-1 text-xs uppercase tracking-[0.2em]",
-                      selectedHistory.status === "PAID"
+                      selectedHistory.status === "SUCCESS"
                         ? "bg-emerald-500/15 text-emerald-300"
                         : selectedHistory.status === "PENDING"
                           ? "bg-yellow-500/15 text-yellow-300"

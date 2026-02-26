@@ -3,6 +3,7 @@ import type { Request, Response } from 'express'
 import { payos } from '../services/payos'
 import { supabase } from '../services/supabase'
 import { broadcastDonationUpdate } from './sse'
+import { DonationStatus } from '../utils/donation-status'
 
 const router = Router()
 
@@ -41,7 +42,7 @@ router.post('/', async (req: Request, res: Response) => {
       return res.json({ success: true })
     }
 
-    const status = isPaid ? 'PAID' : 'FAILED'
+    const status = isPaid ? DonationStatus.SUCCESS : DonationStatus.FAIL
 
     const { error } = await supabase
       .from('donations')
@@ -54,7 +55,7 @@ router.post('/', async (req: Request, res: Response) => {
       return res.status(500).json({ error: 'Failed to update donation' })
     }
 
-    if (status === 'PAID') {
+    if (status === DonationStatus.SUCCESS) {
       // Get the updated donation
       const { data: donation } = await supabase
         .from('donations')

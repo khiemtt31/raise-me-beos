@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.donations (
   sender_name TEXT,
   message TEXT,
   is_anonymous BOOLEAN DEFAULT false,
-  status TEXT DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'PAID', 'CANCELLED')),
+  status TEXT DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'SUCCESS', 'FAIL')),
   user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -55,7 +55,7 @@ CREATE POLICY "Users can update their own data" ON public.users
 
 -- Create policies for donations table
 CREATE POLICY "Anyone can read paid non-anonymous donations" ON public.donations
-  FOR SELECT USING (status = 'PAID' AND is_anonymous = false);
+  FOR SELECT USING (status = 'SUCCESS' AND is_anonymous = false);
 
 CREATE POLICY "Users can read their own donations" ON public.donations
   FOR SELECT USING (auth.uid() = user_id);
@@ -94,3 +94,13 @@ CREATE TRIGGER update_donations_updated_at BEFORE UPDATE ON public.donations
 
 CREATE TRIGGER update_notifications_updated_at BEFORE UPDATE ON public.notifications
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================================
+-- Migration: Rename status values to PENDING / SUCCESS / FAIL
+-- Run this block against an existing database to migrate old status values.
+-- ============================================================================
+-- ALTER TABLE public.donations DROP CONSTRAINT IF EXISTS donations_status_check;
+-- UPDATE public.donations SET status = 'SUCCESS' WHERE status = 'PAID';
+-- UPDATE public.donations SET status = 'FAIL'    WHERE status IN ('CANCELLED', 'FAILED');
+-- ALTER TABLE public.donations ADD CONSTRAINT donations_status_check
+--   CHECK (status IN ('PENDING', 'SUCCESS', 'FAIL'));

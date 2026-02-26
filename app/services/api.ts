@@ -172,6 +172,23 @@ export function subscribeToPaymentStatus(
   }
 }
 
+/**
+ * Cancel a payment and update its status to FAIL
+ * @param orderCode Order code to cancel
+ * @param reason Optional cancellation reason
+ */
+export async function cancelPayment(
+  orderCode: string,
+  reason?: string
+): Promise<void> {
+  await apiRequest<void>(`/api/payment/${orderCode}/cancel`, {
+    method: 'POST',
+    body: JSON.stringify({ cancellationReason: reason ?? 'User cancelled' }),
+    i18nKey: 'ERROR.MESSAGE.002',
+    parseJson: false,
+  })
+}
+
 // ============================================================================
 // Health Check API Functions
 // ============================================================================

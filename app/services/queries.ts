@@ -7,6 +7,7 @@ import type {
   PaymentStatusData,
 } from '@/app/services/api'
 import {
+  cancelPayment,
   createPayment,
   healthCheck,
   getDonationHistory,
@@ -19,15 +20,18 @@ const normalizePaymentStatus = (status?: string | null) => {
   if (!status) return null
   const normalized = status.toUpperCase()
 
+  if (normalized === 'PAID') return 'SUCCESS'
   if (normalized === 'PROCESSING') return 'PENDING'
-  if (normalized === 'EXPIRED') return 'CANCELLED'
-  if (normalized === 'UNDERPAID') return 'FAILED'
+  if (normalized === 'EXPIRED' || normalized === 'CANCELLED') return 'FAIL'
+  if (normalized === 'UNDERPAID' || normalized === 'FAILED') return 'FAIL'
 
   return normalized
 }
 
 const isTerminalStatus = (status?: string | null) =>
-  status === 'PAID' || status === 'CANCELLED' || status === 'FAILED'
+  status === 'SUCCESS' || status === 'FAIL'
+
+export { cancelPayment }
 
 export const queryKeys = {
   health: ['healthz'] as const,

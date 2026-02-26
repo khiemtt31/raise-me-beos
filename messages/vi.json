@@ -266,6 +266,10 @@
     "TOAST": {
       "001": "Đã sao chép liên kết thanh toán!",
       "002": "Không thể sao chép liên kết"
+    },
+    "PROCESSING": {
+      "001": "Đang xử lý thanh toán...",
+      "002": "Vui lòng chờ trong khi chúng tôi xác nhận giao dịch của bạn."
     }
   },
   "DONATE": {

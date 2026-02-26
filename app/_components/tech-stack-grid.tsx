@@ -1,13 +1,13 @@
 const techStacks = [
-  { name: 'React', label: 'UI Library' },
-  { name: 'Next.js', label: 'React Framework' },
-  { name: 'Angular', label: 'Web Framework' },
-  { name: 'Java', label: 'Backend Language' },
-  { name: 'Node.js', label: 'Runtime' },
-  { name: 'FastAPI', label: 'Python API' },
-  { name: 'PostgreSQL', label: 'Relational DB' },
-  { name: 'MySQL', label: 'Relational DB' },
-  { name: 'MongoDB', label: 'NoSQL DB' },
+  { name: 'React', label: 'UI Library', url: 'https://react.dev' },
+  { name: 'Next.js', label: 'React Framework', url: 'https://nextjs.org' },
+  { name: 'Angular', label: 'Web Framework', url: 'https://angular.dev' },
+  { name: 'Java', label: 'Backend Language', url: 'https://www.java.com' },
+  { name: 'Node.js', label: 'Runtime', url: 'https://nodejs.org' },
+  { name: 'FastAPI', label: 'Python API', url: 'https://fastapi.tiangolo.com' },
+  { name: 'PostgreSQL', label: 'Relational DB', url: 'https://www.postgresql.org' },
+  { name: 'MySQL', label: 'Relational DB', url: 'https://www.mysql.com' },
+  { name: 'MongoDB', label: 'NoSQL DB', url: 'https://www.mongodb.com' },
 ]
 
 export function TechStackGrid() {
@@ -31,8 +31,11 @@ export function TechStackGrid() {
         className="reveal mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
         {techStacks.map((tech, index) => (
-          <div
+          <a
             key={tech.name}
+            href={tech.url}
+            target="_blank"
+            rel="noopener noreferrer"
             className="tech-card p-[1px]"
           >
             <div className="tech-card__inner">
@@ -48,7 +51,7 @@ export function TechStackGrid() {
                 {String(index + 1).padStart(2, '0')}
               </span>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </section>

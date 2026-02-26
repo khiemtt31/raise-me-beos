@@ -3,6 +3,7 @@ import { payos } from '../services/payos'
 import { supabase } from '../services/supabase'
 import { MAX_DONATION_AMOUNT, MIN_DONATION_AMOUNT } from '../utils/donation-config'
 import { broadcastDonationUpdate } from './sse'
+import { DonationStatus } from '../utils/donation-status'
 
 const router = Router()
 
@@ -99,7 +100,7 @@ router.post('/create', async (req, res) => {
           sender_name: senderName,
           message: resolvedMessage,
           is_anonymous: isAnonymous,
-          status: 'PENDING',
+          status: DonationStatus.PENDING,
           // user_id: null, // No user system
         })
 
@@ -187,15 +188,15 @@ router.get('/:orderCode', async (req, res) => {
     if (paymentLinkInfo.status === 'PAID') {
       const { data: updated, error: updateError } = await supabase
         .from('donations')
-        .update({ status: 'PAID' })
+        .update({ status: DonationStatus.SUCCESS })
         .eq('order_code', orderCode)
-        .neq('status', 'PAID')
+        .neq('status', DonationStatus.SUCCESS)
         .select('order_code')
 
       if (updateError) {
         console.error('Failed to sync paid donation status:', updateError)
       } else if (updated && updated.length > 0) {
-        broadcastDonationUpdate(orderCode, 'PAID')
+        broadcastDonationUpdate(orderCode, DonationStatus.SUCCESS)
       }
     }
 
@@ -224,7 +225,7 @@ router.post('/:orderCode/cancel', async (req, res) => {
 
     const { error } = await supabase
       .from('donations')
-      .update({ status: 'CANCELLED' })
+      .update({ status: DonationStatus.FAIL })
       .eq('order_code', orderCode)
 
     if (error) {
@@ -232,7 +233,7 @@ router.post('/:orderCode/cancel', async (req, res) => {
       return res.status(500).json({ error: 'Failed to cancel donation' })
     }
 
-    broadcastDonationUpdate(orderCode, 'CANCELLED')
+    broadcastDonationUpdate(orderCode, DonationStatus.FAIL)
 
     return res.json({
       data: cancelledPaymentLink,

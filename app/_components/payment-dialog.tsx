@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import QRCode from 'react-qr-code'
-import { Copy, ExternalLink, Smartphone, CheckCircle, Clock } from 'lucide-react'
+import { Copy, ExternalLink, Smartphone, CheckCircle, Clock, Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -13,6 +13,8 @@ type PaymentDialogProps = {
   onOpenChange: (open: boolean) => void
   qrCode: string
   checkoutUrl: string
+  isProcessing?: boolean
+  onCancel?: () => void
 }
 
 export function PaymentDialog({
@@ -20,6 +22,8 @@ export function PaymentDialog({
   onOpenChange,
   qrCode,
   checkoutUrl,
+  isProcessing = false,
+  onCancel,
 }: PaymentDialogProps) {
   const t = useTranslations()
   const siteContent = getSiteContent(t)
@@ -69,7 +73,23 @@ export function PaymentDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-[var(--hero-border)] bg-[var(--hero-surface-strong)] text-[var(--hero-foreground)] max-w-md">
+      <DialogContent
+        showCloseButton={false}
+        onInteractOutside={(e) => e.preventDefault()}
+        className="border-[var(--hero-border)] bg-[var(--hero-surface-strong)] text-[var(--hero-foreground)] max-w-md"
+      >
+        {/* Processing overlay */}
+        {isProcessing && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-lg bg-[var(--hero-surface-strong)]/95 backdrop-blur-sm">
+            <Loader2 className="h-12 w-12 animate-spin text-[var(--hero-accent)]" />
+            <p className="text-base font-medium text-[var(--hero-foreground)]">
+              {t('PAYMENT.PROCESSING.001')}
+            </p>
+            <p className="text-sm text-[var(--hero-muted)] text-center px-4">
+              {t('PAYMENT.PROCESSING.002')}
+            </p>
+          </div>
+        )}
         <DialogHeader className="text-center">
           <DialogTitle className="text-glow text-xl flex items-center justify-center gap-2">
             <Smartphone className="h-5 w-5" />
@@ -165,7 +185,13 @@ export function PaymentDialog({
 
               <Button
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={() => {
+                  if (onCancel) {
+                    onCancel()
+                  } else {
+                    onOpenChange(false)
+                  }
+                }}
                 className="flex-1 border-[var(--hero-border)] bg-transparent text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)]"
               >
                 {siteContent.paymentClose}
