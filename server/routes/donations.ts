@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import type { DonationHistoryQueryDTO, DonationHistoryResponseDTO } from '../../types/api'
 import { supabase } from '../services/supabase'
+import { DonationStatus } from '../utils/donation-status'
 
 const router = Router()
 
@@ -32,7 +33,7 @@ router.get('/public', async (req, res) => {
     const { data: donations, error } = await supabase
       .from('donations')
       .select('id, amount, message, senderName:sender_name, createdAt:created_at')
-      .eq('status', 'PAID')
+      .eq('status', DonationStatus.SUCCESS)
       .eq('is_anonymous', false)
       .order('created_at', { ascending: false })
       .limit(50)
@@ -64,7 +65,7 @@ router.get('/history', async (req, res) => {
         'id, amount, message, senderName:sender_name, createdAt:created_at, status, isAnonymous:is_anonymous',
         { count: 'exact' }
       )
-      .eq('status', 'PAID')
+      .eq('status', DonationStatus.SUCCESS)
       .order('created_at', { ascending: false })
       .range(from, to)
 

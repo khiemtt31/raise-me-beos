@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -150,7 +151,6 @@ export default function DonatePage() {
       });
 
       setShowQR(false);
-      setIsPaymentProcessing(false);
       createPaymentMutation.reset();
       queryClient.removeQueries({ queryKey: queryKeys.payment });
       if (orderCode) {
@@ -319,50 +319,63 @@ export default function DonatePage() {
 
               {/* Donation history */}
               <div data-reveal className="reveal h-full min-h-0 xl:col-span-7">
-                <div className="glass-panel neon-border rounded-3xl p-6 md:p-8 relative overflow-hidden h-full min-h-0 flex flex-col">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-[var(--hero-accent)]/10 pointer-events-none" />
+                <div className="glass-panel rounded-3xl p-6 md:p-8 relative overflow-hidden h-full min-h-0 flex flex-col shadow-2xl border-2 border-[var(--hero-border)]/30 hover:border-[var(--hero-accent)]/40 transition-all duration-500">
+                  <Image
+                    src="/donation-history-bg.png"
+                    alt=""
+                    fill
+                    className="object-cover opacity-[0.12] pointer-events-none select-none"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/8 via-purple-500/5 to-[var(--hero-accent)]/12 pointer-events-none" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,var(--hero-accent),transparent_60%)] opacity-10 pointer-events-none" />
                   <div className="relative flex h-full min-h-0 flex-col gap-6 lg:gap-8">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="space-y-2">
-                        <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
+                    <div className="flex flex-wrap items-start justify-between gap-4 lg:gap-6">
+                      <div className="space-y-2.5 flex-1 min-w-0">
+                        <p className="text-[10px] uppercase tracking-[0.4em] text-[var(--hero-muted)] font-semibold">
                           {t("DONATE.HISTORY.TITLE.001")}
                         </p>
-                        <h2 className="text-2xl font-heading text-glow sm:text-3xl">
+                        <h2 className="text-2xl font-heading text-glow sm:text-3xl lg:text-4xl leading-tight">
                           {t("DONATE.HISTORY.SUBTITLE.001")}
                         </h2>
-                        <p className="text-sm text-[var(--hero-muted)] max-w-2xl">
+                        <p className="text-sm text-[var(--hero-muted)] max-w-2xl leading-relaxed">
                           {t("DONATE.HISTORY.TEXT.001")}
                         </p>
                       </div>
-                      <div className="flex items-center gap-3 text-[11px] sm:text-sm">
-                        <div className="rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)]/60 px-3 py-1.5 sm:px-4 sm:py-2">
-                          <span className="text-[var(--hero-muted)]">
-                            {t("DONATE.HISTORY.STATS.TOTAL_ENTRIES")}
-                          </span>
-                          {isHistoryLoading ? (
-                            <span className="ml-2 inline-block h-4 w-10 rounded-full bg-[var(--hero-border)]/40 align-middle animate-pulse" />
-                          ) : (
-                            <span className="ml-2 text-[var(--hero-foreground)] font-semibold">
-                              {totalEntries}
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs">
+                        <div className="relative group">
+                          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[var(--hero-accent)] to-blue-500 blur-md opacity-0 group-hover:opacity-50 transition-opacity" />
+                          <div className="relative rounded-full border-2 border-[var(--hero-border)] bg-gradient-to-br from-[var(--hero-surface)]/80 to-[var(--hero-surface)]/40 px-4 py-2 backdrop-blur-sm shadow-lg transition-all duration-300 group-hover:scale-105 sm:px-5 sm:py-2.5">
+                            <span className="text-[var(--hero-muted)] font-medium">
+                              {t("DONATE.HISTORY.STATS.TOTAL_ENTRIES")}
                             </span>
-                          )}
+                            {isHistoryLoading ? (
+                              <span className="ml-2 inline-block h-4 w-10 rounded-full bg-[var(--hero-border)]/40 align-middle animate-pulse" />
+                            ) : (
+                              <span className="ml-2 text-[var(--hero-foreground)] font-bold text-sm">
+                                {totalEntries}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div className="rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)]/60 px-3 py-1.5 sm:px-4 sm:py-2">
-                          <span className="text-[var(--hero-muted)]">
-                            {t("DONATE.HISTORY.STATS.PAGE_TOTAL")}
-                          </span>
-                          {isHistoryLoading ? (
-                            <span className="ml-2 inline-block h-4 w-16 rounded-full bg-[var(--hero-border)]/40 align-middle animate-pulse" />
-                          ) : (
-                            <span className="ml-2 text-[var(--hero-foreground)] font-semibold">
-                              {formatAmount(historyTotalAmount)}
+                        <div className="relative group">
+                          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-[var(--hero-accent)] blur-md opacity-0 group-hover:opacity-50 transition-opacity" />
+                          <div className="relative rounded-full border-2 border-[var(--hero-border)] bg-gradient-to-br from-[var(--hero-surface)]/80 to-[var(--hero-surface)]/40 px-4 py-2 backdrop-blur-sm shadow-lg transition-all duration-300 group-hover:scale-105 sm:px-5 sm:py-2.5">
+                            <span className="text-[var(--hero-muted)] font-medium">
+                              {t("DONATE.HISTORY.STATS.PAGE_TOTAL")}
                             </span>
-                          )}
+                            {isHistoryLoading ? (
+                              <span className="ml-2 inline-block h-4 w-16 rounded-full bg-[var(--hero-border)]/40 align-middle animate-pulse" />
+                            ) : (
+                              <span className="ml-2 text-[var(--hero-foreground)] font-bold text-sm">
+                                {formatAmount(historyTotalAmount)}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex-1 min-h-0 space-y-3 overflow-y-auto pr-2">
+                    <div className="flex-1 min-h-0 space-y-3 overflow-y-auto px-1 -mx-1">
                       {isHistoryLoading && (
                         <div className="space-y-3">
                           {Array.from({ length: 3 }).map((_, index) => (
@@ -414,37 +427,37 @@ export default function DonatePage() {
                                 setSelectedHistory(entry);
                                 setIsHistoryOpen(true);
                               }}
-                              className="w-full text-left rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 transition-all duration-300 hover:scale-[1.01] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)]/70"
+                              className="w-full text-left rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 transition-all duration-200 hover:border-[var(--hero-accent)]/60 hover:bg-[var(--hero-surface)]/60 backdrop-blur-sm cursor-pointer"
                             >
                               <div className="flex flex-wrap items-center justify-between gap-3">
-                                <div className="space-y-1">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-sm font-semibold text-[var(--hero-foreground)]">
+                                <div className="space-y-1.5 flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="text-base font-bold text-[var(--hero-foreground)] truncate">
                                       {displayName}
                                     </span>
                                     <span
                                       className={cn(
-                                        "rounded-full px-2 py-0.5 text-xs uppercase tracking-[0.2em]",
+                                        "rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] font-bold shadow-sm",
                                       entry.status === "SUCCESS"
-                                          ? "bg-emerald-500/15 text-emerald-300"
+                                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                                           : entry.status === "PENDING"
-                                            ? "bg-yellow-500/15 text-yellow-300"
-                                            : "bg-red-500/15 text-red-300",
+                                            ? "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30"
+                                            : "bg-red-500/20 text-red-300 border border-red-500/30",
                                       )}
                                     >
                                       {getStatusLabel(entry.status)}
                                     </span>
                                   </div>
-                                  <p className="text-xs text-[var(--hero-muted)] line-clamp-1">
+                                  <p className="text-xs text-[var(--hero-muted)] line-clamp-1 leading-relaxed">
                                     {entry.message ||
                                       t("DONATE.HISTORY.MESSAGE.NONE")}
                                   </p>
                                 </div>
-                                <div className="text-right space-y-1">
-                                  <div className="text-lg font-heading text-glow">
+                                <div className="text-right space-y-1 shrink-0">
+                                  <div className="text-xl font-heading text-glow font-bold">
                                     {formatAmount(entry.amount)}
                                   </div>
-                                  <div className="text-xs text-[var(--hero-muted)]">
+                                  <div className="text-[10px] text-[var(--hero-muted)] font-medium">
                                     {formatDate(entry.createdAt)}
                                   </div>
                                 </div>
@@ -454,8 +467,8 @@ export default function DonatePage() {
                         })}
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-[var(--hero-border)] pt-4 text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
-                      <span>
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-[var(--hero-border)] pt-5 text-xs">
+                      <span className="uppercase tracking-[0.3em] text-[var(--hero-muted)] font-semibold">
                         {t("DONATE.HISTORY.PAGINATION.LABEL", {
                           page: historyPage,
                           total: totalPages,
@@ -469,7 +482,7 @@ export default function DonatePage() {
                           onClick={() =>
                             setHistoryPage((prev) => Math.max(1, prev - 1))
                           }
-                          className="text-[10px]"
+                          className="text-[10px] h-9 px-4 rounded-xl border-2 transition-all hover:scale-105 hover:shadow-lg disabled:opacity-40"
                         >
                           {t("DONATE.HISTORY.PAGINATION.PREV")}
                         </Button>
@@ -478,7 +491,7 @@ export default function DonatePage() {
                           size="sm"
                           disabled={!hasNextPage || isHistoryLoading}
                           onClick={() => setHistoryPage((prev) => prev + 1)}
-                          className="text-[10px]"
+                          className="text-[10px] h-9 px-4 rounded-xl border-2 transition-all hover:scale-105 hover:shadow-lg disabled:opacity-40"
                         >
                           {t("DONATE.HISTORY.PAGINATION.NEXT")}
                         </Button>
@@ -491,6 +504,15 @@ export default function DonatePage() {
           </section>
         </main>
       </div>
+
+      {isPaymentProcessing && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-4 bg-black/75 backdrop-blur-sm">
+          <div className="h-12 w-12 rounded-full border-4 border-white/20 border-t-white animate-spin" />
+          <p className="text-sm font-medium text-white/80 tracking-wide">
+            {t("PAYMENT.PROCESSING.001")}
+          </p>
+        </div>
+      )}
 
       <PaymentDialog
         open={isDialogOpen}

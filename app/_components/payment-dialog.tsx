@@ -3,7 +3,7 @@ import QRCode from 'react-qr-code'
 import { Copy, ExternalLink, Smartphone, CheckCircle, Clock, Loader2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useTranslations } from 'next-intl'
 import { getSiteContent } from '@/skeleton-data/portfolio'
 import { toast } from 'sonner'
@@ -76,75 +76,87 @@ export function PaymentDialog({
       <DialogContent
         showCloseButton={false}
         onInteractOutside={(e) => e.preventDefault()}
-        className="border-[var(--hero-border)] bg-[var(--hero-surface-strong)] text-[var(--hero-foreground)] max-w-md"
+        className="border-2 border-[var(--hero-border)]/50 bg-[var(--hero-surface-strong)] text-[var(--hero-foreground)] max-w-md shadow-2xl backdrop-blur-xl"
       >
         {/* Processing overlay */}
         {isProcessing && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 rounded-lg bg-[var(--hero-surface-strong)]/95 backdrop-blur-sm">
-            <Loader2 className="h-12 w-12 animate-spin text-[var(--hero-accent)]" />
-            <p className="text-base font-medium text-[var(--hero-foreground)]">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-5 rounded-lg bg-gradient-to-br from-[var(--hero-surface-strong)]/98 to-[var(--hero-surface-strong)]/95 backdrop-blur-md">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full bg-[var(--hero-accent)] blur-xl opacity-50 animate-pulse" />
+              <Loader2 className="relative h-14 w-14 animate-spin text-[var(--hero-accent)]" />
+            </div>
+            <p className="text-lg font-bold text-[var(--hero-foreground)] tracking-wide">
               {t('PAYMENT.PROCESSING.001')}
             </p>
-            <p className="text-sm text-[var(--hero-muted)] text-center px-4">
+            <p className="text-sm text-[var(--hero-muted)] text-center px-6 leading-relaxed">
               {t('PAYMENT.PROCESSING.002')}
             </p>
           </div>
         )}
-        <DialogHeader className="text-center">
-          <DialogTitle className="text-glow text-xl flex items-center justify-center gap-2">
-            <Smartphone className="h-5 w-5" />
+        <DialogHeader className="text-center space-y-3 pb-2">
+          <DialogTitle className="text-glow text-2xl font-bold flex items-center justify-center gap-3">
+            <Smartphone className="h-6 w-6 text-[var(--hero-accent)]" />
             {siteContent.paymentTitle}
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            {t('PAYMENT.TEXT.001')}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
           {/* QR Code Section */}
-          <div className="flex flex-col items-center space-y-4">
-            <div className="relative">
-              <div className="rounded-2xl border-2 border-[var(--hero-border)] bg-[var(--hero-bg)] p-6 shadow-2xl">
+          <div className="flex flex-col items-center space-y-5">
+            <div className="relative group">
+              {/* Glow effect */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[var(--hero-accent)] to-purple-500 blur-2xl opacity-30 group-hover:opacity-50 transition-opacity" />
+
+              <div className="relative rounded-3xl border-2 border-[var(--hero-border)] bg-gradient-to-br from-[var(--hero-bg)] to-[var(--hero-surface)] p-8 shadow-2xl backdrop-blur-sm">
                 <QRCode
                   value={qrCode}
-                  size={180}
+                  size={200}
                   bgColor="transparent"
                   fgColor="currentColor"
-                  className="rounded-lg"
+                  className="rounded-xl"
                 />
               </div>
               {/* Animated border */}
-              <div className="absolute inset-0 rounded-2xl border border-[var(--hero-accent)] animate-pulse opacity-50" />
+              <div className="absolute inset-0 rounded-3xl border-2 border-[var(--hero-accent)] animate-pulse opacity-40" />
             </div>
 
-            {/* Timer */}
-            <div className="flex items-center gap-2 text-sm text-[var(--hero-muted)]">
-              <Clock className="h-4 w-4" />
-              <span>
-                {t('PAYMENT.LABEL.001')}{' '}
-                <span className="font-mono text-[var(--hero-accent)]">
-                  {formatTime(timeLeft)}
+            {/* Timer with enhanced styling */}
+            <div className="relative group">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[var(--hero-accent)] to-purple-500 blur-md opacity-0 group-hover:opacity-50 transition-opacity" />
+              <div className="relative flex items-center gap-3 rounded-full border-2 border-[var(--hero-border)] bg-[var(--hero-surface)]/80 px-5 py-2.5 backdrop-blur-sm shadow-lg">
+                <Clock className="h-5 w-5 text-[var(--hero-accent)] animate-pulse" />
+                <span className="text-sm text-[var(--hero-muted)] font-medium">
+                  {t('PAYMENT.LABEL.001')}{' '}
+                  <span className="font-mono text-[var(--hero-accent)] font-bold text-base">
+                    {formatTime(timeLeft)}
+                  </span>
                 </span>
-              </span>
+              </div>
             </div>
           </div>
 
           {/* Instructions */}
-          <div className="space-y-3 text-center">
-            <div className="text-sm text-[var(--hero-muted)] leading-relaxed">
+          <div className="space-y-4 text-center">
+            <div className="text-sm text-[var(--hero-muted)] leading-relaxed font-medium px-2">
               {siteContent.paymentDescription}
             </div>
 
-            {/* Step by step */}
-            <div className="space-y-2 text-xs text-[var(--hero-muted)]">
-              <div className="flex items-center gap-2 justify-center">
-                <CheckCircle className="h-3 w-3 text-green-400" />
-                <span>{t('PAYMENT.STEP.001')}</span>
+            {/* Step by step with enhanced styling */}
+            <div className="rounded-2xl border border-[var(--hero-border)]/50 bg-[var(--hero-surface)]/30 backdrop-blur-sm p-4 space-y-2.5">
+              <div className="flex items-center gap-3 justify-center group hover:scale-105 transition-transform">
+                <CheckCircle className="h-4 w-4 text-green-400 group-hover:animate-pulse" />
+                <span className="text-sm text-[var(--hero-foreground)]">{t('PAYMENT.STEP.001')}</span>
               </div>
-              <div className="flex items-center gap-2 justify-center">
-                <CheckCircle className="h-3 w-3 text-green-400" />
-                <span>{t('PAYMENT.STEP.002')}</span>
+              <div className="flex items-center gap-3 justify-center group hover:scale-105 transition-transform">
+                <CheckCircle className="h-4 w-4 text-green-400 group-hover:animate-pulse" />
+                <span className="text-sm text-[var(--hero-foreground)]">{t('PAYMENT.STEP.002')}</span>
               </div>
-              <div className="flex items-center gap-2 justify-center">
-                <CheckCircle className="h-3 w-3 text-green-400" />
-                <span>{t('PAYMENT.STEP.003')}</span>
+              <div className="flex items-center gap-3 justify-center group hover:scale-105 transition-transform">
+                <CheckCircle className="h-4 w-4 text-green-400 group-hover:animate-pulse" />
+                <span className="text-sm text-[var(--hero-foreground)]">{t('PAYMENT.STEP.003')}</span>
               </div>
             </div>
           </div>
@@ -157,10 +169,13 @@ export function PaymentDialog({
                 checkoutUrl &&
                 window.open(checkoutUrl, '_blank', 'noopener,noreferrer')
               }
-              className="w-full h-12 bg-[var(--hero-accent)] text-[var(--hero-accent-contrast)] hover:bg-[var(--hero-accent-strong)] text-base font-medium"
+              className="w-full h-14 bg-gradient-to-r from-[var(--hero-accent)] via-purple-500 to-[var(--hero-accent)] bg-[length:200%_100%] text-white hover:bg-[position:100%_0] text-base font-bold shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] rounded-2xl relative overflow-hidden group"
             >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              {siteContent.paymentOpen}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              <div className="relative flex items-center justify-center gap-2">
+                <ExternalLink className="h-5 w-5" />
+                {siteContent.paymentOpen}
+              </div>
             </Button>
 
             {/* Secondary actions */}
@@ -168,17 +183,17 @@ export function PaymentDialog({
               <Button
                 variant="outline"
                 onClick={copyToClipboard}
-                className="flex-1 border-[var(--hero-border)] bg-transparent text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)]"
+                className="flex-1 h-12 border-2 border-[var(--hero-border)] bg-[var(--hero-surface)]/50 text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)] hover:scale-105 active:scale-95 transition-all rounded-xl backdrop-blur-sm shadow-md"
               >
                 {copied ? (
                   <>
                     <CheckCircle className="mr-2 h-4 w-4 text-green-400" />
-                    {t('PAYMENT.BUTTON.004')}
+                    <span className="font-semibold">{t('PAYMENT.BUTTON.004')}</span>
                   </>
                 ) : (
                   <>
                     <Copy className="mr-2 h-4 w-4" />
-                    {t('PAYMENT.BUTTON.003')}
+                    <span className="font-semibold">{t('PAYMENT.BUTTON.003')}</span>
                   </>
                 )}
               </Button>
@@ -192,17 +207,17 @@ export function PaymentDialog({
                     onOpenChange(false)
                   }
                 }}
-                className="flex-1 border-[var(--hero-border)] bg-transparent text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)]"
+                className="flex-1 h-12 border-2 border-[var(--hero-border)] bg-[var(--hero-surface)]/50 text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)] hover:scale-105 active:scale-95 transition-all rounded-xl backdrop-blur-sm shadow-md"
               >
-                {siteContent.paymentClose}
+                <span className="font-semibold">{siteContent.paymentClose}</span>
               </Button>
             </div>
           </div>
 
           {/* Security note */}
-          <div className="text-center text-xs text-[var(--hero-muted)] border-t border-[var(--hero-border)] pt-4">
-            <p>{t('PAYMENT.SECURITY.001')}</p>
-            <p>{t('PAYMENT.SECURITY.002')}</p>
+          <div className="text-center rounded-2xl border border-[var(--hero-border)]/50 bg-[var(--hero-surface)]/20 backdrop-blur-sm p-4 space-y-1">
+            <p className="text-xs text-[var(--hero-muted)] leading-relaxed">{t('PAYMENT.SECURITY.001')}</p>
+            <p className="text-xs text-[var(--hero-muted)] leading-relaxed">{t('PAYMENT.SECURITY.002')}</p>
           </div>
         </div>
       </DialogContent>

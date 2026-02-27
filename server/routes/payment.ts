@@ -53,7 +53,7 @@ router.post('/create', async (req, res) => {
         orderCode,
         amount,
         description: 'Donation',
-        returnUrl: `${baseUrl}/donation/success`,
+        returnUrl: `${baseUrl}/donation/success?orderCode=${orderCode}`,
         cancelUrl: `${baseUrl}/donation/cancel`,
         buyerName: isAnonymous ? undefined : senderName?.substring(0, 100),
         expiredAt: Math.floor(Date.now() / 1000) + 30 * 60, // 30 minutes

@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Image from 'next/image'
 import { DollarSign, Heart, Sparkles, Users, Zap } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
@@ -84,67 +85,85 @@ export function DonationForm({
   return (
     <div
       className={cn(
-        'glass-panel neon-border rounded-3xl relative overflow-hidden flex flex-col',
+        'glass-panel rounded-3xl relative overflow-hidden flex flex-col shadow-2xl border-2 border-[var(--hero-border)]/30 hover:border-[var(--hero-accent)]/50 transition-all duration-500',
         className
       )}
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[var(--hero-accent)]/5 via-transparent to-[var(--hero-accent)]/10 pointer-events-none" />
+      {/* Background image */}
+      <Image
+        src="/donation-form-bg.png"
+        alt=""
+        fill
+        className="object-cover opacity-[0.12] pointer-events-none select-none"
+        priority
+      />
+      {/* Animated background decoration */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[var(--hero-accent)]/10 via-purple-500/5 to-blue-500/10 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,var(--hero-accent),transparent_70%)] opacity-20 pointer-events-none" />
 
-      <div className="relative flex min-h-0 flex-1 flex-col gap-6 px-5 py-5 sm:px-6 sm:py-6 md:gap-8 md:px-8 md:py-8">
-        {/* Header with tier badge */}
-        <div className="flex items-start justify-between">
-          <div className="space-y-2">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]">
+      <div className="relative flex min-h-0 flex-1 flex-col gap-5 px-5 py-6 sm:gap-6 sm:px-7 sm:py-7 md:gap-7 md:px-8 md:py-8">
+        {/* Header with animated tier badge */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2 flex-1">
+            <p className="text-[10px] uppercase tracking-[0.4em] text-[var(--hero-muted)] font-semibold">
               {donationContent.eyebrow}
             </p>
-            <h2 className="text-xl font-heading text-glow sm:text-2xl">
+            <h2 className="text-2xl font-heading text-glow sm:text-3xl leading-tight">
               {donationContent.title}
             </h2>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)] shadow-lg">
-              <tier.icon className={cn('h-6 w-6', tier.color)} />
+          <div className="flex flex-col items-center gap-2 shrink-0">
+            <div className="relative group">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[var(--hero-accent)] to-purple-500 blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
+              <div className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-[var(--hero-border)] bg-[var(--hero-surface)] shadow-xl backdrop-blur-sm transition-transform group-hover:scale-110 duration-300">
+                <tier.icon className={cn('h-7 w-7 transition-all', tier.color)} />
+              </div>
             </div>
-            <span className={cn('text-xs font-medium uppercase tracking-wide', tier.color)}>
+            <span className={cn('text-[10px] font-bold uppercase tracking-widest', tier.color)}>
               {tier.label}
             </span>
           </div>
         </div>
 
-        {/* Amount display with animation */}
-        <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/50 p-4 backdrop-blur-sm">
-          <div className="flex items-center justify-between text-sm uppercase tracking-[0.2em]">
-            <span className="text-[var(--hero-muted)]">{donationContent.amountLabel}</span>
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-heading text-glow font-bold sm:text-2xl">
-                {amount.toLocaleString(locale)}
+        {/* Enhanced amount display */}
+        <div className="relative group">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[var(--hero-accent)]/20 via-purple-500/20 to-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="relative rounded-2xl border-2 border-[var(--hero-border)] bg-gradient-to-br from-[var(--hero-surface)]/80 to-[var(--hero-surface)]/40 p-5 backdrop-blur-md shadow-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)] font-semibold">
+                {donationContent.amountLabel}
               </span>
-              <span className="text-[var(--hero-muted)] text-sm">{currencyLabel}</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-heading text-glow font-bold sm:text-4xl transition-all duration-300">
+                  {amount.toLocaleString(locale)}
+                </span>
+                <span className="text-sm text-[var(--hero-muted)] font-medium">{currencyLabel}</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Preset amounts with better styling */}
-        <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)] mb-3">
+        {/* Preset amounts with modern cards */}
+        <div className="space-y-3">
+          <p className="text-[10px] uppercase tracking-[0.4em] text-[var(--hero-muted)] font-semibold">
             {t('DONATE.LABEL.QUICK_SELECT.001')}
           </p>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
             {donationPresets.map((preset, index) => (
               <Button
                 key={preset}
                 variant="outline"
                 onClick={() => onAmountSelect(preset)}
                 className={cn(
-                  'h-10 rounded-xl border transition-all duration-300 hover:scale-105 hover:shadow-lg sm:h-12',
+                  'h-14 rounded-2xl border-2 transition-all duration-300 hover:scale-105 active:scale-95 sm:h-16 relative overflow-hidden group',
                   amount === preset && !customAmount
-                    ? 'border-[var(--hero-accent)] bg-[var(--hero-accent)] text-[var(--hero-accent-contrast)] shadow-[0_0_20px_var(--hero-accent)]'
-                    : 'border-[var(--hero-border)] bg-[var(--hero-surface)]/50 text-[var(--hero-foreground)] hover:border-[var(--hero-accent)] hover:bg-[var(--hero-surface)] backdrop-blur-sm'
+                    ? 'border-[var(--hero-accent)] bg-gradient-to-br from-[var(--hero-accent)] to-purple-500 text-white shadow-[0_0_30px_var(--hero-accent)] scale-105'
+                    : 'border-[var(--hero-border)] bg-[var(--hero-surface)]/60 text-[var(--hero-foreground)] hover:border-[var(--hero-accent)]/70 hover:bg-[var(--hero-surface)] backdrop-blur-sm shadow-md'
                 )}
-                style={{ animationDelay: `${index * 50}ms` }}
+                style={{ animationDelay: `${index * 75}ms` }}
               >
-                <span className="text-xs font-medium sm:text-sm">
+                <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="relative text-sm font-bold sm:text-base">
                   {preset.toLocaleString(locale)}
                 </span>
               </Button>
@@ -152,120 +171,134 @@ export function DonationForm({
           </div>
         </div>
 
-        {/* Custom amount with better UX */}
-        <div className="space-y-3">
+        {/* Custom amount with icon */}
+        <div className="space-y-2.5">
           <Label
             htmlFor="custom-amount"
-            className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]"
+            className="text-[10px] uppercase tracking-[0.4em] text-[var(--hero-muted)] font-semibold"
           >
             {donationContent.customAmountLabel}
           </Label>
-          <div className="relative">
-            <Input
-              id="custom-amount"
-              type="number"
-              placeholder={donationContent.customAmountPlaceholder}
-              value={customAmount}
-              onChange={(e) => onCustomAmountChange(e.target.value)}
-              onFocus={() => setFocusedField('custom-amount')}
-              onBlur={() => setFocusedField(null)}
-              min={MIN_DONATION_AMOUNT}
-              className={cn(
-                'no-spinner h-11 border transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm sm:h-12',
-                focusedField === 'custom-amount'
-                  ? 'border-[var(--hero-accent)] shadow-[0_0_20px_var(--hero-accent)]'
-                  : 'border-[var(--hero-border)]'
-              )}
-            />
+          <div className="relative group">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[var(--hero-accent)]/30 to-purple-500/30 blur-lg opacity-0 group-focus-within:opacity-100 transition-opacity duration-300" />
+            <div className="relative flex items-center">
+              <DollarSign className={cn(
+                'absolute left-4 h-5 w-5 transition-colors duration-300',
+                focusedField === 'custom-amount' ? 'text-[var(--hero-accent)]' : 'text-[var(--hero-muted)]'
+              )} />
+              <Input
+                id="custom-amount"
+                type="number"
+                placeholder={donationContent.customAmountPlaceholder}
+                value={customAmount}
+                onChange={(e) => onCustomAmountChange(e.target.value)}
+                onFocus={() => setFocusedField('custom-amount')}
+                onBlur={() => setFocusedField(null)}
+                min={MIN_DONATION_AMOUNT}
+                className={cn(
+                  'no-spinner h-14 border-2 transition-all duration-300 rounded-2xl bg-[var(--hero-surface)]/60 backdrop-blur-sm pl-12 text-lg font-semibold shadow-md',
+                  focusedField === 'custom-amount'
+                    ? 'border-[var(--hero-accent)] shadow-[0_0_25px_var(--hero-accent)] scale-[1.02]'
+                    : 'border-[var(--hero-border)] hover:border-[var(--hero-accent)]/50'
+                )}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Personal info section */}
-        <div className="space-y-4 md:space-y-6">
-          <div className="space-y-2">
+        {/* Personal info section with enhanced styling */}
+        <div className="space-y-4">
+          <div className="space-y-2.5">
             <Label
               htmlFor="sender-name"
-              className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]"
+              className="text-[10px] uppercase tracking-[0.4em] text-[var(--hero-muted)] font-semibold"
             >
               {donationContent.nameLabel}
             </Label>
-            <Input
-              id="sender-name"
-              placeholder={donationContent.namePlaceholder}
-              value={senderName}
-              onChange={(e) => onSenderNameChange(e.target.value)}
-              onFocus={() => setFocusedField('sender-name')}
-              onBlur={() => setFocusedField(null)}
-              className={cn(
-                'h-11 transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm sm:h-12',
-                focusedField === 'sender-name'
-                  ? 'border-[var(--hero-accent)] shadow-[0_0_20px_var(--hero-accent)]'
-                  : 'border-[var(--hero-border)]'
-              )}
-            />
+            <div className="relative group">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[var(--hero-accent)]/30 to-blue-500/30 blur-lg opacity-0 group-focus-within:opacity-100 transition-opacity duration-300" />
+              <Input
+                id="sender-name"
+                placeholder={donationContent.namePlaceholder}
+                value={senderName}
+                onChange={(e) => onSenderNameChange(e.target.value)}
+                onFocus={() => setFocusedField('sender-name')}
+                onBlur={() => setFocusedField(null)}
+                className={cn(
+                  'relative h-12 transition-all duration-300 rounded-2xl bg-[var(--hero-surface)]/60 backdrop-blur-sm border-2 shadow-md sm:h-14',
+                  focusedField === 'sender-name'
+                    ? 'border-[var(--hero-accent)] shadow-[0_0_25px_var(--hero-accent)] scale-[1.02]'
+                    : 'border-[var(--hero-border)] hover:border-[var(--hero-accent)]/50'
+                )}
+              />
+            </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <Label
               htmlFor="message"
-              className="text-xs uppercase tracking-[0.3em] text-[var(--hero-muted)]"
+              className="text-[10px] uppercase tracking-[0.4em] text-[var(--hero-muted)] font-semibold"
             >
               {donationContent.messageLabel}
             </Label>
-            <Textarea
-              id="message"
-              placeholder={donationContent.messagePlaceholder}
-              value={message}
-              onChange={(e) => onMessageChange(e.target.value)}
-              onFocus={() => setFocusedField('message')}
-              onBlur={() => setFocusedField(null)}
-              className={cn(
-                'min-h-[72px] transition-all duration-300 rounded-xl bg-[var(--hero-surface)]/50 backdrop-blur-sm resize-none sm:min-h-[100px]',
-                focusedField === 'message'
-                  ? 'border-[var(--hero-accent)] shadow-[0_0_20px_var(--hero-accent)]'
-                  : 'border-[var(--hero-border)]'
-              )}
-              rows={3}
-            />
+            <div className="relative group">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/30 to-[var(--hero-accent)]/30 blur-lg opacity-0 group-focus-within:opacity-100 transition-opacity duration-300" />
+              <Textarea
+                id="message"
+                placeholder={donationContent.messagePlaceholder}
+                value={message}
+                onChange={(e) => onMessageChange(e.target.value)}
+                onFocus={() => setFocusedField('message')}
+                onBlur={() => setFocusedField(null)}
+                className={cn(
+                  'relative min-h-[80px] transition-all duration-300 rounded-2xl bg-[var(--hero-surface)]/60 backdrop-blur-sm resize-none border-2 shadow-md sm:min-h-[100px]',
+                  focusedField === 'message'
+                    ? 'border-[var(--hero-accent)] shadow-[0_0_25px_var(--hero-accent)] scale-[1.02]'
+                    : 'border-[var(--hero-border)] hover:border-[var(--hero-accent)]/50'
+                )}
+                rows={3}
+              />
+            </div>
           </div>
-
         </div>
 
-        {/* Enhanced donate button */}
+        {/* Premium donate button */}
         <Button
           onClick={onDonate}
           disabled={isLoading}
           className={cn(
-            'neon-border h-12 w-full text-base font-heading transition-all duration-300 rounded-xl relative overflow-hidden group sm:h-14 sm:text-lg',
+            'h-14 w-full text-lg font-heading transition-all duration-300 rounded-2xl relative overflow-hidden group shadow-2xl sm:h-16 sm:text-xl',
             isLoading
-              ? 'bg-[var(--hero-surface)] text-[var(--hero-muted)] cursor-not-allowed'
-              : 'bg-[var(--hero-accent)] text-[var(--hero-accent-contrast)] hover:bg-[var(--hero-accent-strong)] hover:scale-[1.02] hover:shadow-[0_0_30px_var(--hero-accent)]'
+              ? 'bg-[var(--hero-surface)] text-[var(--hero-muted)] cursor-not-allowed opacity-60'
+              : 'bg-gradient-to-r from-[var(--hero-accent)] via-purple-500 to-[var(--hero-accent)] bg-[length:200%_100%] text-white hover:bg-[position:100%_0] hover:scale-[1.03] active:scale-[0.98] shadow-[0_0_40px_var(--hero-accent)]'
           )}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
           <div className="relative flex items-center justify-center gap-3">
             {isLoading ? (
               <>
-                <div className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--hero-accent-contrast)] border-t-transparent" />
-                {donationContent.processingLabel}
+                <div className="h-5 w-5 animate-spin rounded-full border-3 border-white/30 border-t-white" />
+                <span className="font-bold">{donationContent.processingLabel}</span>
               </>
             ) : (
               <>
-                <DollarSign className="h-5 w-5" />
-                <span>{donationContent.buttonLabel}</span>
-                <Sparkles className="h-4 w-4 opacity-70" />
+                <Heart className="h-5 w-5 animate-pulse" />
+                <span className="font-bold tracking-wide">{donationContent.buttonLabel}</span>
+                <Sparkles className="h-5 w-5 group-hover:rotate-12 transition-transform" />
               </>
             )}
           </div>
         </Button>
 
-        {/* Impact message */}
-        <div className="text-center text-xs text-[var(--hero-muted)] space-y-1">
-          <p>{t('DONATE.IMPACT.TEXT.001')}</p>
-          <p className="flex items-center justify-center gap-1">
-            <Heart className="h-3 w-3 text-red-400" />
-            <span>{t('DONATE.IMPACT.TEXT.002')}</span>
-          </p>
+        {/* Enhanced impact message */}
+        <div className="rounded-2xl border border-[var(--hero-border)]/50 bg-[var(--hero-surface)]/30 backdrop-blur-sm p-4 text-center space-y-2">
+          <p className="text-xs text-[var(--hero-muted)] leading-relaxed">{t('DONATE.IMPACT.TEXT.001')}</p>
+          <div className="flex items-center justify-center gap-2">
+            <Heart className="h-4 w-4 text-red-400 animate-pulse" />
+            <span className="text-xs text-[var(--hero-foreground)] font-medium">{t('DONATE.IMPACT.TEXT.002')}</span>
+            <Heart className="h-4 w-4 text-red-400 animate-pulse" style={{ animationDelay: '0.5s' }} />
+          </div>
         </div>
       </div>
     </div>

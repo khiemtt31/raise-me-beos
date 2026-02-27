@@ -1,11 +1,21 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
 
 const SuccessPage = () => {
   const t = useTranslations()
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const orderCode = params.get('orderCode')
+    if (!orderCode) return
+
+    const base = (process.env.NEXT_PUBLIC_PAYMENT_SERVICE_URL ?? '').replace(/\/$/, '')
+    fetch(`${base}/api/payment/${orderCode}`).catch(() => {})
+  }, [])
 
   return (
     <div className="min-h-screen bg-transparent text-[var(--hero-foreground)] flex items-center justify-center p-4">
