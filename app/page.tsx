@@ -1,48 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { HeroSection } from "./_components/hero-section";
 import { TechStackGrid } from "./_components/tech-stack-grid";
+import { PageShell } from "@/components/layout/page-shell";
+import { PageContainer } from "@/components/layout/page-container";
+import { useRevealObserver } from "./hooks/use-reveal-observer";
 
 export default function PortfolioPage() {
-  useEffect(() => {
-    const revealNodes = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-reveal]"),
-    );
-
-    if (!revealNodes.length) return;
-
-    if (!("IntersectionObserver" in window)) {
-      revealNodes.forEach((node) => node.classList.add("is-visible"));
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2 },
-    );
-
-    revealNodes.forEach((node) => observer.observe(node));
-
-    return () => observer.disconnect();
-  }, []);
+  useRevealObserver(0.2);
 
   return (
-    <div className="relative h-full overflow-x-hidden bg-transparent text-[var(--hero-foreground)]">
-      <main className="mx-auto flex h-full w-full flex-col px-6 pb-6 pt-[calc(var(--header-h)+0.75rem)] md:px-10 md:pb-8 xl:px-16">
+    <PageShell>
+      <PageContainer className="h-full">
         <div className="min-h-0 flex-1">
           <HeroSection />
           <TechStackGrid />
         </div>
-      </main>
-    </div>
+      </PageContainer>
+    </PageShell>
   );
 }

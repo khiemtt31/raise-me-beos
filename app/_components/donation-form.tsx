@@ -65,18 +65,18 @@ export function DonationForm({
       return {
         icon: Zap,
         label: t('DONATE.TIER.LABEL.002'),
-        color: 'text-blue-400',
+        color: 'text-amber-400',
       }
     if (value >= 50000)
       return {
         icon: Heart,
         label: t('DONATE.TIER.LABEL.003'),
-        color: 'text-pink-400',
+        color: 'text-yellow-500',
       }
     return {
       icon: Users,
       label: t('DONATE.TIER.LABEL.004'),
-      color: 'text-green-400',
+      color: 'text-amber-600',
     }
   }
 
@@ -98,7 +98,7 @@ export function DonationForm({
         priority
       />
       {/* Animated background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[var(--hero-accent)]/10 via-purple-500/5 to-blue-500/10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[var(--hero-accent)]/10 via-[var(--hero-accent)]/4 to-[var(--hero-surface)]/20 pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,var(--hero-accent),transparent_70%)] opacity-20 pointer-events-none" />
 
       <div className="relative flex min-h-0 flex-1 flex-col gap-5 px-5 py-6 sm:gap-6 sm:px-7 sm:py-7 md:gap-7 md:px-8 md:py-8">
