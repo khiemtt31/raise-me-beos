@@ -1,13 +1,15 @@
+import Image from 'next/image'
+
 const techStacks = [
-  { name: 'React', label: 'UI Library', url: 'https://react.dev' },
-  { name: 'Next.js', label: 'React Framework', url: 'https://nextjs.org' },
-  { name: 'Angular', label: 'Web Framework', url: 'https://angular.dev' },
-  { name: 'Java', label: 'Backend Language', url: 'https://www.java.com' },
-  { name: 'Node.js', label: 'Runtime', url: 'https://nodejs.org' },
-  { name: 'FastAPI', label: 'Python API', url: 'https://fastapi.tiangolo.com' },
-  { name: 'PostgreSQL', label: 'Relational DB', url: 'https://www.postgresql.org' },
-  { name: 'MySQL', label: 'Relational DB', url: 'https://www.mysql.com' },
-  { name: 'MongoDB', label: 'NoSQL DB', url: 'https://www.mongodb.com' },
+  { name: 'React', label: 'UI Library', url: 'https://react.dev', logo: '/tech-stacks/react.png' },
+  { name: 'Next.js', label: 'React Framework', url: 'https://nextjs.org', logo: '/tech-stacks/nextjs.png' },
+  { name: 'Angular', label: 'Web Framework', url: 'https://angular.dev', logo: '/tech-stacks/angular.png' },
+  { name: 'Java', label: 'Backend Language', url: 'https://www.java.com', logo: '/tech-stacks/java-spring-boot.png' },
+  { name: 'Node.js', label: 'Runtime', url: 'https://nodejs.org', logo: '/tech-stacks/nodejs.png' },
+  { name: 'FastAPI', label: 'Python API', url: 'https://fastapi.tiangolo.com', logo: '/tech-stacks/fastapi.png' },
+  { name: 'PostgreSQL', label: 'Relational DB', url: 'https://www.postgresql.org', logo: '/tech-stacks/postgresql.png' },
+  { name: 'MySQL', label: 'Relational DB', url: 'https://www.mysql.com', logo: '/tech-stacks/mysql.png' },
+  { name: 'MongoDB', label: 'NoSQL DB', url: 'https://www.mongodb.com', logo: '/tech-stacks/mongodb.png' },
 ]
 
 export function TechStackGrid() {
@@ -39,6 +41,21 @@ export function TechStackGrid() {
             className="tech-card p-[1px]"
           >
             <div className="tech-card__inner">
+              {/* Logo image — sits at the base, right-aligned, faded on left edge */}
+              <div className="tech-card__image-wrap" aria-hidden="true">
+                <Image
+                  src={tech.logo}
+                  alt={tech.name}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  style={{ objectFit: 'contain', objectPosition: 'right center' }}
+                />
+              </div>
+
+              {/* Luxury yellow → black gradient overlay */}
+              <div className="tech-card__gradient" />
+
+              {/* Content on the black/dark side */}
               <div className="relative z-10 space-y-1">
                 <p className="text-lg font-heading text-[var(--hero-accent-strong)]">
                   {tech.name}

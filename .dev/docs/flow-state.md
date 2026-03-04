@@ -56,3 +56,4 @@
 > Minimize frontend code base
 
 <!-- Day 13 -->
+> Just keep improving UI/UX for better user experience.

@@ -71,7 +71,7 @@ export function DonationHistory({
   return (
     <div
       className={cn(
-        'glass-panel rounded-3xl relative overflow-hidden flex flex-col shadow-2xl border-2 border-[var(--hero-border)]/30 hover:border-[var(--hero-accent)]/40 transition-all duration-500',
+        'glass-panel rounded-2xl relative overflow-hidden shadow-xl border border-[var(--hero-border)]/30 hover:border-[var(--hero-accent)]/40 transition-all duration-500',
         className,
       )}
     >
@@ -86,71 +86,49 @@ export function DonationHistory({
       <div className="absolute inset-0 bg-gradient-to-br from-[var(--hero-surface)]/60 via-[var(--hero-accent)]/6 to-[var(--hero-accent)]/12 pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,var(--hero-accent),transparent_60%)] opacity-10 pointer-events-none" />
 
-      <div className="relative flex h-full min-h-0 flex-col gap-6 lg:gap-8 px-6 py-6 md:px-8 md:py-8">
+      <div className="relative flex flex-col gap-4 p-4 sm:p-5 md:p-6">
         {/* Header */}
-        <div className="flex flex-wrap items-start justify-between gap-4 lg:gap-6">
-          <div className="space-y-2.5 flex-1 min-w-0">
-            <p className="text-[10px] uppercase tracking-[0.4em] text-[var(--hero-muted)] font-semibold">
-              {t('DONATE.HISTORY.TITLE.001')}
-            </p>
-            <h2 className="text-2xl font-heading text-glow sm:text-3xl lg:text-4xl leading-tight">
-              {t('DONATE.HISTORY.SUBTITLE.001')}
-            </h2>
-            <p className="text-sm text-[var(--hero-muted)] max-w-2xl leading-relaxed">
-              {t('DONATE.HISTORY.TEXT.001')}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs">
-            <div className="relative group">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[var(--hero-accent)] to-[var(--hero-accent-strong)] blur-md opacity-0 group-hover:opacity-50 transition-opacity" />
-              <div className="relative rounded-full border-2 border-[var(--hero-border)] bg-gradient-to-br from-[var(--hero-surface)]/80 to-[var(--hero-surface)]/40 px-4 py-2 backdrop-blur-sm shadow-lg transition-all duration-300 group-hover:scale-105 sm:px-5 sm:py-2.5">
-                <span className="text-[var(--hero-muted)] font-medium">
-                  {t('DONATE.HISTORY.STATS.TOTAL_ENTRIES')}
-                </span>
-                {isLoading ? (
-                  <span className="ml-2 inline-block h-4 w-10 rounded-full bg-[var(--hero-border)]/40 align-middle animate-pulse" />
-                ) : (
-                  <span className="ml-2 text-[var(--hero-foreground)] font-bold text-sm">
-                    {totalEntries}
-                  </span>
-                )}
-              </div>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-base font-heading text-glow font-bold sm:text-lg">
+            {t('DONATE.HISTORY.SUBTITLE.001')}
+          </h2>
+          <div className="flex items-center gap-2 text-xs">
+            <div className="rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)]/60 px-3 py-1 backdrop-blur-sm">
+              <span className="text-[var(--hero-muted)]">{t('DONATE.HISTORY.STATS.TOTAL_ENTRIES')}</span>
+              {isLoading ? (
+                <span className="ml-1.5 inline-block h-3.5 w-8 rounded-full bg-[var(--hero-border)]/40 align-middle animate-pulse" />
+              ) : (
+                <span className="ml-1.5 font-bold text-[var(--hero-foreground)]">{totalEntries}</span>
+              )}
             </div>
-            <div className="relative group">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[var(--hero-accent-strong)] to-[var(--hero-accent)] blur-md opacity-0 group-hover:opacity-50 transition-opacity" />
-              <div className="relative rounded-full border-2 border-[var(--hero-border)] bg-gradient-to-br from-[var(--hero-surface)]/80 to-[var(--hero-surface)]/40 px-4 py-2 backdrop-blur-sm shadow-lg transition-all duration-300 group-hover:scale-105 sm:px-5 sm:py-2.5">
-                <span className="text-[var(--hero-muted)] font-medium">
-                  {t('DONATE.HISTORY.STATS.PAGE_TOTAL')}
-                </span>
-                {isLoading ? (
-                  <span className="ml-2 inline-block h-4 w-16 rounded-full bg-[var(--hero-border)]/40 align-middle animate-pulse" />
-                ) : (
-                  <span className="ml-2 text-[var(--hero-foreground)] font-bold text-sm">
-                    {formatAmount(historyTotalAmount)}
-                  </span>
-                )}
-              </div>
+            <div className="rounded-full border border-[var(--hero-border)] bg-[var(--hero-surface)]/60 px-3 py-1 backdrop-blur-sm">
+              <span className="text-[var(--hero-muted)]">{t('DONATE.HISTORY.STATS.PAGE_TOTAL')}</span>
+              {isLoading ? (
+                <span className="ml-1.5 inline-block h-3.5 w-14 rounded-full bg-[var(--hero-border)]/40 align-middle animate-pulse" />
+              ) : (
+                <span className="ml-1.5 font-bold text-[var(--hero-foreground)]">{formatAmount(historyTotalAmount)}</span>
+              )}
             </div>
           </div>
         </div>
 
         {/* History list */}
-        <div className="flex-1 min-h-0 space-y-3 overflow-y-auto px-1 -mx-1">
+        <div className="space-y-2 overflow-y-auto max-h-[420px] sm:max-h-[480px] px-0.5 -mx-0.5">
           {isLoading && (
-            <div className="space-y-3">
-              {Array.from({ length: 3 }).map((_, index) => (
+            <div className="space-y-2">
+              {Array.from({ length: 4 }).map((_, index) => (
                 <div
                   key={`history-skeleton-${index}`}
-                  className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4"
+                  className="rounded-xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-4 py-3"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="space-y-2">
-                      <div className="h-4 w-36 rounded-full bg-[var(--hero-border)]/40 animate-pulse" />
-                      <div className="h-3 w-48 rounded-full bg-[var(--hero-border)]/30 animate-pulse" />
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="space-y-1.5">
+                      <div className="h-3.5 w-32 rounded-full bg-[var(--hero-border)]/40 animate-pulse" />
+                      <div className="h-3 w-44 rounded-full bg-[var(--hero-border)]/30 animate-pulse" />
                     </div>
-                    <div className="space-y-2 text-right">
-                      <div className="h-4 w-24 rounded-full bg-[var(--hero-border)]/40 animate-pulse" />
-                      <div className="h-3 w-20 rounded-full bg-[var(--hero-border)]/30 animate-pulse ml-auto" />
+                    <div className="space-y-1.5 text-right">
+                      <div className="h-3.5 w-20 rounded-full bg-[var(--hero-border)]/40 animate-pulse ml-auto" />
+                      <div className="h-3 w-16 rounded-full bg-[var(--hero-border)]/30 animate-pulse ml-auto" />
                     </div>
                   </div>
                 </div>
@@ -159,13 +137,13 @@ export function DonationHistory({
           )}
 
           {!isLoading && isError && (
-            <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 text-sm text-[var(--hero-muted)]">
+            <div className="rounded-xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-4 py-3 text-sm text-[var(--hero-muted)]">
               {t('ERROR.MESSAGE.003')}
             </div>
           )}
 
           {!isLoading && !isError && donationHistory.length === 0 && (
-            <div className="rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 text-sm text-[var(--hero-muted)]">
+            <div className="rounded-xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-4 py-3 text-sm text-[var(--hero-muted)]">
               {t('DONATE.HISTORY.EMPTY.001')}
             </div>
           )}
@@ -180,17 +158,17 @@ export function DonationHistory({
               return (
                 <div
                   key={entry.id}
-                  className="w-full text-left rounded-2xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-5 py-4 backdrop-blur-sm"
+                  className="w-full text-left rounded-xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/40 px-4 py-3 backdrop-blur-sm"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="space-y-1.5 flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex-1 min-w-0 space-y-0.5">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-base font-bold text-[var(--hero-foreground)] truncate">
+                        <span className="text-sm font-semibold text-[var(--hero-foreground)] truncate">
                           {displayName}
                         </span>
                         <span
                           className={cn(
-                            'rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] font-bold shadow-sm',
+                            'rounded-full px-2 py-0.5 text-[9px] uppercase tracking-widest font-bold',
                             entry.status === 'SUCCESS'
                               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
                               : entry.status === 'PENDING'
@@ -201,15 +179,15 @@ export function DonationHistory({
                           {getStatusLabel(entry.status)}
                         </span>
                       </div>
-                      <p className="text-xs text-[var(--hero-muted)] line-clamp-1 leading-relaxed">
+                      <p className="text-xs text-[var(--hero-muted)] line-clamp-1">
                         {entry.message || t('DONATE.HISTORY.MESSAGE.NONE')}
                       </p>
                     </div>
-                    <div className="text-right space-y-1 shrink-0">
-                      <div className="text-xl font-heading text-glow font-bold">
+                    <div className="text-right shrink-0 space-y-0.5">
+                      <div className="text-sm font-heading text-glow font-bold">
                         {formatAmount(entry.amount)}
                       </div>
-                      <div className="text-[10px] text-[var(--hero-muted)] font-medium">
+                      <div className="text-[10px] text-[var(--hero-muted)]">
                         {formatDate(entry.createdAt)}
                       </div>
                     </div>
@@ -220,20 +198,17 @@ export function DonationHistory({
         </div>
 
         {/* Pagination */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-[var(--hero-border)] pt-5 text-xs">
-          <span className="uppercase tracking-[0.3em] text-[var(--hero-muted)] font-semibold">
-            {t('DONATE.HISTORY.PAGINATION.LABEL', {
-              page: historyPage,
-              total: totalPages,
-            })}
+        <div className="flex items-center justify-between gap-3 border-t border-[var(--hero-border)]/60 pt-3 text-xs">
+          <span className="text-[10px] uppercase tracking-widest text-[var(--hero-muted)]">
+            {t('DONATE.HISTORY.PAGINATION.LABEL', { page: historyPage, total: totalPages })}
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <Button
               variant="outline"
               size="sm"
               disabled={!hasPrevPage || isLoading}
               onClick={onPrevPage}
-              className="text-[10px] h-9 px-4 rounded-xl border-2 transition-all hover:scale-105 hover:shadow-lg disabled:opacity-40"
+              className="text-[10px] h-7 px-3 rounded-lg border transition-all disabled:opacity-40"
             >
               {t('DONATE.HISTORY.PAGINATION.PREV')}
             </Button>
@@ -242,7 +217,7 @@ export function DonationHistory({
               size="sm"
               disabled={!hasNextPage || isLoading}
               onClick={onNextPage}
-              className="text-[10px] h-9 px-4 rounded-xl border-2 transition-all hover:scale-105 hover:shadow-lg disabled:opacity-40"
+              className="text-[10px] h-7 px-3 rounded-lg border transition-all disabled:opacity-40"
             >
               {t('DONATE.HISTORY.PAGINATION.NEXT')}
             </Button>

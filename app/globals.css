@@ -444,10 +444,45 @@
     transition: box-shadow 250ms ease, transform 250ms ease, background 250ms ease;
   }
 
+  .tech-card__image-wrap {
+    position: absolute;
+    inset: 0;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 30%, black 68%);
+    mask-image: linear-gradient(to right, transparent 0%, transparent 30%, black 68%);
+  }
+
+  .tech-card__gradient {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.99) 0%,
+      rgba(0, 0, 0, 0.97) 30%,
+      rgba(0, 0, 0, 0.90) 52%,
+      rgba(196, 150, 28, 0.50) 75%,
+      rgba(212, 175, 55, 0.28) 100%
+    );
+    pointer-events: none;
+    transition: background 250ms ease;
+  }
+
+  .tech-card:hover .tech-card__gradient {
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.99) 0%,
+      rgba(0, 0, 0, 0.95) 30%,
+      rgba(0, 0, 0, 0.82) 50%,
+      rgba(212, 175, 55, 0.60) 74%,
+      rgba(212, 175, 55, 0.36) 100%
+    );
+  }
+
   .tech-card__inner::after {
     content: "";
     position: absolute;
     inset: -40% 0;
+    z-index: 2;
     background: linear-gradient(
       120deg,
       transparent 35%,

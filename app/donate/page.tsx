@@ -218,42 +218,34 @@ export default function DonatePage() {
     <PageShell>
       <div className="relative z-10 font-mono">
         <PageContainer>
-          <section className="flex min-h-0 flex-1 flex-col gap-6 xl:gap-8">
-            <div className="grid min-h-0 flex-1 grid-rows gap-6 xl:grid-cols-10 xl:grid-rows-1">
-              {/* Donation form */}
-              <div
-                id="support"
-                data-reveal
-                className="reveal xl:col-span-3"
-              >
-                <DonationForm
-                  className="h-full min-h-0"
-                  amount={amount}
-                  customAmount={customAmount}
-                  senderName={senderName}
-                  message={message}
-                  isLoading={isLoading}
-                  onAmountSelect={handleAmountSelect}
-                  onCustomAmountChange={handleCustomAmountChange}
-                  onSenderNameChange={setSenderName}
-                  onMessageChange={setMessage}
-                  onDonate={handleDonate}
-                />
-              </div>
+          <section className="flex flex-col gap-4 sm:gap-5">
+            {/* Donation form — top */}
+            <div id="support" data-reveal className="reveal">
+              <DonationForm
+                amount={amount}
+                customAmount={customAmount}
+                senderName={senderName}
+                message={message}
+                isLoading={isLoading}
+                onAmountSelect={handleAmountSelect}
+                onCustomAmountChange={handleCustomAmountChange}
+                onSenderNameChange={setSenderName}
+                onMessageChange={setMessage}
+                onDonate={handleDonate}
+              />
+            </div>
 
-              {/* Donation history */}
-              <div data-reveal className="reveal h-full min-h-0 xl:col-span-7">
-                <DonationHistory
-                  className="h-full"
-                  donationHistory={donationHistory}
-                  isLoading={isHistoryLoading}
-                  isError={donationHistoryQuery.isError}
-                  pagination={historyPagination}
-                  historyPage={historyPage}
-                  onPrevPage={() => setHistoryPage((prev) => Math.max(1, prev - 1))}
-                  onNextPage={() => setHistoryPage((prev) => prev + 1)}
-                />
-              </div>
+            {/* Donation history — below */}
+            <div data-reveal className="reveal">
+              <DonationHistory
+                donationHistory={donationHistory}
+                isLoading={isHistoryLoading}
+                isError={donationHistoryQuery.isError}
+                pagination={historyPagination}
+                historyPage={historyPage}
+                onPrevPage={() => setHistoryPage((prev) => Math.max(1, prev - 1))}
+                onNextPage={() => setHistoryPage((prev) => prev + 1)}
+              />
             </div>
           </section>
         </PageContainer>
