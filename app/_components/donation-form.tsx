@@ -2,25 +2,24 @@
 
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
-import { DollarSign, Heart, Sparkles, Users, Zap } from 'lucide-react'
+import { Heart, Sparkles, Users, Zap } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { MIN_DONATION_AMOUNT } from '@/lib/donation-config'
+import { MIN_DONATION_AMOUNT, MAX_DONATION_AMOUNT } from '@/lib/donation-config'
 import { cn } from '@/lib/utils'
 import { getDonationContent, donationPresets } from '@/skeleton-data/portfolio'
 
 type DonationFormProps = {
   className?: string
   amount: number
-  customAmount: string
   senderName: string
   message: string
   isLoading: boolean
   onAmountSelect: (preset: number) => void
-  onCustomAmountChange: (value: string) => void
+  onAmountChange: (value: string) => void
   onSenderNameChange: (value: string) => void
   onMessageChange: (value: string) => void
   onDonate: () => void
@@ -29,12 +28,11 @@ type DonationFormProps = {
 export function DonationForm({
   className,
   amount,
-  customAmount,
   senderName,
   message,
   isLoading,
   onAmountSelect,
-  onCustomAmountChange,
+  onAmountChange,
   onSenderNameChange,
   onMessageChange,
   onDonate,
@@ -117,15 +115,27 @@ export function DonationForm({
             </div>
           </div>
 
-          {/* Current amount display */}
+          {/* Current amount input */}
           <div className="flex items-center justify-between rounded-xl border border-[var(--hero-border)] bg-[var(--hero-surface)]/60 px-3 py-2.5 backdrop-blur-sm">
             <span className="text-[10px] uppercase tracking-widest text-[var(--hero-muted)]">
               {donationContent.amountLabel}
             </span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-xl font-heading text-glow font-bold sm:text-2xl transition-all duration-300">
-                {amount.toLocaleString(locale)}
-              </span>
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                min={MIN_DONATION_AMOUNT}
+                max={MAX_DONATION_AMOUNT}
+                value={amount}
+                onChange={(e) => onAmountChange(e.target.value)}
+                onFocus={() => setFocusedField('amount')}
+                onBlur={() => setFocusedField(null)}
+                className={cn(
+                  'no-spinner w-24 bg-[var(--hero-surface)]/50 p-0 text-right text-xl font-heading text-glow font-bold sm:text-2xl transition-all duration-200',
+                  focusedField === 'amount'
+                    ? 'border-[var(--hero-accent)] shadow-[0_0_12px_var(--hero-accent)]'
+                    : 'border-transparent'
+                )}
+              />
               <span className="text-xs text-[var(--hero-muted)]">{currencyLabel}</span>
             </div>
           </div>
@@ -139,9 +149,9 @@ export function DonationForm({
                 onClick={() => onAmountSelect(preset)}
                 className={cn(
                   'h-9 rounded-xl border text-xs font-bold transition-all duration-200',
-                  amount === preset && !customAmount
+                  amount === preset
                     ? 'border-[var(--hero-accent)] bg-gradient-to-br from-[var(--hero-accent)] to-purple-500 text-white shadow-[0_0_15px_var(--hero-accent)] scale-[1.03]'
-                    : 'border-[var(--hero-border)] bg-[var(--hero-surface)]/60 text-[var(--hero-foreground)] hover:border-[var(--hero-accent)]/60 backdrop-blur-sm'
+                    : 'border-[var(--hero-border)] bg-[var(--hero-surface)]/60 text-[var(--hero-foreground)] hover:border-[var(--hero-accent)]/60 hover:text-white backdrop-blur-sm'
                 )}
                 style={{ animationDelay: `${index * 75}ms` }}
               >
@@ -150,31 +160,6 @@ export function DonationForm({
             ))}
           </div>
 
-          {/* Custom amount */}
-          <div className="relative">
-            <DollarSign
-              className={cn(
-                'absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 z-10 transition-colors',
-                focusedField === 'custom-amount' ? 'text-[var(--hero-accent)]' : 'text-[var(--hero-muted)]'
-              )}
-            />
-            <Input
-              id="custom-amount"
-              type="number"
-              placeholder={donationContent.customAmountPlaceholder}
-              value={customAmount}
-              onChange={(e) => onCustomAmountChange(e.target.value)}
-              onFocus={() => setFocusedField('custom-amount')}
-              onBlur={() => setFocusedField(null)}
-              min={MIN_DONATION_AMOUNT}
-              className={cn(
-                'no-spinner h-9 border rounded-xl bg-[var(--hero-surface)]/60 backdrop-blur-sm pl-8 text-sm font-semibold transition-all duration-200',
-                focusedField === 'custom-amount'
-                  ? 'border-[var(--hero-accent)] shadow-[0_0_12px_var(--hero-accent)]'
-                  : 'border-[var(--hero-border)] hover:border-[var(--hero-accent)]/50'
-              )}
-            />
-          </div>
         </div>
 
         {/* ── Right column: personal info + submit ── */}

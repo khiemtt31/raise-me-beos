@@ -51,7 +51,6 @@ export default function DonatePage() {
   });
 
   const [amount, setAmount] = useState<number>(MIN_DONATION_AMOUNT);
-  const [customAmount, setCustomAmount] = useState<string>("");
   const [senderName, setSenderName] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [showQR, setShowQR] = useState<boolean>(false);
@@ -145,17 +144,20 @@ export default function DonatePage() {
     t,
   ]);
 
-  const handleAmountSelect = (preset: number) => {
-    setAmount(preset);
-    setCustomAmount("");
+  const clampAmount = (value: number) => {
+    if (value < MIN_DONATION_AMOUNT) return MIN_DONATION_AMOUNT;
+    if (value > MAX_DONATION_AMOUNT) return MAX_DONATION_AMOUNT;
+    return value;
   };
 
-  const handleCustomAmountChange = (value: string) => {
-    setCustomAmount(value);
-    const num = parseInt(value);
-    if (!isNaN(num) && num >= MIN_DONATION_AMOUNT) {
-      setAmount(num);
-    }
+  const handleAmountSelect = (preset: number) => {
+    setAmount(clampAmount(preset));
+  };
+
+  const handleAmountChange = (value: string) => {
+    const num = Number(value);
+    if (Number.isNaN(num)) return;
+    setAmount(clampAmount(Math.round(num)));
   };
 
   const handleDonate = async () => {
@@ -223,12 +225,11 @@ export default function DonatePage() {
             <div id="support" data-reveal className="reveal">
               <DonationForm
                 amount={amount}
-                customAmount={customAmount}
                 senderName={senderName}
                 message={message}
                 isLoading={isLoading}
                 onAmountSelect={handleAmountSelect}
-                onCustomAmountChange={handleCustomAmountChange}
+                onAmountChange={handleAmountChange}
                 onSenderNameChange={setSenderName}
                 onMessageChange={setMessage}
                 onDonate={handleDonate}
