@@ -85,11 +85,6 @@ export type SiteContent = {
   paymentOpen: string
 }
 
-type DonationContentOptions = {
-  minAmountLabel: string
-  currencyLabel: string
-}
-
 export const getSections = (t: Translator): Section[] => [
   { id: 'hero', label: t('HOME.SECTION.001') },
   { id: 'story', label: t('HOME.SECTION.002') },
@@ -115,8 +110,7 @@ export const getSiteContent = (t: Translator): SiteContent => ({
 })
 
 export const getDonationContent = (
-  t: Translator,
-  options: DonationContentOptions
+  t: Translator
 ): DonationContent => ({
   eyebrow: t('DONATE.EYEBROW.001'),
   title: t('DONATE.TITLE.001'),

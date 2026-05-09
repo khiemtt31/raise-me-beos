@@ -8,38 +8,24 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon --exec \"tsx --env-file=.env.dev index.ts\"",
-    "test": "nodemon --exec \"tsx --env-file=.env.test index.ts\"",
-    "test:unit": "vitest run",
-    "staging": "tsx --env-file=.env.staging index.ts",
-    "prod": "tsx --env-file=.env.prod index.ts",
-    "start": "tsx index.ts",
+    "dev": "wrangler dev --local --port 4001",
+    "staging": "wrangler dev --env staging --local --port 4001",
+    "prod": "wrangler deploy",
+    "start": "wrangler dev --local --port 4001",
+    "test": "vitest run",
+    "verify": "npm run build && npm run test",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
-    "@payos/node": "^2.0.3",
     "@supabase/supabase-js": "^2.90.1",
-    "body-parser": "^2.2.2",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "express-rate-limit": "^8.2.1",
-    "helmet": "^8.1.0",
-    "hpp": "^0.2.3",
-    "tsx": "^4.21.0",
-    "winston": "^3.19.0",
+    "hono": "^4.12.16",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@express-rate-limit/tsconfig": "^1.0.2",
-    "@types/body-parser": "^1.19.6",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/hpp": "^0.2.7",
-    "@types/supertest": "^2.0.16",
-    "nodemon": "^3.1.11",
-    "supertest": "^7.1.1",
-    "typescript": "^5.7.2",
-    "vitest": "^2.1.4"
+    "@typescript-eslint/eslint-plugin": "^8.59.1",
+    "@typescript-eslint/parser": "^8.59.1",
+    "wrangler": "^4.58.0",
+    "vitest": "^4.1.5",
+    "typescript": "^5.7.2"
   }
 }

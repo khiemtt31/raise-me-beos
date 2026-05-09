@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { Heart, Sparkles, Users, Zap } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
@@ -42,14 +42,7 @@ export function DonationForm({
   const [focusedField, setFocusedField] = useState<string | null>(null)
 
   const currencyLabel = t('DONATE.CURRENCY.001')
-  const minAmountLabel = useMemo(
-    () => MIN_DONATION_AMOUNT.toLocaleString(locale),
-    [locale]
-  )
-  const donationContent = getDonationContent(t, {
-    minAmountLabel,
-    currencyLabel,
-  })
+  const donationContent = getDonationContent(t)
 
   const getAmountTier = (value: number) => {
     if (value >= 500000)

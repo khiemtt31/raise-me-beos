@@ -1,54 +1,75 @@
-import { Router } from 'express'
-import { payos } from '../services/payos'
-import { supabase } from '../services/supabase'
-import { MAX_DONATION_AMOUNT, MIN_DONATION_AMOUNT } from '../utils/donation-config'
-import { broadcastDonationUpdate } from './sse'
-import { DonationStatus } from '../utils/donation-status'
+import { Hono } from 'hono'
+import { payos } from '../services/payos.js'
+import { supabase } from '../services/supabase.js'
+import { MAX_DONATION_AMOUNT, MIN_DONATION_AMOUNT } from '../utils/donation-config.js'
+import { DonationStatus } from '../utils/donation-status.js'
+import { broadcastDonationUpdate } from './sse.js'
+import { getServerRuntimeEnv } from '../utils/runtime-env.js'
 
-const router = Router()
+type CreatePaymentBody = {
+  amount?: number
+  senderName?: string
+  message?: string
+  isAnonymous?: boolean
+}
 
-router.post('/create', async (req, res) => {
+type PayOsPaymentRequestResult = {
+  checkoutUrl: string
+  qrCode: string
+}
+
+const parseJsonBody = async <T>(payload: Promise<unknown>): Promise<Partial<T>> => {
+  try {
+    return (await payload) as Partial<T>
+  } catch {
+    return {}
+  }
+}
+
+const paymentRoutes = new Hono()
+
+paymentRoutes.post('/create', async (c) => {
   const startTime = Date.now()
-  console.log(`[PAYMENT CREATE] Starting payment creation for amount: ${req.body.amount}`)
+  const env = getServerRuntimeEnv({ env: c.env as Record<string, string | undefined> })
 
   try {
-    const { amount, senderName, message, isAnonymous } = req.body as {
-      amount?: number
-      senderName?: string
-      message?: string
-      isAnonymous?: boolean
-    }
+    const { amount, senderName, message, isAnonymous } = await parseJsonBody<CreatePaymentBody>(c.req.json())
+    console.log(`[PAYMENT CREATE] Starting payment creation for amount: ${amount}`)
     const resolvedMessage =
       typeof message === 'string' && message.trim().length > 0
         ? message.trim()
         : 'With all the supports!!!'
 
-    // Validate amount
-    if (!amount || amount < MIN_DONATION_AMOUNT) {
+    if (typeof amount !== 'number' || Number.isNaN(amount) || amount < MIN_DONATION_AMOUNT) {
       console.log(`[PAYMENT CREATE] Invalid amount: ${amount}`)
-      return res.status(400).json({
-        error: 'Invalid amount',
-        message: `Minimum donation amount is ${MIN_DONATION_AMOUNT.toLocaleString()} VND`
-      })
+      return c.json(
+        {
+          error: 'Invalid amount',
+          message: `Minimum donation amount is ${MIN_DONATION_AMOUNT.toLocaleString()} VND`,
+        },
+        400
+      )
     }
 
     if (amount > MAX_DONATION_AMOUNT) {
       console.log(`[PAYMENT CREATE] Amount too large: ${amount}`)
-      return res.status(400).json({
-        error: 'Amount too large',
-        message: `Maximum donation amount is ${MAX_DONATION_AMOUNT.toLocaleString()} VND`
-      })
+      return c.json(
+        {
+          error: 'Amount too large',
+          message: `Maximum donation amount is ${MAX_DONATION_AMOUNT.toLocaleString()} VND`,
+        },
+        400
+      )
     }
 
     const orderCode = Number(Date.now())
-    const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
+    const baseUrl = env.BASE_URL
     console.log(`[PAYMENT CREATE] Generated orderCode: ${orderCode}`)
 
-    // Create PayOS payment request with timeout
-    let paymentData
+    let paymentData: PayOsPaymentRequestResult
     const payosStartTime = Date.now()
     try {
-      console.log(`[PAYMENT CREATE] Creating PayOS payment request...`)
+      console.log('[PAYMENT CREATE] Creating PayOS payment request...')
       const paymentPromise = payos.paymentRequests.create({
         orderCode,
         amount,
@@ -56,7 +77,7 @@ router.post('/create', async (req, res) => {
         returnUrl: `${baseUrl}/donation/success?orderCode=${orderCode}`,
         cancelUrl: `${baseUrl}/donation/cancel`,
         buyerName: isAnonymous ? undefined : senderName?.substring(0, 100),
-        expiredAt: Math.floor(Date.now() / 1000) + 30 * 60, // 30 minutes
+        expiredAt: Math.floor(Date.now() / 1000) + 30 * 60,
         items: [
           {
             name: 'Donation',
@@ -66,74 +87,90 @@ router.post('/create', async (req, res) => {
         ],
       })
 
-      // Add timeout for PayOS API call
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('PayOS API timeout')), 10000) // 10 second timeout
+      let timeoutId: ReturnType<typeof setTimeout> | undefined
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error('PayOS API timeout')), 10_000)
       })
 
-      paymentData = await Promise.race([paymentPromise, timeoutPromise]) as any
+      try {
+        paymentData = (await Promise.race([paymentPromise, timeoutPromise])) as PayOsPaymentRequestResult
+      } finally {
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+        }
+      }
+
       console.log(`[PAYMENT CREATE] PayOS request completed in ${Date.now() - payosStartTime}ms`)
     } catch (payosError: unknown) {
       console.error(`[PAYMENT CREATE] PayOS error after ${Date.now() - payosStartTime}ms:`, payosError)
       const errorMessage = payosError instanceof Error ? payosError.message : 'Unknown PayOS error'
       if (errorMessage === 'PayOS API timeout') {
-        return res.status(504).json({
-          error: 'Payment service timeout',
-          message: 'Unable to create payment link. Please try again.'
-        })
+        return c.json(
+          {
+            error: 'Payment service timeout',
+            message: 'Unable to create payment link. Please try again.',
+          },
+          504
+        )
       }
-      return res.status(500).json({
-        error: 'Payment service error',
-        message: 'Failed to create payment link. Please try again.'
-      })
+
+      return c.json(
+        {
+          error: 'Payment service error',
+          message: 'Failed to create payment link. Please try again.',
+        },
+        500
+      )
     }
 
-    // Insert donation into database with timeout
     const dbStartTime = Date.now()
     try {
-      console.log(`[PAYMENT CREATE] Inserting donation into database...`)
-      const insertPromise = supabase
-        .from('donations')
-        .insert({
-          order_code: orderCode.toString(),
-          amount,
-          sender_name: senderName,
-          message: resolvedMessage,
-          is_anonymous: isAnonymous,
-          status: DonationStatus.PENDING,
-          // user_id: null, // No user system
-        })
-
-      // Add timeout for database operation
-      const dbTimeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Database timeout')), 8000) // 8 second timeout
+      console.log('[PAYMENT CREATE] Inserting donation into database...')
+      const insertPromise = supabase.from('donations').insert({
+        order_code: orderCode.toString(),
+        amount,
+        sender_name: senderName,
+        message: resolvedMessage,
+        is_anonymous: isAnonymous,
+        status: DonationStatus.PENDING,
       })
 
-      const result = await Promise.race([insertPromise, dbTimeoutPromise]) as { error: any }
+      let timeoutId: ReturnType<typeof setTimeout> | undefined
+      const dbTimeoutPromise = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error('Database timeout')), 8_000)
+      })
 
-      const { error } = result
+      try {
+        const result = (await Promise.race([insertPromise, dbTimeoutPromise])) as { error: unknown }
+        const { error } = result
 
-      if (error) {
-        console.error(`[PAYMENT CREATE] Database insert failed after ${Date.now() - dbStartTime}ms:`, error)
+        if (error) {
+          console.error(`[PAYMENT CREATE] Database insert failed after ${Date.now() - dbStartTime}ms:`, error)
 
-        // Try to cancel the PayOS payment since DB insert failed
-        try {
-          await payos.paymentRequests.cancel(orderCode, 'Database error')
-        } catch (cancelError) {
-          console.error('Failed to cancel PayOS payment:', cancelError)
+          try {
+            await payos.paymentRequests.cancel(orderCode, 'Database error')
+          } catch (cancelError) {
+            console.error('Failed to cancel PayOS payment:', cancelError)
+          }
+
+          return c.json(
+            {
+              error: 'Database error',
+              message: 'Failed to save donation details. Please try again.',
+            },
+            500
+          )
         }
-
-        return res.status(500).json({
-          error: 'Database error',
-          message: 'Failed to save donation details. Please try again.'
-        })
+      } finally {
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+        }
       }
 
       console.log(`[PAYMENT CREATE] Database insert completed in ${Date.now() - dbStartTime}ms`)
     } catch (dbError: unknown) {
       console.error(`[PAYMENT CREATE] Database operation error after ${Date.now() - dbStartTime}ms:`, dbError)
 
-      // Try to cancel the PayOS payment since DB operation failed
       try {
         await payos.paymentRequests.cancel(orderCode, 'Database timeout')
       } catch (cancelError) {
@@ -142,47 +179,54 @@ router.post('/create', async (req, res) => {
 
       const errorMessage = dbError instanceof Error ? dbError.message : 'Unknown database error'
       if (errorMessage === 'Database timeout') {
-        return res.status(504).json({
-          error: 'Database timeout',
-          message: 'Database operation timed out. Please try again.'
-        })
+        return c.json(
+          {
+            error: 'Database timeout',
+            message: 'Database operation timed out. Please try again.',
+          },
+          504
+        )
       }
 
-      return res.status(500).json({
-        error: 'Database error',
-        message: 'Failed to save donation details. Please try again.'
-      })
+      return c.json(
+        {
+          error: 'Database error',
+          message: 'Failed to save donation details. Please try again.',
+        },
+        500
+      )
     }
 
     console.log(`[PAYMENT CREATE] Payment creation completed successfully in ${Date.now() - startTime}ms`)
 
-    // Success - return QR code and checkout URL
-    return res.json({
+    return c.json({
       checkoutUrl: paymentData.checkoutUrl,
       qrCode: paymentData.qrCode,
       orderCode: orderCode.toString(),
     })
-
   } catch (error) {
     console.error(`[PAYMENT CREATE] Unexpected error after ${Date.now() - startTime}ms:`, error)
-    return res.status(500).json({
-      error: 'Internal server error',
-      message: 'An unexpected error occurred. Please try again.'
-    })
+    return c.json(
+      {
+        error: 'Internal server error',
+        message: 'An unexpected error occurred. Please try again.',
+      },
+      500
+    )
   }
 })
 
-router.get('/:orderCode', async (req, res) => {
+paymentRoutes.get('/:orderCode', async (c) => {
   try {
-    const { orderCode } = req.params
+    const orderCode = c.req.param('orderCode')
     if (!orderCode) {
-      return res.status(400).json({ error: 'Missing orderCode' })
+      return c.json({ error: 'Missing orderCode' }, 400)
     }
 
     const paymentLinkInfo = await payos.paymentRequests.get(Number(orderCode))
 
     if (!paymentLinkInfo) {
-      return res.status(404).json({ error: 'Payment not found' })
+      return c.json({ error: 'Payment not found' }, 404)
     }
 
     if (paymentLinkInfo.status === 'PAID') {
@@ -196,26 +240,26 @@ router.get('/:orderCode', async (req, res) => {
       if (updateError) {
         console.error('Failed to sync paid donation status:', updateError)
       } else if (updated && updated.length > 0) {
-        broadcastDonationUpdate(orderCode, DonationStatus.SUCCESS)
+        await broadcastDonationUpdate(orderCode, DonationStatus.SUCCESS)
       }
     }
 
-    return res.json({
+    return c.json({
       data: paymentLinkInfo,
     })
   } catch (error) {
     console.error('Get payment info error:', error)
-    return res.status(500).json({ error: 'Failed to get payment info' })
+    return c.json({ error: 'Failed to get payment info' }, 500)
   }
 })
 
-router.post('/:orderCode/cancel', async (req, res) => {
+paymentRoutes.post('/:orderCode/cancel', async (c) => {
   try {
-    const { orderCode } = req.params
-    const { cancellationReason } = req.body
+    const orderCode = c.req.param('orderCode')
+    const { cancellationReason } = await parseJsonBody<{ cancellationReason?: string }>(c.req.json())
 
     if (!orderCode) {
-      return res.status(400).json({ error: 'Missing orderCode' })
+      return c.json({ error: 'Missing orderCode' }, 400)
     }
 
     const cancelledPaymentLink = await payos.paymentRequests.cancel(
@@ -223,25 +267,22 @@ router.post('/:orderCode/cancel', async (req, res) => {
       cancellationReason || 'User cancelled'
     )
 
-    const { error } = await supabase
-      .from('donations')
-      .update({ status: DonationStatus.FAIL })
-      .eq('order_code', orderCode)
+    const { error } = await supabase.from('donations').update({ status: DonationStatus.FAIL }).eq('order_code', orderCode)
 
     if (error) {
       console.error('Failed to cancel donation:', error)
-      return res.status(500).json({ error: 'Failed to cancel donation' })
+      return c.json({ error: 'Failed to cancel donation' }, 500)
     }
 
-    broadcastDonationUpdate(orderCode, DonationStatus.FAIL)
+    await broadcastDonationUpdate(orderCode, DonationStatus.FAIL)
 
-    return res.json({
+    return c.json({
       data: cancelledPaymentLink,
     })
   } catch (error) {
     console.error('Cancel payment error:', error)
-    return res.status(500).json({ error: 'Failed to cancel payment' })
+    return c.json({ error: 'Failed to cancel payment' }, 500)
   }
 })
 
-export default router
+export default paymentRoutes

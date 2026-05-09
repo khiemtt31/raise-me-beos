@@ -65,18 +65,11 @@ const readStoredState = (): BackgroundState => {
 }
 
 export function BackgroundProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<BackgroundState>(defaultState)
-  const [isReady, setIsReady] = useState(false)
+  const [state, setState] = useState<BackgroundState>(() => readStoredState())
 
   useEffect(() => {
-    setState(readStoredState())
-    setIsReady(true)
-  }, [])
-
-  useEffect(() => {
-    if (!isReady) return
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-  }, [isReady, state])
+  }, [state])
 
   useEffect(() => {
     if (!state.autoRotate) return

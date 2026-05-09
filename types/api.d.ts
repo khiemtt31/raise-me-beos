@@ -28,6 +28,6 @@ export interface DonationHistoryItemDTO {
   method: string | null
 }
 
-export interface DonationHistoryQueryDTO extends PaginationQueryDTO {}
+export type DonationHistoryQueryDTO = PaginationQueryDTO
 
 export type DonationHistoryResponseDTO = PaginatedResponseDTO<DonationHistoryItemDTO>

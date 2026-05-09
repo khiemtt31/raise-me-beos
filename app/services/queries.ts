@@ -105,7 +105,7 @@ export const usePaymentStatus = (orderCode: string | null, enabled: boolean) => 
   useEffect(() => {
     if (!orderCode || !enabled) return
 
-    let intervalId: ReturnType<typeof setInterval> | undefined
+    let intervalId: ReturnType<typeof setInterval> | null = null
     let isActive = true
     const startedAt = Date.now()
     const maxDurationMs = 5 * 60 * 1000

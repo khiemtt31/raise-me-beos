@@ -90,27 +90,36 @@ function MatrixBackground() {
 function CircuitBackground() {
   const elements = useMemo(
     () =>
-      Array.from({ length: 20 }, () => ({
+      Array.from({ length: 20 }, (_, index) => {
+        const seed = index + 1
+        const primary = (seed * 17) % 100
+        const secondary = (seed * 37) % 100
+        const verticalDuration = 2 + ((seed * 7) % 30) / 10
+        const horizontalDuration = 2 + ((seed * 11) % 30) / 10
+        const nodeDuration = 1 + ((seed * 5) % 20) / 10
+
+        return {
         vertical: {
-          x1: `${Math.random() * 100}%`,
-          x2: `${Math.random() * 100}%`,
-          duration: 2 + Math.random() * 3,
-          delay: Math.random() * 2,
+          x1: `${primary}%`,
+          x2: `${secondary}%`,
+          duration: verticalDuration,
+          delay: (seed % 5) * 0.4,
         },
         horizontal: {
-          y1: `${Math.random() * 100}%`,
-          y2: `${Math.random() * 100}%`,
-          duration: 2 + Math.random() * 3,
-          delay: Math.random() * 2,
+          y1: `${secondary}%`,
+          y2: `${primary}%`,
+          duration: horizontalDuration,
+          delay: ((seed + 2) % 5) * 0.35,
         },
         node: {
-          cx: `${Math.random() * 100}%`,
-          cy: `${Math.random() * 100}%`,
+          cx: `${(seed * 53) % 100}%`,
+          cy: `${(seed * 29) % 100}%`,
           r: 0.5,
-          duration: 1 + Math.random() * 2,
-          delay: Math.random() * 2,
+          duration: nodeDuration,
+          delay: (seed % 4) * 0.25,
         },
-      })),
+      }
+      }),
     []
   )
 

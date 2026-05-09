@@ -9,11 +9,7 @@ interface PageContainerProps {
 /**
  * PageContainer — scrollable inner container for standard pages.
  *
- * Convention compliance (from design/conventions.md):
- *   • pt = var(--page-pt)  →  header height + 1.5 rem  ≈ 96 px  (Double Header Rule)
- *   • px = 1.5 rem (24 px) → 2.5 rem (40 px) → 4 rem (64 px)   (8 pt scale)
- *   • pb = 1.5 rem (24 px) → 2 rem (32 px)                      (8 pt scale)
- *   • max-width 1280 px centred                                   (Container Max-Width rule)
+ * Convention compliance: see `docs/conventions.md`.
  */
 export function PageContainer({ children, className }: PageContainerProps) {
   return (

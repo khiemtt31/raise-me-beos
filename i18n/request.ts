@@ -1,8 +1,7 @@
 ﻿import { getRequestConfig } from "next-intl/server";
 import { cookies, headers } from "next/headers";
 
-const locales = ["en", "vi"] as const;
-type Locale = (typeof locales)[number];
+type Locale = "en" | "vi";
 const defaultLocale: Locale = "en";
 
 const resolveLocale = (value?: string | null): Locale => {

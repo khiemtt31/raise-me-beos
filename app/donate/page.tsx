@@ -45,16 +45,12 @@ export default function DonatePage() {
     [locale],
   );
 
-  const donationContent = getDonationContent(t, {
-    minAmountLabel,
-    currencyLabel,
-  });
+  const donationContent = getDonationContent(t);
 
   const [amount, setAmount] = useState<number>(MIN_DONATION_AMOUNT);
   const [senderName, setSenderName] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [showQR, setShowQR] = useState<boolean>(false);
-  const [isPaymentProcessing, setIsPaymentProcessing] = useState<boolean>(false);
   const [historyPage, setHistoryPage] = useState<number>(1);
 
   const createPaymentMutation = useCreatePaymentMutation();
@@ -73,6 +69,9 @@ export default function DonatePage() {
   });
   const donationHistory = donationHistoryQuery.data?.data ?? [];
   const historyPagination = donationHistoryQuery.data?.pagination;
+  const paymentStatus = paymentStatusQuery.data?.status;
+  const isPaymentProcessing = createPaymentMutation.isPending || paymentStatus === "SUCCESS";
+  const isDialogOpen = showQR && Boolean(payment?.qrCode) && paymentStatus !== 'SUCCESS' && paymentStatus !== 'FAIL';
 
   useRevealObserver(0.1, '0px 0px -50px 0px');
 
@@ -93,22 +92,9 @@ export default function DonatePage() {
   }, []);
 
   useEffect(() => {
-    const status = paymentStatusQuery.data?.status;
-    if (!status) return;
+    if (!paymentStatus) return;
 
-    if (status === "SUCCESS") {
-      setIsPaymentProcessing(true);
-      confetti({
-        particleCount: 150,
-        spread: 100,
-        origin: { y: 0.6 },
-        colors: ["#00ff88", "#00aaff", "#ff0088", "#ffaa00"],
-      });
-      toast.success(t("DONATE.TOAST.PAID.TITLE.001"), {
-        duration: 5000,
-      });
-
-      setShowQR(false);
+    if (paymentStatus === "SUCCESS") {
       createPaymentMutation.reset();
       queryClient.removeQueries({ queryKey: queryKeys.payment });
       if (orderCode) {
@@ -119,13 +105,20 @@ export default function DonatePage() {
       queryClient.invalidateQueries({
         queryKey: queryKeys.donationHistoryBase,
       });
+      confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ["#00ff88", "#00aaff", "#ff0088", "#ffaa00"],
+      });
+      toast.success(t("DONATE.TOAST.PAID.TITLE.001"), {
+        duration: 5000,
+      });
       router.push("/donation/success");
       return;
     }
 
-    if (status === "FAIL") {
-      setShowQR(false);
-      setIsPaymentProcessing(false);
+    if (paymentStatus === "FAIL") {
       createPaymentMutation.reset();
       queryClient.removeQueries({ queryKey: queryKeys.payment });
       if (orderCode) {
@@ -138,7 +131,7 @@ export default function DonatePage() {
   }, [
     createPaymentMutation,
     orderCode,
-    paymentStatusQuery.data?.status,
+    paymentStatus,
     queryClient,
     router,
     t,
@@ -213,7 +206,6 @@ export default function DonatePage() {
   };
 
   const isLoading = createPaymentMutation.isPending;
-  const isDialogOpen = showQR && Boolean(payment?.qrCode);
   const isHistoryLoading = donationHistoryQuery.isLoading;
 
   return (
@@ -261,9 +253,9 @@ export default function DonatePage() {
         </div>
       )}
 
-      <PaymentDialog
-        open={isDialogOpen}
-        onOpenChange={setShowQR}
+        <PaymentDialog
+          open={isDialogOpen}
+          onOpenChange={setShowQR}
         qrCode={payment?.qrCode ?? ""}
         checkoutUrl={payment?.checkoutUrl ?? ""}
         isProcessing={isPaymentProcessing}
@@ -278,7 +270,6 @@ export default function DonatePage() {
             // best-effort cancel
           }
           setShowQR(false);
-          setIsPaymentProcessing(false);
           createPaymentMutation.reset();
           queryClient.removeQueries({ queryKey: queryKeys.payment });
           queryClient.removeQueries({ queryKey: queryKeys.paymentStatus(orderCode) });

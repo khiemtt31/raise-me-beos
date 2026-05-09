@@ -1,58 +1,82 @@
-import { Router } from 'express'
-import { supabase } from '../services/supabase'
+import { Hono } from 'hono'
+import { streamSSE } from 'hono/streaming'
+import { supabase } from '../services/supabase.js'
 
-const router = Router()
+type SseClient = {
+  orderCode: string
+  send: (status: string) => Promise<void>
+}
 
-// Store connected clients
-const clients = new Map<string, { res: any, orderCode: string }>()
+const clients = new Map<string, SseClient>()
 
-router.get('/status/:orderCode', async (req, res) => {
-  const { orderCode } = req.params
-  
-  const allowedOrigins = process.env.CORS_ORIGINS 
-    ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
-    : ['http://localhost:3000']
-    
-  const origin = req.headers.origin as string
-  const allowOrigin = (origin && allowedOrigins.includes(origin)) ? origin : allowedOrigins[0]
+export const resetDonationClients = () => {
+  clients.clear()
+}
 
-  // Set headers for SSE
-  res.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive',
-    'Access-Control-Allow-Origin': allowOrigin,
-    'Access-Control-Allow-Headers': 'Cache-Control',
-  })
+export const registerDonationClient = (orderCode: string, send: (status: string) => Promise<void>) => {
+  const clientId = `${Date.now()}-${Math.random().toString(16).slice(2)}`
+  clients.set(clientId, { orderCode, send })
+  return clientId
+}
 
-  // Send initial data
-  const { data: donation } = await supabase
-    .from('donations')
-    .select('status')
-    .eq('order_code', orderCode)
-    .single()
+export const unregisterDonationClient = (clientId: string) => {
+  clients.delete(clientId)
+}
 
-  if (donation) {
-    res.write(`data: ${JSON.stringify({ status: donation.status })}\n\n`)
+export const hasDonationClient = (orderCode: string) => {
+  for (const client of clients.values()) {
+    if (client.orderCode === orderCode) {
+      return true
+    }
   }
 
-  // Store client connection
-  const clientId = Date.now().toString()
-  clients.set(clientId, { res, orderCode })
+  return false
+}
 
-  // Remove client on disconnect
-  req.on('close', () => {
-    clients.delete(clientId)
+export const broadcastDonationUpdate = async (orderCode: string, status: string) => {
+  const pendingUpdates: Promise<void>[] = []
+
+  for (const [clientId, client] of clients.entries()) {
+    if (client.orderCode !== orderCode) {
+      continue
+    }
+
+    pendingUpdates.push(
+      client
+        .send(status)
+        .catch(() => {
+          clients.delete(clientId)
+        })
+        .then(() => undefined)
+    )
+  }
+
+  await Promise.all(pendingUpdates)
+}
+
+const sseRoutes = new Hono()
+
+sseRoutes.get('/status/:orderCode', async (c) => {
+  const orderCode = c.req.param('orderCode')
+
+  const { data: donation } = await supabase.from('donations').select('status').eq('order_code', orderCode).single()
+
+  return streamSSE(c, async (stream) => {
+    if (donation) {
+      await stream.writeSSE({ data: JSON.stringify({ status: donation.status }) })
+    }
+
+    const clientId = registerDonationClient(orderCode, async (status: string) => {
+      await stream.writeSSE({ data: JSON.stringify({ status }) })
+    })
+
+    await new Promise<void>((resolve) => {
+      stream.onAbort(() => {
+        unregisterDonationClient(clientId)
+        resolve()
+      })
+    })
   })
 })
 
-// Function to broadcast status updates
-export const broadcastDonationUpdate = (orderCode: string, status: string) => {
-  clients.forEach((client, clientId) => {
-    if (client.orderCode === orderCode) {
-      client.res.write(`data: ${JSON.stringify({ status })}\n\n`)
-    }
-  })
-}
-
-export default router
+export default sseRoutes

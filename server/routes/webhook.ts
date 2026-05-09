@@ -1,89 +1,94 @@
-import { Router } from 'express'
-import type { Request, Response } from 'express'
-import { payos } from '../services/payos'
-import { supabase } from '../services/supabase'
-import { broadcastDonationUpdate } from './sse'
-import { DonationStatus } from '../utils/donation-status'
+import { Hono } from 'hono'
+import { payos } from '../services/payos.js'
+import { supabase } from '../services/supabase.js'
+import { DonationStatus } from '../utils/donation-status.js'
+import { getServerRuntimeEnv } from '../utils/runtime-env.js'
+import { broadcastDonationUpdate } from './sse.js'
 
-const router = Router()
+type PayosWebhookPayload = {
+  code?: string
+  desc?: string
+  success?: boolean
+  data?: {
+    orderCode?: string | number
+    code?: string
+  }
+  signature?: string
+}
 
-router.post('/', async (req: Request, res: Response) => {
+const isWebhookPayload = (payload: PayosWebhookPayload): payload is PayosWebhookPayload & { data: Record<string, unknown>; signature: string } => {
+  return (
+    typeof payload.code === 'string' &&
+    typeof payload.desc === 'string' &&
+    typeof payload.success === 'boolean' &&
+    typeof payload.signature === 'string' &&
+    typeof payload.data === 'object' &&
+    payload.data !== null &&
+    'orderCode' in payload.data
+  )
+}
+
+const webhookRoutes = new Hono()
+
+webhookRoutes.post('/', async (c) => {
   try {
-    const payload = req.body as {
-      code?: string
-      desc?: string
-      success?: boolean
-      data?: { orderCode?: string | number; code?: string }
-      signature?: string
+    const payload = (await c.req.json().catch(() => ({}))) as PayosWebhookPayload
+    const env = getServerRuntimeEnv({ env: c.env as Record<string, string | undefined> })
+
+    if (!isWebhookPayload(payload)) {
+      return c.json({ error: 'Invalid webhook payload' }, 400)
     }
 
-    const verifiedData = await payos.webhooks.verify(req.body)
-    const orderCode = (
-      (verifiedData as { orderCode?: string | number })?.orderCode ??
-      payload.data?.orderCode
-    )?.toString()
+    const verifiedData = await payos.webhooks.verify(payload, env.PAYOS_CHECKSUM_KEY)
+    const orderCode = ((verifiedData as { orderCode?: string | number })?.orderCode ?? payload.data?.orderCode)?.toString()
 
     if (!orderCode) {
-      return res.status(400).json({ error: 'Missing orderCode' })
+      return c.json({ error: 'Missing orderCode' }, 400)
     }
 
     const topCode = payload.code
     const dataCode = payload.data?.code
     const successFlag = payload.success
 
-    const isPaid =
-      successFlag === true && topCode === '00' && dataCode === '00'
+    const isPaid = successFlag === true && topCode === '00' && dataCode === '00'
     const isFailed =
       successFlag === false ||
       (typeof topCode === 'string' && topCode !== '00') ||
       (typeof dataCode === 'string' && dataCode !== '00')
 
     if (!isPaid && !isFailed) {
-      return res.json({ success: true })
+      return c.json({ success: true })
     }
 
     const status = isPaid ? DonationStatus.SUCCESS : DonationStatus.FAIL
 
-    const { error } = await supabase
-      .from('donations')
-      .update({ status })
-      .eq('order_code', orderCode)
-      .select()
+    const { error } = await supabase.from('donations').update({ status }).eq('order_code', orderCode).select()
 
     if (error) {
       console.error('Failed to update donation:', error)
-      return res.status(500).json({ error: 'Failed to update donation' })
+      return c.json({ error: 'Failed to update donation' }, 500)
     }
 
     if (status === DonationStatus.SUCCESS) {
-      // Get the updated donation
-      const { data: donation } = await supabase
-        .from('donations')
-        .select('*')
-        .eq('order_code', orderCode)
-        .single()
+      const { data: donation } = await supabase.from('donations').select('*').eq('order_code', orderCode).single()
 
-      // Create notification for the user if they have an account
       if (donation?.user_id) {
-        await supabase
-          .from('notifications')
-          .insert({
-            user_id: donation.user_id,
-            title: 'Donation Successful',
-            content: `Your donation of ${donation.amount.toLocaleString()}đ has been processed successfully. Thank you for your support!`,
-            type: 'DONATION_SUCCESS',
-          })
+        await supabase.from('notifications').insert({
+          user_id: donation.user_id,
+          title: 'Donation Successful',
+          content: `Your donation of ${donation.amount.toLocaleString()}đ has been processed successfully. Thank you for your support!`,
+          type: 'DONATION_SUCCESS',
+        })
       }
     }
 
-    // Broadcast the update to connected clients
-    broadcastDonationUpdate(orderCode, status)
+    await broadcastDonationUpdate(orderCode, status)
 
-    return res.json({ success: true })
+    return c.json({ success: true })
   } catch (error) {
     console.error('Webhook error:', error)
-    return res.status(400).json({ error: 'Invalid signature' })
+    return c.json({ error: 'Invalid signature' }, 400)
   }
 })
 
-export default router
+export default webhookRoutes

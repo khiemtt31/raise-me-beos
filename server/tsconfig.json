@@ -2,8 +2,9 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "noEmit": false,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "target": "es2020",
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -11,5 +12,5 @@
     "skipLibCheck": true
   },
   "include": ["./**/*.ts", "../types/**/*.d.ts"],
-  "exclude": ["node_modules", "../node_modules"]
+  "exclude": ["node_modules", "../node_modules", "test/**/*", "**/*.test.ts", "**/*.spec.ts"]
 }
