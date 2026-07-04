@@ -1,15 +1,5 @@
-# Agent Guide Entry Point
+<!-- BEGIN:nextjs-agent-rules -->
+# This is NOT the Next.js you know
 
-If you are an AI agent working in this repository, read `docs/AGENTS.md` first.
-
-Canonical references:
-
-- `docs/AGENTS.md`
-- `docs/README.md`
-- `docs/architecture.md`
-- `docs/setup.md`
-- `docs/conventions.md`
-- `docs/quality.md`
-- `docs/DESIGN.md`
-- `.claude/settings.local.json`
-- `.sisyphus/`
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+<!-- END:nextjs-agent-rules -->

@@ -1,2 +1,0 @@
-export const MIN_DONATION_AMOUNT = 10_000
-export const MAX_DONATION_AMOUNT = 500_000
