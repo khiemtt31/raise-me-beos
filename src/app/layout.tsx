@@ -1,26 +1,12 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, Geist_Mono, Space_Grotesk } from "next/font/google";
-import "./globals.css";
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-});
-
-const dmSerif = DM_Serif_Display({
-  variable: "--font-dm-serif",
-  subsets: ["latin"],
-  weight: "400",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import "./globals.scss";
 
 export const metadata: Metadata = {
-  title: "Parallel universe",
-  description: "An original art project in the sculpture genre, combining steampunk and readymade styles.",
+  title: {
+    default: "Hanzo",
+    template: "%s | Hanzo",
+  },
+  description: "Portfolio homepage for Hanzo Hekim, implemented from the provided Figma homepage frame.",
 };
 
 export default function RootLayout({
@@ -29,10 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${spaceGrotesk.variable} ${dmSerif.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="en" className="h-full antialiased">
       <body className="min-h-full bg-background text-foreground">{children}</body>
     </html>
   );
