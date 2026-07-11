@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Homepage } from "@/components/home/Homepage";
+import { PortfolioPage } from "@/components/portfolio/PortfolioPage";
 
 export const metadata: Metadata = {
-  title: "Home",
-  description: "The Hanzo portfolio homepage based on the provided Figma design.",
+  title: "Hanzo Portfolio",
+  description: "The horizontally scrolling Hanzo portfolio based on the provided Figma design export.",
 };
 
 export default function Home() {
-  return <Homepage />;
+  return <PortfolioPage />;
 }

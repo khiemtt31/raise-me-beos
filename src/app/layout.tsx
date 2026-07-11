@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import "./globals.scss";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
     default: "Hanzo",
     template: "%s | Hanzo",
   },
-  description: "Portfolio homepage for Hanzo Hekim, implemented from the provided Figma homepage frame.",
+  description: "Horizontally scrolling portfolio for Hanzo Hekim, implemented from the provided Figma design frames.",
 };
 
 export default function RootLayout({

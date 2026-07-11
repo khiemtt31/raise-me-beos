@@ -12,8 +12,6 @@
 
 # testing
 /coverage
-/playwright-report/
-/test-results/
 
 # next.js
 /.next/
@@ -23,6 +21,9 @@
 
 # production
 /build
+
+# large local media
+/public/videos/*.mp4
 
 # misc
 .DS_Store
