@@ -35,8 +35,7 @@ It currently includes these sections:
 - `Projects`
 - `Contact`
 
-<details open>
-<summary><strong>Tiny tour</strong></summary>
+Tiny Tour:
 
 - `Home` introduces the portfolio with portrait imagery and a bold title.
 - `Work` shows a milestone timeline.
@@ -44,17 +43,6 @@ It currently includes these sections:
 - `Projects` and `Contact` are ready as empty design sections for expansion.
 
 </details>
-
----
-
-## Run It
-
-```bash
-npm install
-npm run dev
-```
-
-Open the local app in your browser and scroll sideways through the sections.
 
 ---
 
@@ -132,19 +120,3 @@ The original background videos are intentionally kept out of git because they ar
 - The navigation uses section IDs that match the portfolio sections.
 - `Projects` and `Contact` currently exist as placeholder panels, so they can be expanded later without changing the layout.
 - If you change the visual copy or the section list, update the matching data in `src/components/portfolio/PortfolioData.ts`.
-
----
-
-## Helpful Commands
-
-```bash
-npm run lint
-npm run typecheck
-npm run build
-```
-
-If you want, the next fun upgrade is usually one of these:
-
-1. add a live preview screenshot section to the README
-2. make the README even more playful with badges, ASCII art, or little stickers
-3. turn the placeholder `Projects` and `Contact` panels into full sections
