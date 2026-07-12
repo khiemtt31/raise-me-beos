@@ -3,9 +3,8 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-import { VisualizerField } from "@/components/portfolio/Visualizer";
 import { WorkMilestones, type SectionId } from "@/components/portfolio/PortfolioData";
-import { Cn } from "@/lib/Utils";
+import { Cn } from "@/lib/utils";
 
 type SectionProps = {
   active: boolean;
@@ -32,8 +31,6 @@ const AboutGamesCopy =
 export function HomeSection({ active }: SectionProps) {
   return (
     <section aria-labelledby="home-title" className="portfolio-section portfolio-section--home" id="home">
-      <VisualizerField active={active} sectionId="home" />
-
       <div className="portfolio-section__content portfolio-home">
         <motion.div
           className="portfolio-home__primary portfolio-image-frame"
@@ -91,8 +88,6 @@ export function HomeSection({ active }: SectionProps) {
 export function WorkSection({ active }: SectionProps) {
   return (
     <section aria-labelledby="work-title" className="portfolio-section portfolio-section--work" id="work">
-      <VisualizerField active={active} sectionId="work" />
-
       <motion.div
         className="portfolio-section__content portfolio-work"
         variants={ContentMotion}
@@ -125,8 +120,6 @@ export function WorkSection({ active }: SectionProps) {
 export function AboutSection({ active }: SectionProps) {
   return (
     <section aria-labelledby="about-title" className="portfolio-section portfolio-section--about" id="about">
-      <VisualizerField active={active} sectionId="about" />
-
       <div className="portfolio-section__content portfolio-about">
         <h2 className="sr-only" id="about-title">
           About
@@ -191,12 +184,17 @@ export function AboutSection({ active }: SectionProps) {
 export function EmptyDesignSection({ active, sectionId, title }: EmptySectionProps) {
   return (
     <section aria-labelledby={`${sectionId}-title`} className={`portfolio-section portfolio-section--${sectionId}`} id={sectionId}>
-      <VisualizerField active={active} sectionId={sectionId} />
-      <div className="portfolio-section__content">
+      <motion.div
+        className="portfolio-section__content"
+        variants={ContentMotion}
+        initial="inactive"
+        animate={active ? "active" : "inactive"}
+        transition={{ duration: 0.8, ease: MotionEase }}
+      >
         <h2 className="sr-only" id={`${sectionId}-title`}>
           {title}
         </h2>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-import { Cn } from "@/lib/Utils";
+import { Cn } from "@/lib/utils";
 import { SectionVisualizers, type SectionId, type VisualizerLayer, type VisualizerTone } from "@/components/portfolio/PortfolioData";
 
 type BlobDefinition = {
@@ -92,6 +92,27 @@ const BlobPresets: Record<VisualizerTone, BlobDefinition[]> = {
 };
 
 const MotionEase: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+export function VisualizerStage({ sectionId }: Pick<VisualizerFieldProps, "sectionId">) {
+  return (
+    <div aria-hidden="true" className="portfolio-visualizer-stage">
+      <AnimatePresence initial={false} mode="sync">
+        <motion.div
+          key={sectionId}
+          className="portfolio-section__visualizers"
+          initial={{ opacity: 0, scale: 1.04, filter: "blur(18px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 0.96, filter: "blur(22px)" }}
+          transition={{ duration: 0.95, ease: MotionEase }}
+        >
+          {SectionVisualizers[sectionId].map((Layer) => (
+            <Visualizer key={Layer.id} {...Layer} active />
+          ))}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export function VisualizerField({ active, sectionId }: VisualizerFieldProps) {
   return (
