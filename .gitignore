@@ -22,9 +22,6 @@
 # production
 /build
 
-# large local media
-/public/videos/*.mp4
-
 # misc
 .DS_Store
 *.pem

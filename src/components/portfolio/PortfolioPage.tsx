@@ -60,6 +60,10 @@ export function PortfolioPage() {
 
   return (
     <main className="portfolio-page" id="portfolio">
+      <video aria-hidden="true" autoPlay className="portfolio-background-video" loop muted playsInline preload="metadata">
+        <source src="/videos/live-background-001.mp4" type="video/mp4" />
+      </video>
+
       <Header activeSectionId={ActiveSection} navItems={HeaderSections} onNavigate={ScrollToSection} />
       <motion.div aria-hidden="true" className="portfolio-scroll-glow" style={{ opacity: SmoothProgress }} />
 

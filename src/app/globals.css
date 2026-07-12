@@ -121,6 +121,27 @@
     background: var(--background);
   }
 
+  .portfolio-page::after {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    content: "";
+    background:
+      radial-gradient(circle at 18% 22%, rgba(255, 242, 226, 0.56), transparent 34%),
+      linear-gradient(90deg, rgba(255, 242, 226, 0.74), rgba(255, 242, 226, 0.52));
+  }
+
+  .portfolio-background-video {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
   .portfolio-scroll {
     position: relative;
     z-index: 1;
@@ -161,7 +182,7 @@
     overflow: hidden;
     scroll-snap-align: start;
     scroll-snap-stop: always;
-    background: var(--background);
+    background: transparent;
     container-type: inline-size;
   }
 
