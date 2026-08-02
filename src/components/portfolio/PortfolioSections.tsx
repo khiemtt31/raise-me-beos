@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { BrainCircuit, Clapperboard, Code2, Gamepad2, Orbit, Sparkles, Trophy } from "lucide-react";
 
-import { WorkMilestones, type SectionId } from "@/components/portfolio/PortfolioData";
-import { Cn } from "@/lib/utils";
+import type { SectionId } from "@/components/portfolio/PortfolioData";
+import { WorkTimeline } from "@/components/portfolio/WorkTimeline";
 
 type SectionProps = {
   active: boolean;
@@ -22,11 +23,32 @@ const ContentMotion = {
   inactive: { opacity: 0.72, scale: 0.985, y: 10 },
 };
 
-const AboutTechnologyCopy =
-  "I've always been fascinated by technology and science fiction. What draws me to the genre isn't just the futuristic worlds, but the possibility that today's imagination can become tomorrow's reality. The rapid evolution of artificial intelligence is a perfect example of ideas once considered fiction becoming part of everyday life, and it continues to inspire my curiosity as a developer.";
+const AboutHobbies = [
+  { Icon: Trophy, label: "Football", note: "Energy + teamwork", tone: "spice" },
+  { Icon: Clapperboard, label: "Movies", note: "Stories + worlds", tone: "gold" },
+  { Icon: Gamepad2, label: "Games", note: "Strategy + play", tone: "sand" },
+  { Icon: Orbit, label: "Sci-fi", note: "Future + wonder", tone: "umber" },
+];
 
-const AboutGamesCopy =
-  "Outside of coding, I enjoy playing games that challenge creativity, strategy, and problem-solving. I appreciate experiences that encourage exploration, experimentation, and continuous learning. I believe curiosity is one of the strongest drivers of growth, and it's something I bring into both my work and my everyday life.";
+const AboutSkills = [
+  {
+    Icon: Code2,
+    copy: "From polished interfaces to dependable APIs, I enjoy understanding the whole product.",
+    title: "Full-stack craft",
+  },
+  {
+    Icon: BrainCircuit,
+    copy: "I break large problems into clear systems, useful feedback loops, and shippable steps.",
+    title: "Systems thinking",
+  },
+  {
+    Icon: Sparkles,
+    copy: "AI and emerging technology keep me experimenting with what software can become next.",
+    title: "Future curious",
+  },
+];
+
+const AboutPrinciples = ["Learn one percent every day", "Build with purpose, not noise", "Stay playful when problems get hard"];
 
 export function HomeSection({ active }: SectionProps) {
   return (
@@ -44,8 +66,8 @@ export function HomeSection({ active }: SectionProps) {
             alt="Primary portrait of Hanzo Hekim"
             width={700}
             height={800}
-            priority
-            sizes="(max-width: 900px) 86vw, 37vw"
+            preload
+            sizes="(max-width: 900px) min(calc(100vw - 2rem), 28rem), min(36.46vw, 700px)"
           />
         </motion.div>
 
@@ -61,8 +83,7 @@ export function HomeSection({ active }: SectionProps) {
             alt="Secondary portrait of Hanzo Hekim"
             width={500}
             height={500}
-            priority
-            sizes="(max-width: 900px) 68vw, 27vw"
+            sizes="(max-width: 900px) min(calc(72vw - 1.44rem), 22rem), min(26.05vw, 500px)"
           />
         </motion.div>
 
@@ -96,85 +117,138 @@ export function WorkSection({ active }: SectionProps) {
         transition={{ duration: 0.8, ease: MotionEase }}
       >
         <h2 className="portfolio-display portfolio-work__title" id="work-title">
-          How I Evolved
+          Hybrid Achievement <span className="portfolio-work__title-symbol" aria-hidden="true">⚒</span>
+          <span className="sr-only"> through hard work</span>
         </h2>
-
-        <div className="portfolio-timeline" aria-label="Career evolution timeline">
-          <div className="portfolio-timeline__line" />
-          {WorkMilestones.map((Milestone) => (
-            <div
-              key={Milestone.id}
-              className={Cn("portfolio-milestone", `portfolio-milestone--${Milestone.side}`, Milestone.className)}
-              style={{ left: Milestone.position }}
-            >
-              {Milestone.side !== "line" ? <span className="portfolio-milestone__marker" aria-hidden="true" /> : null}
-              <p className="portfolio-milestone__label">{Milestone.label}</p>
-            </div>
-          ))}
-        </div>
+        <p className="portfolio-work__hint">Grow through out the experiences and keep moving forward everyday</p>
+        <WorkTimeline active={active} />
       </motion.div>
     </section>
   );
 }
 
 export function AboutSection({ active }: SectionProps) {
+  const ShouldReduceMotion = useReducedMotion();
+  const MotionDuration = ShouldReduceMotion ? 0 : 0.65;
+
   return (
     <section aria-labelledby="about-title" className="portfolio-section portfolio-section--about" id="about">
-      <div className="portfolio-section__content portfolio-about">
-        <h2 className="sr-only" id="about-title">
-          About
-        </h2>
-
+      <div className="portfolio-section__content portfolio-about" data-active={active}>
         <motion.div
-          className="portfolio-about__primary portfolio-image-frame"
-          variants={ContentMotion}
-          initial="inactive"
-          animate={active ? "active" : "inactive"}
-          transition={{ duration: 0.8, ease: MotionEase }}
+          className="portfolio-about__playbook"
+          initial={{ opacity: 0, x: -52 }}
+          animate={active ? { opacity: 1, x: 0 } : { opacity: 0.58, x: -24 }}
+          transition={{ duration: MotionDuration, ease: MotionEase }}
         >
-          <Image
-            src="/images/portfolio/AboutPrimary.png"
-            alt="Hanzo in a science fiction desert scene"
-            width={856}
-            height={466}
-            sizes="(max-width: 900px) 88vw, 45vw"
-          />
+          <p className="portfolio-about__eyebrow">Player profile / off the clock</p>
+          <h2 className="portfolio-display portfolio-about__title" id="about-title">
+            Built by curiosity.
+            <span>Powered by play.</span>
+          </h2>
+          <p className="portfolio-about__lede">
+            I am a software engineer who treats life like an open-world game: explore widely, learn constantly, and leave every team better than I found it.
+          </p>
+
+          <div className="portfolio-about__hobbies" aria-label="Hobbies and interests">
+            {AboutHobbies.map(({ Icon, label, note, tone }, Index) => (
+              <motion.div
+                key={label}
+                className={`portfolio-about__hobby portfolio-about__hobby--${tone}`}
+                initial={{ opacity: 0, scale: 0.82, y: 18 }}
+                animate={active ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0.55, scale: 0.9, y: 8 }}
+                transition={{ duration: MotionDuration, delay: ShouldReduceMotion ? 0 : 0.08 + Index * 0.07, ease: MotionEase }}
+                whileHover={ShouldReduceMotion ? undefined : { rotate: Index % 2 === 0 ? -3 : 3, scale: 1.05, y: -4 }}
+              >
+                <Icon aria-hidden="true" size={19} strokeWidth={2.3} />
+                <span>
+                  <strong>{label}</strong>
+                  <small>{note}</small>
+                </span>
+              </motion.div>
+            ))}
+          </div>
+
+          <section className="portfolio-about__loadout" aria-labelledby="about-loadout-title">
+            <div className="portfolio-about__section-heading">
+              <span>01</span>
+              <h3 id="about-loadout-title">Engineering loadout</h3>
+            </div>
+            <div className="portfolio-about__skill-grid">
+              {AboutSkills.map(({ Icon, copy, title }, Index) => (
+                <motion.article
+                  key={title}
+                  className="portfolio-about__skill"
+                  initial={{ opacity: 0, y: 22 }}
+                  animate={active ? { opacity: 1, y: 0 } : { opacity: 0.52, y: 12 }}
+                  transition={{ duration: MotionDuration, delay: ShouldReduceMotion ? 0 : 0.27 + Index * 0.08, ease: MotionEase }}
+                  whileHover={ShouldReduceMotion ? undefined : { y: -6 }}
+                >
+                  <Icon aria-hidden="true" size={22} strokeWidth={2.15} />
+                  <h4>{title}</h4>
+                  <p>{copy}</p>
+                </motion.article>
+              ))}
+            </div>
+          </section>
+
+          <motion.section
+            className="portfolio-about__method"
+            aria-labelledby="about-method-title"
+            initial={{ opacity: 0, y: 20 }}
+            animate={active ? { opacity: 1, y: 0 } : { opacity: 0.55, y: 10 }}
+            transition={{ duration: MotionDuration, delay: ShouldReduceMotion ? 0 : 0.5, ease: MotionEase }}
+          >
+            <div className="portfolio-about__section-heading">
+              <span>02</span>
+              <h3 id="about-method-title">Life methodology</h3>
+            </div>
+            <ol>
+              {AboutPrinciples.map((Principle, Index) => (
+                <li key={Principle}>
+                  <span>{String(Index + 1).padStart(2, "0")}</span>
+                  {Principle}
+                </li>
+              ))}
+            </ol>
+          </motion.section>
         </motion.div>
 
-        <motion.p
-          className="portfolio-about__copy portfolio-about__copy--top"
-          variants={ContentMotion}
-          initial="inactive"
-          animate={active ? "active" : "inactive"}
-          transition={{ duration: 0.8, delay: 0.08, ease: MotionEase }}
-        >
-          {AboutTechnologyCopy}
-        </motion.p>
-
-        <motion.p
-          className="portfolio-about__copy portfolio-about__copy--bottom"
-          variants={ContentMotion}
-          initial="inactive"
-          animate={active ? "active" : "inactive"}
-          transition={{ duration: 0.8, delay: 0.16, ease: MotionEase }}
-        >
-          {AboutGamesCopy}
-        </motion.p>
-
         <motion.div
-          className="portfolio-about__secondary portfolio-image-frame"
-          variants={ContentMotion}
-          initial="inactive"
-          animate={active ? "active" : "inactive"}
-          transition={{ duration: 0.8, delay: 0.22, ease: MotionEase }}
+          className="portfolio-about__gallery"
+          initial={{ opacity: 0, x: 72 }}
+          animate={active ? { opacity: 1, x: 0 } : { opacity: 0.56, x: 36 }}
+          transition={{ duration: MotionDuration, delay: ShouldReduceMotion ? 0 : 0.12, ease: MotionEase }}
         >
-          <Image
-            src="/images/portfolio/AboutSecondary.png"
-            alt="Hanzo portrait in front of an eclipse"
-            width={778}
-            height={561}
-            sizes="(max-width: 900px) 88vw, 41vw"
-          />
+          <motion.figure className="portfolio-about__primary" whileHover={ShouldReduceMotion ? undefined : { rotate: -1.2, scale: 1.015 }}>
+            <Image
+              src="/images/portfolio/AboutPrimary.png"
+              alt="Hanzo in a science fiction desert scene"
+              width={856}
+              height={466}
+              sizes="(max-width: 900px) 92vw, 39vw"
+            />
+            <figcaption>Explorer mode / always on</figcaption>
+          </motion.figure>
+
+          <motion.figure className="portfolio-about__secondary" whileHover={ShouldReduceMotion ? undefined : { rotate: 1.2, scale: 1.02 }}>
+            <Image
+              src="/images/portfolio/AboutSecondary.png"
+              alt="Hanzo portrait in front of an eclipse"
+              width={778}
+              height={561}
+              sizes="(max-width: 900px) 76vw, 29vw"
+            />
+            <figcaption>Engineer / builder / problem solver</figcaption>
+          </motion.figure>
+
+          <div className="portfolio-about__orbit" aria-hidden="true">
+            <Orbit size={32} strokeWidth={1.6} />
+          </div>
+          <div className="portfolio-about__film" aria-hidden="true">
+            <Clapperboard size={27} strokeWidth={1.8} />
+          </div>
+          <span className="portfolio-about__ball-shadow" aria-hidden="true" />
+          <span className="portfolio-about__ball" aria-hidden="true">⚽</span>
         </motion.div>
       </div>
     </section>

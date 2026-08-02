@@ -1,6 +1,6 @@
 export type SectionId = "home" | "work" | "about" | "projects" | "contact";
 
-export type VisualizerTone = "aurora" | "ribbon" | "lime" | "wash";
+export type VisualizerTone = "sandstorm" | "shadow" | "spice" | "sun";
 
 export type VisualizerLayer = {
   activeScale?: number;
@@ -12,11 +12,21 @@ export type VisualizerLayer = {
 };
 
 export type WorkMilestone = {
-  className?: string;
+  align: "left" | "center" | "right";
+  company: string;
+  companyProfile: string;
+  current?: boolean;
   id: string;
-  label: string;
+  image: string;
+  imageAlt: string;
+  monogram: string;
+  period: string;
   position: string;
-  side: "top" | "bottom" | "line";
+  role: string;
+  shortRole: string;
+  side: "top" | "bottom";
+  skills: string[];
+  summary: string;
 };
 
 export const PortfolioSections: { id: SectionId; label: string }[] = [
@@ -33,21 +43,21 @@ export const SectionVisualizers: Record<SectionId, VisualizerLayer[]> = {
   home: [
     {
       id: "home-top-right",
-      tone: "ribbon",
+      tone: "sandstorm",
       className: "visualizer--home-top-right",
       rotation: -7,
       activeScale: 1.04,
     },
     {
-      id: "home-right-lime",
-      tone: "lime",
-      className: "visualizer--home-right-lime",
+      id: "home-right-sun",
+      tone: "sun",
+      className: "visualizer--home-right-sun",
       rotation: 10,
       idleScale: 0.94,
     },
     {
       id: "home-bottom-left",
-      tone: "aurora",
+      tone: "spice",
       className: "visualizer--home-bottom-left",
       rotation: 16,
     },
@@ -55,32 +65,32 @@ export const SectionVisualizers: Record<SectionId, VisualizerLayer[]> = {
   work: [
     {
       id: "work-left",
-      tone: "aurora",
+      tone: "spice",
       className: "visualizer--work-left",
       rotation: -16,
       activeScale: 1.08,
     },
     {
       id: "work-top",
-      tone: "ribbon",
+      tone: "sandstorm",
       className: "visualizer--work-top",
       rotation: 4,
     },
     {
       id: "work-right",
-      tone: "lime",
+      tone: "sun",
       className: "visualizer--work-right",
       rotation: 21,
     },
     {
       id: "work-bottom-left",
-      tone: "wash",
+      tone: "shadow",
       className: "visualizer--work-bottom-left",
       rotation: -3,
     },
     {
       id: "work-bottom-right",
-      tone: "aurora",
+      tone: "spice",
       className: "visualizer--work-bottom-right",
       rotation: 13,
     },
@@ -88,20 +98,20 @@ export const SectionVisualizers: Record<SectionId, VisualizerLayer[]> = {
   about: [
     {
       id: "about-top-right",
-      tone: "ribbon",
+      tone: "sandstorm",
       className: "visualizer--about-top-right",
       rotation: 12,
       activeScale: 1.05,
     },
     {
       id: "about-right",
-      tone: "aurora",
+      tone: "spice",
       className: "visualizer--about-right",
       rotation: -9,
     },
     {
       id: "about-bottom-left",
-      tone: "wash",
+      tone: "shadow",
       className: "visualizer--about-bottom-left",
       rotation: 15,
     },
@@ -109,20 +119,20 @@ export const SectionVisualizers: Record<SectionId, VisualizerLayer[]> = {
   projects: [
     {
       id: "projects-top-right",
-      tone: "ribbon",
+      tone: "sandstorm",
       className: "visualizer--projects-top-right",
       rotation: 9,
       activeScale: 1.04,
     },
     {
       id: "projects-right",
-      tone: "aurora",
+      tone: "spice",
       className: "visualizer--projects-right",
       rotation: -8,
     },
     {
       id: "projects-bottom-left",
-      tone: "wash",
+      tone: "shadow",
       className: "visualizer--projects-bottom-left",
       rotation: 4,
     },
@@ -130,32 +140,32 @@ export const SectionVisualizers: Record<SectionId, VisualizerLayer[]> = {
   contact: [
     {
       id: "contact-top-left",
-      tone: "aurora",
+      tone: "spice",
       className: "visualizer--contact-top-left",
       rotation: -18,
       activeScale: 1.07,
     },
     {
       id: "contact-top-right",
-      tone: "lime",
+      tone: "sun",
       className: "visualizer--contact-top-right",
       rotation: 8,
     },
     {
       id: "contact-left",
-      tone: "ribbon",
+      tone: "sandstorm",
       className: "visualizer--contact-left",
       rotation: 17,
     },
     {
       id: "contact-bottom",
-      tone: "aurora",
+      tone: "spice",
       className: "visualizer--contact-bottom",
       rotation: -7,
     },
     {
       id: "contact-bottom-right",
-      tone: "wash",
+      tone: "shadow",
       className: "visualizer--contact-bottom-right",
       rotation: 25,
     },
@@ -165,33 +175,71 @@ export const SectionVisualizers: Record<SectionId, VisualizerLayer[]> = {
 export const WorkMilestones: WorkMilestone[] = [
   {
     id: "frontend-force",
-    label: "Joining the software forces as a part time Frontend Developer",
-    position: "14.5%",
-    side: "top",
+    align: "left",
+    company: "TANCA Joint Stock Company",
+    companyProfile: "Vietnamese HR technology company building a cloud platform for attendance, payroll, and workforce operations.",
+    image: "/Work/work-placeholder.jpg",
+    imageAlt: "Temporary workplace placeholder",
+    monogram: "TA",
+    period: "Mar 2024 - Oct 2024",
+    position: "10%",
+    role: "Frontend Developer",
+    shortRole: "Frontend developer",
+    side: "bottom",
+    skills: ["React", "TypeScript", "SaaS", "Product delivery"],
+    summary:
+      "Positioned as an intermediate Frontend Developer, I collaborated with a cross-functional team to ship profitable features for a Human Resource Management SaaS product.",
   },
   {
     id: "fullstack-intern",
-    label: "Continuous learning to become a Full Stack Developer Intern",
-    position: "32.5%",
-    side: "bottom",
+    align: "center",
+    company: "Vucar Joint Stock Company",
+    companyProfile: "A technology-led automotive marketplace improving how used cars are inspected, valued, and auctioned.",
+    image: "/Work/work-placeholder.jpg",
+    imageAlt: "Temporary workplace placeholder",
+    monogram: "VU",
+    period: "Nov 2024 - Dec 2024",
+    position: "34%",
+    role: "Intern Software Engineer",
+    shortRole: "Full-stack intern",
+    side: "top",
+    skills: ["Full Stack", "AI Agents", "API design", "Car bidding"],
+    summary:
+      "Worked as a Full Stack Developer to enhance a car bidding system with integrated AI agents while also building supporting AI services and solving product problems end to end.",
   },
   {
     id: "fresher-fullstack",
-    label: "Keep moving forward to Fresher Full Stack Developer",
-    position: "50.4%",
-    side: "top",
+    align: "center",
+    company: "SystemEXE Vietnam Limited Company",
+    companyProfile: "The Vietnam engineering center of a Japanese software group delivering enterprise systems for clients in Japan.",
+    image: "/Work/work-placeholder.jpg",
+    imageAlt: "Temporary workplace placeholder",
+    monogram: "SX",
+    period: "Mar 2025 - May 2026",
+    position: "59%",
+    role: "Fresher Software Engineer",
+    shortRole: "Software engineer",
+    side: "bottom",
+    skills: ["Agile", "SDLC", "Backend", "Japanese projects"],
+    summary:
+      "Focused on solving software problems for Japanese clients, following Agile practices closely and contributing throughout the full software development lifecycle.",
   },
   {
     id: "junior-fullstack",
-    label: "Full fill my skill to become Junior Full Stack Developer",
-    position: "68.9%",
-    side: "bottom",
-  },
-  {
-    id: "one-percent",
-    className: "portfolio-milestone--end",
-    label: "Continuos learning 1% everyday",
-    position: "81.1%",
-    side: "line",
+    align: "right",
+    company: "Amaris Vietnam Limited Company",
+    companyProfile: "Amaris Consulting is Mantu's technology consulting business, connecting engineering specialists with global enterprise teams.",
+    current: true,
+    image: "/Work/work-placeholder.jpg",
+    imageAlt: "Temporary workplace placeholder",
+    monogram: "AM",
+    period: "Jun 2026 - Present",
+    position: "84%",
+    role: "Software Engineer",
+    shortRole: "Software consultant",
+    side: "top",
+    skills: ["Consulting", "Agile & Scrum", "SDLC", "Bosch BGSW"],
+    summary:
+      "I work as a Software Engineering Consultant outsourced to Bosch Global Software Technologies Vietnam, applying the full SDLC within Agile and Scrum delivery teams.",
   },
 ];

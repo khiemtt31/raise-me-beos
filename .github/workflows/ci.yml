@@ -28,3 +28,6 @@ jobs:
 
       - name: Build
         run: npm run build:cloudflare
+
+      - name: Verify image optimization
+        run: npm run verify:images
