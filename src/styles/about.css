@@ -1,0 +1,468 @@
+@layer components {
+  .portfolio-about {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(25rem, 0.92fr);
+    align-items: stretch;
+    gap: clamp(2rem, 5vw, 6rem);
+    padding: clamp(6.5rem, 10vh, 8.5rem) clamp(1.5rem, 5vw, 6rem) clamp(1.5rem, 4vh, 3rem);
+  }
+
+  .portfolio-about__playbook {
+    position: relative;
+    top: auto;
+    left: auto;
+    display: flex;
+    width: auto;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem 0;
+    color: var(--ink-deep);
+  }
+
+  .portfolio-about__eyebrow {
+    margin: 0 0 0.55rem;
+    color: var(--brand-active);
+    font-family: monospace;
+    font-size: clamp(0.63rem, 0.7vw, 0.78rem);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-about__title {
+    margin: 0;
+    color: var(--ink-title);
+    font-size: clamp(3.1rem, 4.15vw, 5rem);
+    line-height: 0.91;
+  }
+
+  .portfolio-about__title span {
+    display: block;
+    margin: 0.18em 0 0 0.9em;
+    color: var(--brand-active);
+    font-family: var(--font-space-grotesk), Arial, sans-serif;
+    font-size: 0.43em;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+
+  .portfolio-about__lede {
+    width: min(42rem, 92%);
+    margin: 0.8rem 0 0;
+    color: rgba(43, 28, 19, 0.84);
+    font-size: clamp(0.88rem, 1vw, 1.08rem);
+    font-weight: 580;
+    line-height: 1.38;
+  }
+
+  .portfolio-about__hobbies {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .portfolio-about__hobby {
+    display: grid;
+    min-width: 0;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.45rem;
+    align-items: center;
+    border: 2px solid var(--ink-deep);
+    padding: 0.48rem;
+    background: rgba(240, 223, 189, 0.88);
+    box-shadow: 0.2rem 0.2rem 0 var(--ink-deep);
+  }
+
+  .portfolio-about__hobby > svg {
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid currentColor;
+    padding: 0.35rem;
+  }
+
+  .portfolio-about__hobby span {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+  }
+
+  .portfolio-about__hobby strong {
+    font-size: clamp(0.68rem, 0.75vw, 0.82rem);
+    line-height: 1;
+  }
+
+  .portfolio-about__hobby small {
+    margin-top: 0.18rem;
+    overflow: hidden;
+    color: rgba(43, 28, 19, 0.64);
+    font-family: monospace;
+    font-size: clamp(0.48rem, 0.52vw, 0.58rem);
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .portfolio-about__hobby--spice > svg {
+    background: rgba(182, 91, 50, 0.2);
+    color: var(--spice-deep);
+  }
+
+  .portfolio-about__hobby--gold > svg {
+    background: rgba(201, 154, 69, 0.24);
+    color: var(--brand-active);
+  }
+
+  .portfolio-about__hobby--sand > svg {
+    background: rgba(212, 173, 108, 0.54);
+    color: var(--umber);
+  }
+
+  .portfolio-about__hobby--umber > svg {
+    background: rgba(75, 45, 32, 0.14);
+    color: var(--umber);
+  }
+
+  .portfolio-about__loadout,
+  .portfolio-about__method {
+    margin-top: 1rem;
+  }
+
+  .portfolio-about__section-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .portfolio-about__section-heading::after {
+    width: 100%;
+    height: 2px;
+    content: "";
+    background: var(--ink-deep);
+    opacity: 0.16;
+  }
+
+  .portfolio-about__section-heading > span {
+    display: grid;
+    flex: 0 0 1.55rem;
+    height: 1.55rem;
+    place-items: center;
+    background: var(--ink-deep);
+    color: var(--gold);
+    font-family: monospace;
+    font-size: 0.62rem;
+    font-weight: 900;
+  }
+
+  .portfolio-about__section-heading h3 {
+    flex: 0 0 auto;
+    margin: 0;
+    font-family: var(--font-space-grotesk), Arial, sans-serif;
+    font-size: clamp(0.78rem, 0.9vw, 1rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-about__skill-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .portfolio-about__skill {
+    position: relative;
+    min-height: 7.8rem;
+    border: 1px solid rgba(43, 28, 19, 0.4);
+    padding: 0.7rem;
+    background: rgba(232, 207, 159, 0.76);
+    box-shadow: inset 0.25rem 0 0 var(--brand);
+  }
+
+  .portfolio-about__skill::after {
+    position: absolute;
+    top: 0.32rem;
+    right: 0.32rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    content: "";
+    background: var(--gold);
+    box-shadow: 0 0 0 1px var(--ink-deep);
+  }
+
+  .portfolio-about__skill svg {
+    color: var(--brand-active);
+  }
+
+  .portfolio-about__skill h4 {
+    margin: 0.35rem 0 0.28rem;
+    font-size: clamp(0.78rem, 0.88vw, 0.96rem);
+    font-weight: 850;
+  }
+
+  .portfolio-about__skill p {
+    margin: 0;
+    color: rgba(43, 28, 19, 0.74);
+    font-size: clamp(0.62rem, 0.67vw, 0.74rem);
+    font-weight: 560;
+    line-height: 1.3;
+  }
+
+  .portfolio-about__method ol {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .portfolio-about__method li {
+    display: grid;
+    grid-template-columns: 1.45rem 1fr;
+    gap: 0.42rem;
+    align-items: center;
+    color: var(--ink-deep);
+    font-size: clamp(0.65rem, 0.72vw, 0.8rem);
+    font-weight: 750;
+    line-height: 1.15;
+  }
+
+  .portfolio-about__method li > span {
+    display: grid;
+    width: 1.45rem;
+    height: 1.45rem;
+    place-items: center;
+    border: 1px solid var(--ink-deep);
+    background: var(--gold);
+    font-family: monospace;
+    font-size: 0.56rem;
+    font-weight: 900;
+    transform: rotate(-5deg);
+  }
+
+  .portfolio-about__gallery {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: auto;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .portfolio-about__gallery::before,
+  .portfolio-about__gallery::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    border: 2px solid var(--ink-deep);
+  }
+
+  .portfolio-about__gallery::before {
+    top: 1.1rem;
+    right: -0.8rem;
+    width: 92%;
+    height: 48%;
+    background: rgba(212, 173, 108, 0.3);
+  }
+
+  .portfolio-about__gallery::after {
+    right: 1.2rem;
+    bottom: 0.1rem;
+    width: 72%;
+    height: 46%;
+    background: rgba(182, 91, 50, 0.18);
+  }
+
+  .portfolio-about__primary,
+  .portfolio-about__secondary {
+    position: absolute;
+    z-index: 1;
+    margin: 0;
+    border: 2px solid var(--ink-deep);
+    background: var(--ink-deep);
+    box-shadow: 0.55rem 0.55rem 0 rgba(43, 28, 19, 0.28);
+    transition: filter 220ms ease;
+  }
+
+  .portfolio-about__primary {
+    top: 0;
+    right: 0;
+    width: 100%;
+  }
+
+  .portfolio-about__secondary {
+    top: 44%;
+    bottom: auto;
+    left: -2vw;
+    z-index: 2;
+    width: 75%;
+  }
+
+  .portfolio-about__primary:hover,
+  .portfolio-about__secondary:hover {
+    filter: saturate(1.08) contrast(1.03);
+  }
+
+  .portfolio-about__primary img,
+  .portfolio-about__secondary img {
+    width: 100%;
+    height: auto;
+  }
+
+  .portfolio-about__primary figcaption,
+  .portfolio-about__secondary figcaption {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0.4rem 0.65rem;
+    background: rgba(43, 28, 19, 0.88);
+    color: var(--background);
+    font-family: monospace;
+    font-size: clamp(0.52rem, 0.58vw, 0.66rem);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-about__orbit,
+  .portfolio-about__film {
+    position: absolute;
+    z-index: 4;
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--ink-deep);
+    background: var(--background);
+    color: var(--brand-active);
+    box-shadow: 0.28rem 0.28rem 0 var(--ink-deep);
+  }
+
+  .portfolio-about__orbit {
+    top: -1.3rem;
+    left: -1.2rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+  }
+
+  .portfolio-about[data-active="true"] .portfolio-about__orbit svg {
+    animation: about-orbit 7s linear infinite;
+  }
+
+  .portfolio-about__film {
+    top: 45%;
+    right: -1.4rem;
+    width: 3.2rem;
+    height: 3.2rem;
+    color: var(--brand);
+    transform: rotate(7deg);
+  }
+
+  .portfolio-about[data-active="true"] .portfolio-about__film {
+    animation: about-film-wiggle 2.2s steps(3, end) infinite;
+  }
+
+  @keyframes about-orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes about-film-wiggle {
+    0%,
+    100% {
+      transform: rotate(7deg);
+    }
+    50% {
+      transform: rotate(-7deg) translateY(-0.3rem);
+    }
+  }
+
+}
+
+@media (max-width: 900px) {
+  .portfolio-about {
+    gap: 2rem;
+  }
+
+  .portfolio-about__playbook {
+    width: 100%;
+  }
+
+  .portfolio-about__title {
+    font-size: clamp(3rem, 12vw, 4.5rem);
+  }
+
+  .portfolio-about__lede {
+    width: min(100%, 40rem);
+    font-size: 1rem;
+  }
+
+  .portfolio-about__hobbies {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .portfolio-about__hobby strong {
+    font-size: 0.8rem;
+  }
+
+  .portfolio-about__hobby small {
+    font-size: 0.56rem;
+  }
+
+  .portfolio-about__skill h4 {
+    font-size: 0.88rem;
+  }
+
+  .portfolio-about__skill p {
+    font-size: 0.7rem;
+  }
+
+  .portfolio-about__method li {
+    font-size: 0.75rem;
+  }
+
+  .portfolio-about__gallery {
+    width: 100%;
+    height: clamp(29rem, 108vw, 43rem);
+    flex: 0 0 auto;
+    margin-top: 0.5rem;
+  }
+
+  .portfolio-about__primary {
+    width: 100%;
+  }
+
+  .portfolio-about__secondary {
+    top: 45%;
+    bottom: auto;
+    left: 2%;
+    width: 74%;
+  }
+
+  .portfolio-about__gallery::before {
+    height: 42%;
+  }
+
+  .portfolio-about__gallery::after {
+    height: 48%;
+  }
+}
+
+@media (max-width: 520px) {
+  .portfolio-about__skill-grid,
+  .portfolio-about__method ol {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-about__skill {
+    min-height: 0;
+  }
+
+  .portfolio-about__gallery {
+    height: 31rem;
+  }
+}

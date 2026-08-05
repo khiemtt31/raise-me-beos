@@ -5,8 +5,8 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { Video, VideoOff } from "lucide-react";
 
 import { Header } from "@/components/layout/Header";
-import { AboutSection, EmptyDesignSection, HomeSection, WorkSection } from "@/components/portfolio/PortfolioSections";
-import { HeaderSections, PortfolioSections, type SectionId } from "@/components/portfolio/PortfolioData";
+import { AboutSection, ContactSection, HomeSection, ProjectsSection, WorkSection } from "@/components/portfolio/PortfolioSections";
+import { HeaderSections, PortfolioSections, SectionTitles, type SectionId } from "@/components/portfolio/PortfolioData";
 import { VisualizerStage } from "@/components/portfolio/Visualizer";
 
 export function PortfolioPage() {
@@ -64,6 +64,10 @@ export function PortfolioPage() {
     VideoElement.pause();
   }, [VideoEnabled]);
 
+  useEffect(() => {
+    document.title = SectionTitles[ActiveSection];
+  }, [ActiveSection]);
+
   const ScrollToSection = (SectionIdToShow: SectionId) => {
     const Scroller = ScrollerRef.current;
     const Section = Scroller?.querySelector<HTMLElement>(`#${SectionIdToShow}`);
@@ -120,8 +124,8 @@ export function PortfolioPage() {
         <HomeSection active={ActiveSection === "home"} />
         <WorkSection active={ActiveSection === "work"} />
         <AboutSection active={ActiveSection === "about"} />
-        <EmptyDesignSection active={ActiveSection === "projects"} sectionId="projects" title="Projects" />
-        <EmptyDesignSection active={ActiveSection === "contact"} sectionId="contact" title="Contact" />
+        <ProjectsSection active={ActiveSection === "projects"} />
+        <ContactSection active={ActiveSection === "contact"} />
       </div>
     </main>
   );

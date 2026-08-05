@@ -1,0 +1,134 @@
+@layer components {
+  .visualizer--home-top-right {
+    top: -13vh;
+    right: -2vw;
+    width: 48vw;
+    height: 48vh;
+  }
+
+  .visualizer--home-right-sun {
+    top: 26vh;
+    right: -8vw;
+    width: 29vw;
+    height: 45vh;
+  }
+
+  .visualizer--home-bottom-left {
+    bottom: -24vh;
+    left: -12vw;
+    width: 55vw;
+    height: 45vh;
+  }
+
+  .visualizer--work-left {
+    top: -10vh;
+    left: -14vw;
+    width: 38vw;
+    height: 74vh;
+  }
+
+  .visualizer--work-top {
+    top: -20vh;
+    left: 32vw;
+    width: 42vw;
+    height: 48vh;
+  }
+
+  .visualizer--work-right {
+    top: 7vh;
+    right: -4vw;
+    width: 35vw;
+    height: 44vh;
+  }
+
+  .visualizer--work-bottom-left {
+    bottom: -21vh;
+    left: -2vw;
+    width: 46vw;
+    height: 39vh;
+  }
+
+  .visualizer--work-bottom-right {
+    right: -4vw;
+    bottom: -22vh;
+    width: 47vw;
+    height: 46vh;
+  }
+
+  .visualizer--about-top-right {
+    top: -13vh;
+    right: 5vw;
+    width: 42vw;
+    height: 35vh;
+  }
+
+  .visualizer--about-right {
+    top: 18vh;
+    right: -5vw;
+    width: 38vw;
+    height: 75vh;
+  }
+
+  .visualizer--about-bottom-left {
+    bottom: -15vh;
+    left: -11vw;
+    width: 48vw;
+    height: 37vh;
+  }
+
+  .visualizer--projects-top-right {
+    top: -10vh;
+    right: 6vw;
+    width: 38vw;
+    height: 33vh;
+  }
+
+  .visualizer--projects-right {
+    top: 12vh;
+    right: -12vw;
+    width: 39vw;
+    height: 64vh;
+  }
+
+  .visualizer--projects-bottom-left {
+    bottom: -17vh;
+    left: -8vw;
+    width: 45vw;
+    height: 34vh;
+  }
+
+  .visualizer--contact-top-left {
+    top: -20vh;
+    left: -11vw;
+    width: 50vw;
+    height: 61vh;
+  }
+
+  .visualizer--contact-top-right {
+    top: -11vh;
+    right: -2vw;
+    width: 35vw;
+    height: 42vh;
+  }
+
+  .visualizer--contact-left {
+    top: 33vh;
+    left: -18vw;
+    width: 44vw;
+    height: 47vh;
+  }
+
+  .visualizer--contact-bottom {
+    bottom: -24vh;
+    left: 15vw;
+    width: 55vw;
+    height: 42vh;
+  }
+
+  .visualizer--contact-bottom-right {
+    right: -9vw;
+    bottom: -9vh;
+    width: 34vw;
+    height: 38vh;
+  }
+}

@@ -1,0 +1,60 @@
+:root {
+  --font-space-grotesk: "Space Grotesk";
+  --font-jacques-francois: "Jacques Francois";
+
+  --background: #e8cf9f;
+  --foreground: #24170f;
+  --brand: #a94f2c;
+  --brand-active: #7a4727;
+  --ink-deep: #2b1c13;
+  --ink-title: #6f321e;
+
+  --spice: #b65b32;
+  --spice-deep: #7a3822;
+  --sand: #d4ad6c;
+  --sand-light: #f0dfbd;
+  --gold: #c99a45;
+  --umber: #4b2d20;
+  --visualizer-spice: #b65b32;
+  --visualizer-umber: #513124;
+  --visualizer-sand: #c99b5f;
+  --visualizer-sun: #e0bb72;
+  --fremen-blue: #4f6870;
+
+  --surface: rgba(232, 207, 159, 0.86);
+  --surface-strong: #ead2a4;
+  --border: rgba(43, 28, 19, 0.2);
+  --ring: rgba(169, 79, 44, 0.34);
+
+  --header-max: 1536px;
+  --section-pad-x: clamp(1.25rem, 5vw, 6.5rem);
+  --section-pad-top: clamp(7rem, 11vh, 8.75rem);
+  --shadow-image: 0 30px 80px rgba(55, 31, 18, 0.24);
+  --blur-visualizer: clamp(52px, 6.7vw, 128px);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--surface-strong);
+  --color-popover-foreground: var(--foreground);
+  --color-primary: var(--brand);
+  --color-primary-foreground: #f5e7cb;
+  --color-secondary: rgba(43, 28, 19, 0.1);
+  --color-secondary-foreground: var(--ink-deep);
+  --color-muted: rgba(43, 28, 19, 0.07);
+  --color-muted-foreground: rgba(36, 23, 15, 0.72);
+  --color-accent: var(--ink-deep);
+  --color-accent-foreground: var(--surface-strong);
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--ring);
+  --radius-sm: 1rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 1.75rem;
+  --font-sans: var(--font-space-grotesk);
+  --font-display: var(--font-jacques-francois);
+}

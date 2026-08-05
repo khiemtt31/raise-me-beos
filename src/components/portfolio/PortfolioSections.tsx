@@ -2,9 +2,21 @@
 
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { BrainCircuit, Clapperboard, Code2, Gamepad2, Orbit, Sparkles, Trophy } from "lucide-react";
+import {
+  BrainCircuit,
+  Clapperboard,
+  Code2,
+  Gamepad2,
+  Mail,
+  Orbit,
+  Sparkles,
+  Trophy,
+} from "lucide-react";
+import { useState } from "react";
 
-import type { SectionId } from "@/components/portfolio/PortfolioData";
+import { Projects, type SectionId } from "@/components/portfolio/PortfolioData";
+import { Button } from "@/components/ui/Button";
+import { ProjectGrid } from "@/components/portfolio/ProjectShowcase";
 import { WorkTimeline } from "@/components/portfolio/WorkTimeline";
 
 type SectionProps = {
@@ -12,7 +24,7 @@ type SectionProps = {
 };
 
 type EmptySectionProps = SectionProps & {
-  sectionId: Extract<SectionId, "projects" | "contact">;
+  sectionId: Extract<SectionId, "contact">;
   title: string;
 };
 
@@ -49,6 +61,49 @@ const AboutSkills = [
 ];
 
 const AboutPrinciples = ["Learn one percent every day", "Build with purpose, not noise", "Stay playful when problems get hard"];
+
+type ContactLink = {
+  href: string;
+  Icon?: typeof Mail;
+  label: string;
+  note: string;
+  tone: "github" | "linkedin" | "instagram" | "email";
+  mark: string;
+};
+
+const ContactLinks: ContactLink[] = [
+  {
+    href: "https://github.com/your-handle",
+    label: "GitHub",
+    note: "Code, repos, and shipping proof",
+    tone: "github",
+    mark: "GH",
+  },
+  {
+    href: "https://www.linkedin.com/in/your-handle",
+    label: "LinkedIn",
+    note: "Work history and collaborations",
+    tone: "linkedin",
+    mark: "in",
+  },
+  {
+    href: "https://www.instagram.com/your-handle",
+    label: "Instagram",
+    note: "A more personal signal",
+    tone: "instagram",
+    mark: "ig",
+  },
+  {
+    href: "mailto:hello@your-domain.com",
+    Icon: Mail,
+    label: "Email",
+    note: "Fastest way to reach me",
+    tone: "email",
+    mark: "@",
+  },
+];
+
+const ContactPills = ["Open to freelance", "Open to collab", "Product + full-stack"];
 
 export function HomeSection({ active }: SectionProps) {
   return (
@@ -247,9 +302,113 @@ export function AboutSection({ active }: SectionProps) {
           <div className="portfolio-about__film" aria-hidden="true">
             <Clapperboard size={27} strokeWidth={1.8} />
           </div>
-          <span className="portfolio-about__ball-shadow" aria-hidden="true" />
-          <span className="portfolio-about__ball" aria-hidden="true">⚽</span>
         </motion.div>
+      </div>
+    </section>
+  );
+}
+
+export function ProjectsSection({ active }: SectionProps) {
+  return (
+    <section aria-label="Projects" className="portfolio-section portfolio-section--projects" id="projects">
+      <motion.div
+        className="portfolio-section__content portfolio-projects"
+        variants={ContentMotion}
+        initial="inactive"
+        animate={active ? "active" : "inactive"}
+        transition={{ duration: 0.8, ease: MotionEase }}
+      >
+        <ProjectGrid projects={Projects} />
+      </motion.div>
+    </section>
+  );
+}
+
+export function ContactSection({ active }: SectionProps) {
+  const ShouldReduceMotion = useReducedMotion();
+  const MotionDuration = ShouldReduceMotion ? 0 : 0.7;
+  const ContactModelSources = ["/images/portfolio/contact-model.png", "/images/portfolio/AboutSecondary.png", "/images/homepage/HeroPrimary.png"];
+  const [ContactModelIndex, SetContactModelIndex] = useState(0);
+
+  return (
+    <section aria-labelledby="contact-title" className="portfolio-section portfolio-section--contact" id="contact">
+      <div className="portfolio-section__content portfolio-contact" data-active={active}>
+        <motion.div
+          className="portfolio-contact__copy"
+          initial={{ opacity: 0, x: -48 }}
+          animate={active ? { opacity: 1, x: 0 } : { opacity: 0.6, x: -18 }}
+          transition={{ duration: MotionDuration, ease: MotionEase }}
+        >
+          <p className="portfolio-contact__eyebrow">Signal / final checkpoint</p>
+          <h2 className="portfolio-display portfolio-contact__title" id="contact-title">
+            Let&apos;s build something real.
+          </h2>
+          <p className="portfolio-contact__lede">
+            I&apos;m open to freelance and collab opportunities. If you need a builder for frontend, full-stack, or product work, send a signal.
+          </p>
+
+          <div className="portfolio-contact__status" aria-label="Availability">
+            {ContactPills.map((Pill) => (
+              <span key={Pill}>{Pill}</span>
+            ))}
+          </div>
+
+          <div className="portfolio-contact__actions">
+            <Button asChild className="portfolio-contact__cta" variant="default">
+              <a href="mailto:hello@hanzohekim.dev">
+                <Mail aria-hidden="true" size={18} strokeWidth={2.2} />
+                Email me
+              </a>
+            </Button>
+            <p className="portfolio-contact__aside">Prefer social? Use the cards below.</p>
+          </div>
+
+          <div className="portfolio-contact__socials" aria-label="Social links">
+            {ContactLinks.map(({ href, Icon, label, note, tone, mark }, Index) => (
+              <motion.a
+                key={label}
+                className={`portfolio-contact__social portfolio-contact__social--${tone}`}
+                href={href}
+                initial={{ opacity: 0, y: 18 }}
+                animate={active ? { opacity: 1, y: 0 } : { opacity: 0.56, y: 10 }}
+                transition={{ duration: MotionDuration, delay: ShouldReduceMotion ? 0 : 0.2 + Index * 0.08, ease: MotionEase }}
+                target={href.startsWith("http") ? "_blank" : undefined}
+                rel={href.startsWith("http") ? "noreferrer" : undefined}
+                whileHover={ShouldReduceMotion ? undefined : { y: -4 }}
+                whileTap={ShouldReduceMotion ? undefined : { scale: 0.98 }}
+              >
+                <span className="portfolio-contact__social-icon" aria-hidden="true">
+                  {Icon ? <Icon size={20} strokeWidth={2.2} /> : <span className="portfolio-contact__social-mark">{mark}</span>}
+                </span>
+                <span className="portfolio-contact__social-copy">
+                  <strong>{label}</strong>
+                  <small>{note}</small>
+                </span>
+              </motion.a>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.figure
+          className="portfolio-contact__model"
+          initial={{ opacity: 0, x: 56, scale: 0.96 }}
+          animate={active ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0.58, x: 22, scale: 0.98 }}
+          transition={{ duration: MotionDuration, delay: ShouldReduceMotion ? 0 : 0.12, ease: MotionEase }}
+        >
+          <span className="portfolio-contact__model-badge">Cutout / ready</span>
+          <div className="portfolio-contact__model-frame">
+            <Image
+              src={ContactModelSources[ContactModelIndex] ?? ContactModelSources[0]}
+              alt="Hanzo Hekim portrait for the contact section"
+              fill
+              sizes="(max-width: 900px) 86vw, 30vw"
+              onError={() => {
+                SetContactModelIndex((Index) => Math.min(Index + 1, ContactModelSources.length - 1));
+              }}
+            />
+          </div>
+          <figcaption>Open for freelance and collab</figcaption>
+        </motion.figure>
       </div>
     </section>
   );
