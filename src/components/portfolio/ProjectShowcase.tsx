@@ -79,7 +79,7 @@ const CornerPositions: Corner[] = [
 const StackSpring = { type: "spring" as const, stiffness: 230, damping: 28, mass: 0.8 };
 const AutoplayDelay = 3000;
 
-export function ProjectGrid({ projects }: { projects: Project[] }) {
+export function ProjectGrid({ active, projects }: { active: boolean; projects: Project[] }) {
   const [HoveredProjectId, SetHoveredProjectId] = useState<string | null>(null);
   const ShouldReduceMotion = useReducedMotion();
 
@@ -113,8 +113,9 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
           corner={CornerPositions[ProjectIndex % CornerPositions.length] ?? CornerPositions[0]}
           isPromoted={HoveredProjectId === ProjectItem.id}
           isDimmed={HoveredProjectId !== null && HoveredProjectId !== ProjectItem.id}
-          reducedMotion={ShouldReduceMotion}
-          onPromote={() => SetHoveredProjectId(ProjectItem.id)}
+           reducedMotion={ShouldReduceMotion}
+           active={active}
+           onPromote={() => SetHoveredProjectId(ProjectItem.id)}
         />
       ))}
     </div>
@@ -127,10 +128,11 @@ type ProjectStackProps = {
   isPromoted: boolean;
   isDimmed: boolean;
   reducedMotion: boolean | null;
+  active: boolean;
   onPromote: () => void;
 };
 
-function ProjectStack({ project, corner, isPromoted, isDimmed, reducedMotion, onPromote }: ProjectStackProps) {
+function ProjectStack({ active, project, corner, isPromoted, isDimmed, reducedMotion, onPromote }: ProjectStackProps) {
   const [ActiveImageIndex, SetActiveImageIndex] = useState(0);
   const [IsExpanded, SetIsExpanded] = useState(false);
   const Category = ProjectCategories[project.id] ?? FallbackCategory;
@@ -138,7 +140,7 @@ function ProjectStack({ project, corner, isPromoted, isDimmed, reducedMotion, on
   const Transition = reducedMotion ? { duration: 0 } : StackSpring;
 
   useEffect(() => {
-    if (reducedMotion || project.images.length < 2) {
+    if (reducedMotion || !active || project.images.length < 2) {
       return undefined;
     }
 
@@ -147,7 +149,7 @@ function ProjectStack({ project, corner, isPromoted, isDimmed, reducedMotion, on
     }, AutoplayDelay);
 
     return () => window.clearInterval(AutoplayTimer);
-  }, [project.images.length, reducedMotion]);
+  }, [active, project.images.length, reducedMotion]);
 
   const MoveImage = (Direction: 1 | -1) => {
     SetActiveImageIndex((CurrentIndex) => (CurrentIndex + Direction + project.images.length) % project.images.length);

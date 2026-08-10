@@ -2,7 +2,6 @@
 
 import { startTransition, useEffect, useRef, useState, type WheelEvent } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { Video, VideoOff } from "lucide-react";
 
 import { Header } from "@/components/layout/Header";
 import { AboutSection, ContactSection, HomeSection, ProjectsSection, WorkSection } from "@/components/portfolio/PortfolioSections";
@@ -11,10 +10,10 @@ import { VisualizerStage } from "@/components/portfolio/Visualizer";
 
 export function PortfolioPage() {
   const ScrollerRef = useRef<HTMLDivElement>(null);
-  const VideoRef = useRef<HTMLVideoElement>(null);
   const ActiveSectionRef = useRef<SectionId>("home");
+  const ScrollTargetRef = useRef<number | null>(null);
+  const ScrollFrameRef = useRef<number | null>(null);
   const [ActiveSection, SetActiveSection] = useState<SectionId>("home");
-  const [VideoEnabled, SetVideoEnabled] = useState(true);
   const ScrollProgress = useMotionValue(0);
   const SmoothProgress = useSpring(ScrollProgress, { damping: 30, stiffness: 160, mass: 0.5 });
 
@@ -46,23 +45,11 @@ export function PortfolioPage() {
     return () => {
       Scroller.removeEventListener("scroll", SyncScrollState);
       window.removeEventListener("resize", SyncScrollState);
+      if (ScrollFrameRef.current !== null) {
+        window.cancelAnimationFrame(ScrollFrameRef.current);
+      }
     };
   }, [ScrollProgress]);
-
-  useEffect(() => {
-    const VideoElement = VideoRef.current;
-
-    if (!VideoElement) {
-      return;
-    }
-
-    if (VideoEnabled) {
-      void VideoElement.play().catch(() => undefined);
-      return;
-    }
-
-    VideoElement.pause();
-  }, [VideoEnabled]);
 
   useEffect(() => {
     document.title = SectionTitles[ActiveSection];
@@ -72,6 +59,7 @@ export function PortfolioPage() {
     const Scroller = ScrollerRef.current;
     const Section = Scroller?.querySelector<HTMLElement>(`#${SectionIdToShow}`);
 
+    ScrollTargetRef.current = null;
     Section?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
   };
 
@@ -83,42 +71,42 @@ export function PortfolioPage() {
     }
 
     Event.preventDefault();
-    Scroller.scrollLeft += Event.deltaY;
+    const MaxScroll = Scroller.scrollWidth - Scroller.clientWidth;
+    const CurrentTarget = ScrollTargetRef.current ?? Scroller.scrollLeft;
+    ScrollTargetRef.current = Math.min(MaxScroll, Math.max(0, CurrentTarget + Event.deltaY));
+
+    if (ScrollFrameRef.current !== null) {
+      return;
+    }
+
+    const EaseScroll = () => {
+      const Target = ScrollTargetRef.current;
+
+      if (Target === null) {
+        ScrollFrameRef.current = null;
+        return;
+      }
+
+      const Distance = Target - Scroller.scrollLeft;
+      if (Math.abs(Distance) < 0.5) {
+        Scroller.scrollLeft = Target;
+        ScrollFrameRef.current = null;
+        return;
+      }
+
+      Scroller.scrollLeft += Distance * 0.16;
+      ScrollFrameRef.current = window.requestAnimationFrame(EaseScroll);
+    };
+
+    ScrollFrameRef.current = window.requestAnimationFrame(EaseScroll);
   };
 
   return (
     <main className="portfolio-page" id="portfolio">
-      <video
-        ref={VideoRef}
-        aria-hidden="true"
-        autoPlay
-        className="portfolio-background-video"
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        data-enabled={VideoEnabled}
-      >
-        <source src="/videos/live-background-001.mp4" type="video/mp4" />
-      </video>
-
       <VisualizerStage sectionId={ActiveSection} />
 
       <Header activeSectionId={ActiveSection} navItems={HeaderSections} onNavigate={ScrollToSection} />
       <motion.div aria-hidden="true" className="portfolio-scroll-glow" style={{ opacity: SmoothProgress }} />
-
-      <motion.button
-        type="button"
-        className="portfolio-video-toggle"
-        aria-label={VideoEnabled ? "Turn background video off" : "Turn background video on"}
-        aria-pressed={VideoEnabled}
-        onClick={() => SetVideoEnabled((Enabled) => !Enabled)}
-        whileHover={{ y: -2 }}
-        whileTap={{ scale: 0.94 }}
-        transition={{ duration: 0.18, ease: "easeOut" }}
-      >
-        {VideoEnabled ? <Video aria-hidden="true" size={22} strokeWidth={2.2} /> : <VideoOff aria-hidden="true" size={22} strokeWidth={2.2} />}
-      </motion.button>
 
       <div ref={ScrollerRef} className="portfolio-scroll" onWheel={HandleWheel}>
         <HomeSection active={ActiveSection === "home"} />

@@ -172,10 +172,10 @@ export function WorkSection({ active }: SectionProps) {
         transition={{ duration: 0.8, ease: MotionEase }}
       >
         <h2 className="portfolio-display portfolio-work__title" id="work-title">
-          Hybrid Achievement <span className="portfolio-work__title-symbol" aria-hidden="true">⚒</span>
-          <span className="sr-only"> through hard work</span>
+          Career in orbit <span className="portfolio-work__title-symbol" aria-hidden="true">✦</span>
+          <span className="sr-only"> through hard work and momentum</span>
         </h2>
-        <p className="portfolio-work__hint">Grow through out the experiences and keep moving forward everyday</p>
+        <p className="portfolio-work__hint">Navigate the checkpoints. Watch the velocity. Keep moving toward the next system.</p>
         <WorkTimeline active={active} />
       </motion.div>
     </section>
@@ -318,7 +318,7 @@ export function ProjectsSection({ active }: SectionProps) {
         animate={active ? "active" : "inactive"}
         transition={{ duration: 0.8, ease: MotionEase }}
       >
-        <ProjectGrid projects={Projects} />
+        <ProjectGrid active={active} projects={Projects} />
       </motion.div>
     </section>
   );
