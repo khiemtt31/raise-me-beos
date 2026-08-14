@@ -1,4 +1,0 @@
-interface:
-  display_name: "Cloudflare Next"
-  short_description: "Preserve and validate Next on Cloudflare"
-  default_prompt: "Use $cloudflare-next to audit this Next/OpenNext/Wrangler deployment change."

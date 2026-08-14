@@ -1,4 +1,0 @@
-interface:
-  display_name: "Responsive UI"
-  short_description: "Design accessible cinematic layouts"
-  default_prompt: "Use $responsive-ui to review this portfolio composition across desktop, mobile, and static fallback."

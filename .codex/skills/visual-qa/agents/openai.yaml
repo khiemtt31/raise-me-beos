@@ -1,4 +1,0 @@
-interface:
-  display_name: "Visual Qa"
-  short_description: "Run responsive and fallback visual checks"
-  default_prompt: "Use $visual-qa to test this portfolio across responsive, reduced-motion, and fallback states."
