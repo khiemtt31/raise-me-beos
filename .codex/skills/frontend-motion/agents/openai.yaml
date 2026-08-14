@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Motion"
+  short_description: "Implement purposeful accessible motion"
+  default_prompt: "Use $frontend-motion to review this portfolio animation for purpose and reduced motion."

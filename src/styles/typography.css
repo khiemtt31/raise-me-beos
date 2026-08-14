@@ -1,0 +1,9 @@
+:root {
+  --font-body: "Space Grotesk", Arial, sans-serif;
+  --font-display: "Jacques Francois", Georgia, serif;
+  --text-label: 0.7rem;
+  --tracking-label: 0.14em;
+  --tracking-display: -0.045em;
+  --leading-body: 1.7;
+  --leading-display: 0.96;
+}

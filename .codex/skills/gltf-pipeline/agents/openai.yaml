@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gltf Pipeline"
+  short_description: "Optimize and validate portfolio GLBs"
+  default_prompt: "Use $gltf-pipeline to prepare this character GLB for a bounded web hero."

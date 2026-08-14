@@ -1,0 +1,4 @@
+interface:
+  display_name: "Performance Guardian"
+  short_description: "Gate bundle and WebGL performance costs"
+  default_prompt: "Use $performance-guardian to measure and gate this proposed hero effect."

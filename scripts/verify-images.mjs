@@ -54,7 +54,7 @@ try {
   const PageResponse = await WaitForPreview();
   const Html = await PageResponse.text();
   const ImagePreloads = Html.match(/<link(?=[^>]*rel="preload")(?=[^>]*as="image")[^>]*>/g) ?? [];
-  const PrimaryImage = Html.match(/<img[^>]*alt="Primary portrait of Hanzo Hekim"[^>]*>/)?.[0];
+  const PrimaryImage = Html.match(/<img[^>]*alt="Three-quarter portrait of Khiem Hanzo Tran in a dark, luminous setting"[^>]*>/)?.[0];
   const ImageSource = PrimaryImage?.match(/src="([^"]+)"/)?.[1]?.replaceAll("&amp;", "&");
 
   if (ImagePreloads.length !== 1) {

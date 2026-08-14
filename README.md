@@ -1,122 +1,45 @@
 # Raise Me Beos
 
-<p align="center">
-  <b>🍭 A bright, bouncy, horizontally scrolling portfolio for Hanzo Hekim 🍭</b><br />
-  Built to feel a little like a candy shop, a little like a science-fair poster, and a lot like the codebase it lives in.
-</p>
+Portfolio V2 static Ember Editorial portfolio for Khiem Hanzo Tran. Phase 2B replaces the previous horizontally scrolling frontend with a polished server-rendered App Router composition while preserving the Cloudflare/OpenNext delivery path and reusable portfolio content/assets.
 
-<p align="center">
-  <a href="#tiny-tour">Tiny Tour</a> ·
-  <a href="#run-it">Run It</a> ·
-  <a href="#scripts">Scripts</a> ·
-  <a href="#project-map">Project Map</a> ·
-  <a href="#notes">Notes</a>
-</p>
+The static experience is intentionally complete before future enhancement. This phase does not include Motion, WebGL, animation runtime, character reveal, shaders, particles, post-processing, or background video.
 
----
+## Run it
 
-## What this is
-
-This project is a Next.js portfolio site with a playful, colorful art direction and a side-scrolling layout.
-
-The experience is built around:
-
-- a fixed header with section navigation
-- a horizontally scrolling main canvas
-- animated blob-like visualizers
-- large editorial typography
-- local artwork and background assets in `public/`
-
-It currently includes these sections:
-
-- `Home`
-- `Work`
-- `About`
-- `Projects`
-- `Contact`
-
-Tiny Tour:
-
-- `Home` introduces the portfolio with portrait imagery and a bold title.
-- `Work` shows a milestone timeline.
-- `About` mixes text with visual cards.
-- `Projects` and `Contact` are ready as empty design sections for expansion.
-
-</details>
-
----
+```bash
+npm ci
+npm run dev
+```
 
 ## Scripts
 
-- `npm run dev` - start the local Next.js dev server
-- `npm run build` - production build for Next.js
-- `npm run lint` - run ESLint
-- `npm run typecheck` - run TypeScript without emitting files
-- `npm run build:cloudflare` - build with OpenNext for Cloudflare
-- `npm run preview` - build for Cloudflare and preview locally
-- `npm run deploy` - build for Cloudflare and deploy
-- `npm run cf-typegen` - generate Cloudflare types
+- `npm run dev` — local Next.js development
+- `npm run build` — standard Next.js production build
+- `npm run lint` — ESLint
+- `npm run typecheck` — TypeScript without emitting files
+- `npm run build:cloudflare` — OpenNext Cloudflare build
+- `npm run preview` — OpenNext Cloudflare local preview
+- `npm run deploy` — OpenNext Cloudflare deployment
+- `npm run verify:images` — image optimization/preview check
+- `npm run cf-typegen` — Wrangler environment type generation when bindings exist
 
----
+## Source map
 
-## Project Map
+- `src/app/` — App Router entry points, metadata, loading UI, and global CSS
+- `src/components/` — small server-rendered layout and content sections
+- `src/content/` — typed profile, career, project, about, and contact data
+- `src/styles/tokens.css` — semantic Obsidian/Ember color, spacing, width, typography, and z-index tokens
+- `src/styles/typography.css` — local font roles
+- `public/` — reusable portfolio imagery and reference assets
+- `.github/workflows/` — CI and Cloudflare deployment workflows
+- `docs/` — audit, migration, content, decisions, and specification records
 
-- `src/app/page.tsx` - app entry page
-- `src/app/layout.tsx` - root layout and metadata
-- `src/app/globals.css` - global styles, theme tokens, and layout rules
-- `src/components/portfolio/PortfolioPage.tsx` - horizontal scroll controller
-- `src/components/portfolio/PortfolioSections.tsx` - home, work, about, and placeholder sections
-- `src/components/portfolio/PortfolioData.ts` - section data and timeline copy
-- `src/components/portfolio/Visualizer.tsx` - animated background blobs
-- `src/components/layout/Header.tsx` - sticky navigation header
-- `src/components/ui/Button.tsx` - reusable button primitive
-- `src/lib/Utils.ts` - shared class name helper
+## Architecture status
 
----
+- React Server Components are the default; Phase 2B has no Client Components.
+- HTML content is independent of WebGL and the static hero is the intentional future fallback state.
+- The approved Ember Editorial direction is implemented with CSS, existing Fontsource assets, and `next/image`.
+- Motion, Three.js, React Three Fiber, and glTF tooling remain deferred to later phases.
+- Production deployment was not performed as part of Phase 2B.
 
-## Stack
-
-- Next.js 16.2.9
-- React 19.2.4
-- TypeScript
-- Tailwind CSS 4
-- Framer Motion
-- Lucide React
-- OpenNext for Cloudflare deployment
-
----
-
-## Design Mood
-
-The UI intentionally leans into a cheerful, childlike energy:
-
-- warm cream background
-- vivid pink, violet, and lime accents
-- oversized serif display type
-- soft frosted surfaces
-- floating visual blobs
-- smooth motion and scroll snapping
-
-It is colorful on purpose, but still shaped by the actual portfolio structure in the codebase.
-
----
-
-## Assets
-
-Local assets live in `public/`:
-
-- `public/images/homepage/`
-- `public/images/portfolio/`
-- `public/images/background/`
-- `public/Portfolio Designs/`
-
-The original background videos are intentionally kept out of git because they are too large for GitHub's 100 MB file limit.
-
----
-
-## Notes
-
-- The main experience is horizontal, not vertical.
-- The navigation uses section IDs that match the portfolio sections.
-- `Projects` and `Contact` currently exist as placeholder panels, so they can be expanded later without changing the layout.
-- If you change the visual copy or the section list, update the matching data in `src/components/portfolio/PortfolioData.ts`.
+Read [PLAN.md](PLAN.md), [docs/SPEC.md](docs/SPEC.md), and [docs/MIGRATION-MANIFEST.md](docs/MIGRATION-MANIFEST.md) before continuing the rebuild.

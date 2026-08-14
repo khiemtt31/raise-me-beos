@@ -3,10 +3,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Hanzo",
-    template: "%s | Hanzo",
+    default: "Khiem Hanzo Tran — Software Engineer",
+    template: "%s | Khiem Hanzo Tran",
   },
-  description: "Horizontally scrolling portfolio for Hanzo Hekim, implemented from the provided Figma design frames.",
+  description: "Khiem Hanzo Tran is a software engineer building thoughtful interfaces, dependable systems, and useful products across the stack.",
 };
 
 export default function RootLayout({
@@ -15,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className="min-h-full bg-background text-foreground">{children}</body>
+    <html lang="en">
+      <body>{children}</body>
     </html>
   );
 }

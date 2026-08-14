@@ -1,10 +1,8 @@
 export default function Loading() {
   return (
-    <main className="portfolio-loading" aria-label="Loading Hanzo portfolio">
-      <div className="portfolio-loading__orb skeleton" aria-hidden="true" />
-      <p className="portfolio-loading__eyebrow">Establishing signal</p>
-      <h1>Loading the galaxy</h1>
-      <div className="portfolio-loading__line skeleton" aria-hidden="true" />
+    <main className="loading-shell" aria-label="Loading Hanzo portfolio">
+      <p className="eyebrow">Loading portfolio</p>
+      <div className="loading-shell__line" aria-hidden="true" />
     </main>
   );
 }
