@@ -1,0 +1,153 @@
+.hero {
+	position: absolute;
+	isolation: isolate;
+	overflow: hidden;
+	background: transparent;
+}
+
+.hero__title-position {
+	position: absolute;
+	bottom: 27vh;
+	left: 50%;
+	width: min(100% - 2rem, 80rem);
+	z-index: 1;
+	transform: translateX(-50%);
+	text-align: center;
+}
+
+.hero__title {
+	position: relative;
+	margin: 0;
+	color: var(--foreground);
+	font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
+	font-size: clamp(1.05rem, 5.75vw, 5.85rem);
+	font-weight: 600;
+	letter-spacing: 0.09em;
+	line-height: 1.1;
+	white-space: nowrap;
+	animation: title-reveal var(--reveal-duration) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.hero__accent {
+	color: var(--accent);
+}
+
+.hero__title::before,
+.hero__title::after {
+	position: absolute;
+	inset: 0;
+	content: 'KHIEM HANZO TRAN';
+	pointer-events: none;
+	color: transparent;
+	background-repeat: no-repeat;
+	background-size: 300% 100%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	mix-blend-mode: screen;
+}
+
+.hero__title::before {
+	background-image: linear-gradient(
+		100deg,
+		transparent 35%,
+		rgba(242, 240, 236, 0.04) 43%,
+		rgba(255, 255, 255, 0.24) 50%,
+		rgba(242, 240, 236, 0.04) 57%,
+		transparent 65%
+	);
+	filter: blur(7px);
+	animation: title-glow-soft 6.5s linear var(--glow-delay) infinite both;
+}
+
+.hero__title::after {
+	background-image: linear-gradient(
+		100deg,
+		transparent 42%,
+		rgba(255, 255, 255, 0.08) 47%,
+		rgba(255, 255, 255, 0.46) 50%,
+		rgba(255, 255, 255, 0.08) 53%,
+		transparent 58%
+	);
+	filter: blur(1px);
+	animation: title-glow-sharp 6.5s linear var(--glow-delay) infinite both;
+}
+
+@keyframes title-reveal {
+	from {
+		clip-path: inset(0 100% 0 0);
+	}
+	to {
+		clip-path: inset(0 0 0 0);
+	}
+}
+
+@keyframes title-glow-soft {
+	0% {
+		opacity: 0;
+		background-position: -140% 0;
+	}
+	8% {
+		opacity: 0.08;
+		background-position: -120% 0;
+	}
+	28% {
+		opacity: 0.18;
+		background-position: -30% 0;
+	}
+	58% {
+		opacity: 0.12;
+		background-position: 70% 0;
+	}
+	72%,
+	100% {
+		opacity: 0;
+		background-position: 140% 0;
+	}
+}
+
+@keyframes title-glow-sharp {
+	0% {
+		opacity: 0;
+		background-position: -140% 0;
+	}
+	10% {
+		opacity: 0.12;
+		background-position: -120% 0;
+	}
+	30% {
+		opacity: 0.3;
+		background-position: -30% 0;
+	}
+	58% {
+		opacity: 0.18;
+		background-position: 70% 0;
+	}
+	70%,
+	100% {
+		opacity: 0;
+		background-position: 140% 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hero__title {
+		animation: none;
+		clip-path: none;
+	}
+
+	.hero__title::before,
+	.hero__title::after {
+		display: none;
+	}
+}
+
+@media (max-width: 480px) {
+	.hero__title-position {
+		width: calc(100% - 2rem);
+	}
+
+	.hero__title {
+		letter-spacing: 0.045em;
+	}
+}

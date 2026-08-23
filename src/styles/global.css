@@ -1,0 +1,156 @@
+:root {
+	--background: #000;
+	--foreground: #f2f0ec;
+	--accent: #8e1b1b;
+	--reveal-duration: 4200ms;
+	--glow-delay: 4200ms;
+	--view-duration: 900ms;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	height: 100%;
+	min-width: 320px;
+	background: var(--background);
+}
+
+html {
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
+body {
+	color: var(--foreground);
+	font-family: Georgia, 'Times New Roman', serif;
+	overflow: hidden;
+	overscroll-behavior: none;
+	touch-action: none;
+}
+
+main {
+	height: 100svh;
+	min-height: 100%;
+	overflow: hidden;
+}
+
+.site-shell {
+	position: relative;
+	isolation: isolate;
+	height: 100%;
+	overflow: hidden;
+}
+
+.site-shell::before {
+	position: absolute;
+	inset: -2rem;
+	content: '';
+	z-index: 0;
+	background: url('/app_background.png') center / cover no-repeat;
+	filter: blur(18px) brightness(0.62);
+	transform: scale(1.06);
+	animation: background-focus var(--reveal-duration) cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.hero,
+.about {
+	position: absolute;
+	inset: 0;
+	height: 100%;
+	min-height: 100%;
+	opacity: 0;
+	visibility: hidden;
+	z-index: 0;
+	transform: translate3d(0, 2rem, 0);
+	transition:
+		opacity var(--view-duration) ease,
+		transform var(--view-duration) cubic-bezier(0.2, 0.8, 0.2, 1),
+		visibility 0s linear var(--view-duration);
+}
+
+.site-shell[data-view='hero'] .hero,
+.site-shell:has(#about-me:target) .about {
+	opacity: 1;
+	visibility: visible;
+	z-index: 2;
+	transform: translate3d(0, 0, 0);
+	transition-delay: 0s;
+}
+
+.site-shell[data-view='about'] .hero,
+.site-shell:has(#about-me:target) .hero {
+	opacity: 0;
+	visibility: hidden;
+	z-index: 0;
+	transform: translate3d(0, -2rem, 0);
+}
+
+.site-shell[data-view='about'] .about {
+	opacity: 1;
+	visibility: visible;
+	z-index: 2;
+	transform: translate3d(0, 0, 0);
+	transition-delay: 0s;
+}
+
+.nav-container {
+	position: fixed;
+	left: clamp(1rem, 4vw, 4rem);
+	bottom: clamp(1.25rem, 4vw, 3rem);
+	z-index: 10;
+	opacity: 0.5;
+	transition: opacity 300ms ease;
+}
+
+.nav-container:hover,
+.nav-container:focus-within {
+	opacity: 1;
+}
+
+.nav-container__link {
+	color: var(--foreground);
+	font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
+	font-size: 0.72rem;
+	letter-spacing: 0.14em;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: color 300ms ease;
+}
+
+.nav-container__link:hover,
+.nav-container__link:focus-visible {
+	color: #fff;
+}
+
+.nav-container__link:focus-visible {
+	outline: 1px solid currentColor;
+	outline-offset: 0.45rem;
+}
+
+@keyframes background-focus {
+	from {
+		filter: blur(18px) brightness(0.62);
+		transform: scale(1.06);
+	}
+	to {
+		filter: blur(0) brightness(0.86);
+		transform: scale(1);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hero,
+	.about {
+		transition: none;
+	}
+
+	.site-shell::before {
+		animation: none;
+		filter: none;
+		transform: none;
+	}
+}

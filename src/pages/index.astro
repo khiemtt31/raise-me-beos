@@ -1,0 +1,38 @@
+---
+import About from '../components/About.astro';
+import Hero from '../components/Hero.astro';
+import Navigation from '../components/Navigation.astro';
+import '../styles/global.css';
+import '../styles/hero.css';
+import '../styles/about-me.css';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta
+			name="description"
+			content="Khiem Hanzo Tran — a cinematic personal portfolio introduction."
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<title>Khiem Hanzo Tran</title>
+	</head>
+	<body>
+		<main class="site-shell" data-view="hero">
+			<Hero />
+			<About />
+		</main>
+
+		<Navigation />
+		<script src="../scripts/page-state.ts"></script>
+	</body>
+</html>
