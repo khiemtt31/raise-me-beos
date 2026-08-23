@@ -8,14 +8,14 @@
 }
 
 .about__content {
-	position: relative;
+	position: absolute;
+	inset: 0;
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-	gap: clamp(4rem, 10vw, 12rem);
-	width: 100%;
-	padding: 0 clamp(2rem, 6vw, 8rem) clamp(2rem, 6vw, 8rem);
+	grid-template-columns: minmax(0, 29vw) minmax(0, 1fr) minmax(0, 25vw);
+	align-items: center;
+	column-gap: clamp(1.5rem, 4vw, 5rem);
+	padding: 0 clamp(1.5rem, 4vw, 4.5rem);
 	z-index: 1;
-	transform: translateY(clamp(3rem, 8vh, 7rem));
 }
 
 .about__left,
@@ -23,19 +23,20 @@
 	opacity: 1;
 	transform: translateY(0);
 	width: 100%;
-	max-width: 38rem;
+	max-width: none;
 	transition:
 		opacity var(--view-duration) ease,
 		transform var(--view-duration) cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .about__left {
-	justify-self: end;
+	grid-column: 1;
+	justify-self: stretch;
 }
 
 .about__right {
-	align-self: end;
-	justify-self: start;
+	grid-column: 3;
+	justify-self: stretch;
 }
 
 .about__eyebrow {
@@ -51,9 +52,9 @@
 	margin: 0;
 	color: var(--foreground);
 	font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
-	font-size: clamp(2.8rem, 6.8vw, 7rem);
+	font-size: clamp(2.45rem, 3.85vw, 4.75rem);
 	font-weight: 600;
-	letter-spacing: 0.04em;
+	letter-spacing: 0.015em;
 	line-height: 0.98;
 }
 
@@ -62,11 +63,10 @@
 }
 
 .about__right p {
-	max-width: 38rem;
 	margin: 0;
 	color: rgba(242, 240, 236, 0.82);
-	font-size: clamp(1.05rem, 1.5vw, 1.35rem);
-	line-height: 1.6;
+	font-size: clamp(0.95rem, 1.2vw, 1.25rem);
+	line-height: 1.55;
 }
 
 .about__right p + p {
@@ -109,22 +109,32 @@
 	}
 }
 
-@media (max-width: 480px) {
+@media (max-width: 760px) {
 	.about__content {
 		grid-template-columns: 1fr;
-		gap: 2.5rem;
-		width: 100%;
-		padding: 0 1rem 1rem;
-		transform: translateY(clamp(1rem, 4vh, 3rem));
+		align-content: space-between;
+		row-gap: 2.5rem;
+		padding: 13vh 1rem 11vh;
 	}
 
 	.about__left,
 	.about__right {
+		grid-column: 1;
 		justify-self: start;
 		max-width: none;
 	}
 
 	.about__right {
-		padding-bottom: 0;
+		align-self: end;
+	}
+}
+
+@media (min-width: 761px) and (max-height: 700px) {
+	.about h2 {
+		font-size: clamp(2.25rem, 3.5vw, 4rem);
+	}
+
+	.about__right p {
+		font-size: clamp(0.9rem, 1.05vw, 1.1rem);
 	}
 }

@@ -99,8 +99,8 @@ main {
 
 .nav-container {
 	position: fixed;
-	left: clamp(1rem, 4vw, 4rem);
-	bottom: clamp(1.25rem, 4vw, 3rem);
+	left: clamp(0.5rem, 2vw, 2rem);
+	bottom: clamp(0.5rem, 2vw, 1rem);
 	z-index: 10;
 	opacity: 0.5;
 	transition: opacity 300ms ease;

@@ -10,8 +10,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:cloudflare": "astro build",
     "preview": "astro preview",
-    "deploy": "pnpm run build && wrangler deploy",
+    "deploy": "pnpm run build:cloudflare && wrangler deploy",
     "astro": "astro"
   },
   "dependencies": {
