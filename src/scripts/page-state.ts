@@ -1,21 +1,34 @@
-type View = 'hero' | 'about';
+type View = 'hero' | 'about' | 'contacts';
 
 const page = document.querySelector<HTMLElement>('.site-shell');
-const aboutLink = document.querySelector<HTMLAnchorElement>('.nav-container__link');
+const viewLinks = {
+	about: document.querySelector<HTMLAnchorElement>('[data-view-link="about"]'),
+	contacts: document.querySelector<HTMLAnchorElement>('[data-view-link="contacts"]'),
+};
 
 if (page) {
 	document.documentElement.classList.add('has-js');
 
 	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 	const transitionDuration = reduceMotion ? 0 : 900;
-	let currentView: View = window.location.hash === '#about-me' ? 'about' : 'hero';
+	const viewFromHash = (): View => {
+		const hash = window.location.hash.toLowerCase();
+		if (hash === '#about-me' || hash === '#aboutme') return 'about';
+		if (hash === '#contacts') return 'contacts';
+		return 'hero';
+	};
+
+	let currentView: View = viewFromHash();
 	let transitionLocked = false;
 
 	const updateNavigationState = () => {
-		if (currentView === 'about') {
-			aboutLink?.setAttribute('aria-current', 'page');
-		} else {
-			aboutLink?.removeAttribute('aria-current');
+		for (const [view, link] of Object.entries(viewLinks)) {
+			if (!link) continue;
+			if (view === currentView) {
+				link.setAttribute('aria-current', 'page');
+			} else {
+				link.removeAttribute('aria-current');
+			}
 		}
 	};
 
@@ -27,9 +40,9 @@ if (page) {
 		updateNavigationState();
 
 		if (updateUrl) {
-			const nextUrl = nextView === 'about'
-				? '#about-me'
-				: `${window.location.pathname}${window.location.search}`;
+			const nextUrl = nextView === 'hero'
+				? `${window.location.pathname}${window.location.search}`
+				: nextView === 'about' ? '#about-me' : '#contacts';
 			history.pushState(null, '', nextUrl);
 		}
 
@@ -39,16 +52,37 @@ if (page) {
 		}, transitionDuration);
 	};
 
+	const moveView = (direction: 1 | -1) => {
+		const views: View[] = ['hero', 'about', 'contacts'];
+		const nextIndex = Math.max(0, Math.min(views.length - 1, views.indexOf(currentView) + direction));
+		setView(views[nextIndex]);
+	};
+
+	const preservesNativeKeyboardBehavior = (target: EventTarget | null): boolean => {
+		if (!(target instanceof HTMLElement)) return false;
+		return target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'A'].includes(target.tagName);
+	};
+
 	page.dataset.view = currentView;
 	updateNavigationState();
 
-	aboutLink?.addEventListener('click', (event) => {
-		event.preventDefault();
-		setView('about');
-	});
+	for (const [view, link] of Object.entries(viewLinks) as Array<[View, HTMLAnchorElement | null]>) {
+		link?.addEventListener('click', (event) => {
+			event.preventDefault();
+			setView(view);
+		});
+	}
 
 	const syncViewWithUrl = () => {
-		setView(window.location.hash === '#about-me' ? 'about' : 'hero', false);
+		const nextView = viewFromHash();
+
+		if (nextView === currentView) {
+			page.dataset.view = nextView;
+			updateNavigationState();
+			return;
+		}
+
+		setView(nextView, false);
 	};
 
 	window.addEventListener('hashchange', syncViewWithUrl);
@@ -60,24 +94,34 @@ if (page) {
 			event.preventDefault();
 
 			if (transitionLocked || Math.abs(event.deltaY) < 12) return;
-			setView(event.deltaY > 0 ? 'about' : 'hero');
+			moveView(event.deltaY > 0 ? 1 : -1);
 		},
 		{ passive: false },
 	);
 
 	window.addEventListener('keydown', (event) => {
 		if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+		if (preservesNativeKeyboardBehavior(event.target)) return;
 
-		const nextView: View | null = ['ArrowDown', 'PageDown', 'End', ' '].includes(event.key)
-			? 'about'
-			: ['ArrowUp', 'PageUp', 'Home'].includes(event.key)
-				? 'hero'
-				: null;
+		if (['ArrowDown', 'PageDown', ' '].includes(event.key)) {
+			event.preventDefault();
+			if (!transitionLocked) moveView(1);
+		}
 
-		if (!nextView || transitionLocked) return;
+		if (['ArrowUp', 'PageUp'].includes(event.key)) {
+			event.preventDefault();
+			if (!transitionLocked) moveView(-1);
+		}
 
-		event.preventDefault();
-		setView(nextView);
+		if (event.key === 'Home') {
+			event.preventDefault();
+			if (!transitionLocked) setView('hero');
+		}
+
+		if (event.key === 'End') {
+			event.preventDefault();
+			if (!transitionLocked) setView('contacts');
+		}
 	});
 
 	let touchStartY = 0;
@@ -99,7 +143,7 @@ if (page) {
 			const distance = touchStartY - touchEndY;
 
 			if (Math.abs(distance) < 50) return;
-			setView(distance > 0 ? 'about' : 'hero');
+			moveView(distance > 0 ? 1 : -1);
 		},
 		{ passive: true },
 	);

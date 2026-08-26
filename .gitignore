@@ -2,6 +2,7 @@
 dist/
 # generated types
 .astro/
+.wrangler/
 
 # dependencies
 node_modules/
@@ -25,3 +26,5 @@ pnpm-debug.log*
 
 .agent/**
 **/.agent
+
+.dev.vars

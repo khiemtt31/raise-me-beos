@@ -1,3 +1,12 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
 <nav class="nav-container" aria-label="Primary navigation">
-	<a class="nav-container__link" href="#about-me">About Me</a>
+	<div class="nav-container__links">
+		<a class="nav-container__link" href="#about-me" data-view-link="about">About Me</a>
+		<a class="nav-container__link" href="#contacts" data-view-link="contacts">Contacts</a>
+	</div>
 </nav>
+
+<p class="nav-copyright">© {currentYear} Khiem Hanzo Tran</p>

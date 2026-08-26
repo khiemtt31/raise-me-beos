@@ -14,14 +14,18 @@ The project is a one-route Astro site:
 ├── src/
 │   ├── components/
 │   │   ├── About.astro
+│   │   ├── Contact.astro
 │   │   ├── Hero.astro
 │   │   └── Navigation.astro
 │   ├── pages/
 │   │   └── index.astro
 │   ├── scripts/
+│   │   ├── contact-form.ts
 │   │   └── page-state.ts
-│   └── styles/
-│       └── global.css
+│   ├── styles/
+│   │   ├── contact.css
+│   │   └── global.css
+│   └── worker.ts
 └── package.json
 ```
 
@@ -50,6 +54,27 @@ All commands are run from the root of the project, from a terminal:
 Cloudflare deployment is configured for the existing `raise-me-beos` Worker. Pushes to `main`
 run the production workflow with the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets
 from the repository's `production` environment.
+
+### Contact form delivery
+
+The Contacts state submits to `/api/contact`. The Cloudflare Worker validates the payload, enforces
+a five-message calendar-week limit using the `ContactQuota` Durable Object, and sends accepted
+messages to `shacker1357@gmail.com` through the Gmail API. The visitor's address is preserved as
+the `Reply-To` address.
+
+Configure the Gmail OAuth secrets in the Cloudflare Worker; never commit them to the repository:
+
+```sh
+wrangler secret put GOOGLE_CLIENT_ID
+wrangler secret put GOOGLE_CLIENT_SECRET
+wrangler secret put GOOGLE_REFRESH_TOKEN
+wrangler secret put CONTACT_EMAIL
+```
+
+The Gmail OAuth client must be authorized with the `gmail.send` scope. Local Worker requests can be
+tested with `pnpm exec wrangler dev --local` after providing equivalent local variables through a
+local-only `.dev.vars` file. Set `CONTACT_EMAIL` there for local development; configure the same
+variable as a Worker secret or variable in production.
 
 ## 👀 Want to learn more?
 

@@ -1,11 +1,28 @@
 {
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "raise-me-beos",
+	"main": "src/worker.ts",
 	"compatibility_date": "2026-08-23",
 	"observability": {
 		"enabled": true
 	},
 	"assets": {
-		"directory": "./dist"
+		"directory": "./dist",
+		"binding": "ASSETS",
+		"run_worker_first": ["/api/*"]
+	},
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "CONTACT_QUOTA",
+				"class_name": "ContactQuota"
+			}
+		]
+	},
+	"exports": {
+		"ContactQuota": {
+			"type": "durable-object",
+			"storage": "sqlite"
+		}
 	}
 }

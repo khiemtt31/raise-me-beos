@@ -1,10 +1,12 @@
 ---
 import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
 import Hero from '../components/Hero.astro';
 import Navigation from '../components/Navigation.astro';
 import '../styles/global.css';
 import '../styles/hero.css';
 import '../styles/about-me.css';
+import '../styles/contact.css';
 ---
 
 <html lang="en">
@@ -24,15 +26,17 @@ import '../styles/about-me.css';
 			href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&display=swap"
 			rel="stylesheet"
 		/>
-		<title>Khiem Hanzo Tran</title>
+		<title>Hanzo</title>
 	</head>
 	<body>
 		<main class="site-shell" data-view="hero">
 			<Hero />
 			<About />
+			<Contact />
 		</main>
 
 		<Navigation />
 		<script src="../scripts/page-state.ts"></script>
+		<script src="../scripts/contact-form.ts"></script>
 	</body>
 </html>

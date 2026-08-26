@@ -1,0 +1,45 @@
+<section id="contacts" class="contacts" aria-labelledby="contacts-title">
+	<div class="contacts__content">
+		<div class="contacts__left">
+			<p class="contacts__eyebrow">Start a conversation</p>
+			<h2 id="contacts-title">Make it<br /><span>meaningful.</span></h2>
+
+			<form class="contact-form" data-contact-form action="/api/contact" method="post">
+				<div class="contact-form__trap" aria-hidden="true">
+					<label for="company-website">Company website</label>
+					<input id="company-website" name="companyWebsite" type="text" tabindex="-1" autocomplete="new-password" />
+				</div>
+
+				<label class="contact-form__field">
+					<span>Name</span>
+					<input name="name" type="text" autocomplete="name" maxlength="80" required />
+				</label>
+
+				<label class="contact-form__field">
+					<span>Email</span>
+					<input name="email" type="email" autocomplete="email" maxlength="254" required />
+				</label>
+
+				<label class="contact-form__field">
+					<span>Message</span>
+					<textarea name="message" rows="4" maxlength="3000" required></textarea>
+				</label>
+
+				<div class="contact-form__actions">
+					<button type="submit">Send message</button>
+					<p class="contact-form__status" data-contact-status role="status" aria-live="polite"></p>
+				</div>
+			</form>
+		</div>
+
+		<aside class="contacts__right" aria-labelledby="ecosystems-title">
+			<p class="contacts__eyebrow">Find me elsewhere</p>
+			<h3 id="ecosystems-title">My Ecosystems</h3>
+			<nav class="ecosystems" aria-label="Social and professional links">
+				<a href="https://github.com/khiemtt31" target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
+				<a href="https://www.linkedin.com/in/khiem-hanzo-tran/" target="_blank" rel="noreferrer">LinkedIn <span>↗</span></a>
+			</nav>
+			<p class="contacts__note">For collaborations, product ideas, and thoughtful digital work.</p>
+		</aside>
+	</div>
+</section>

@@ -82,15 +82,15 @@
 
 .site-shell[data-view='about'] .about__left,
 .site-shell[data-view='about'] .about__right,
-.site-shell:has(#about-me:target) .about__left,
-.site-shell:has(#about-me:target) .about__right {
+html:not(.has-js) .site-shell:has(#about-me:target) .about__left,
+html:not(.has-js) .site-shell:has(#about-me:target) .about__right {
 	opacity: 1;
 	transform: translateY(0);
 	transition-delay: 160ms;
 }
 
 .site-shell[data-view='about'] .about__right,
-.site-shell:has(#about-me:target) .about__right {
+html:not(.has-js) .site-shell:has(#about-me:target) .about__right {
 	transition-delay: 300ms;
 }
 
@@ -102,8 +102,8 @@
 
 	.site-shell[data-view='about'] .about__left,
 	.site-shell[data-view='about'] .about__right,
-	.site-shell:has(#about-me:target) .about__left,
-	.site-shell:has(#about-me:target) .about__right {
+	html:not(.has-js) .site-shell:has(#about-me:target) .about__left,
+	html:not(.has-js) .site-shell:has(#about-me:target) .about__right {
 		opacity: 1;
 		transform: none;
 	}

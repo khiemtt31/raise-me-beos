@@ -57,7 +57,8 @@ main {
 }
 
 .hero,
-.about {
+.about,
+.contacts {
 	position: absolute;
 	inset: 0;
 	height: 100%;
@@ -73,7 +74,10 @@ main {
 }
 
 .site-shell[data-view='hero'] .hero,
-.site-shell:has(#about-me:target) .about {
+.site-shell[data-view='about'] .about,
+.site-shell[data-view='contacts'] .contacts,
+html:not(.has-js) .site-shell:has(#about-me:target) .about,
+html:not(.has-js) .site-shell:has(#contacts:target) .contacts {
 	opacity: 1;
 	visibility: visible;
 	z-index: 2;
@@ -82,19 +86,21 @@ main {
 }
 
 .site-shell[data-view='about'] .hero,
-.site-shell:has(#about-me:target) .hero {
+.site-shell[data-view='contacts'] .hero,
+html:not(.has-js) .site-shell:has(#about-me:target) .hero,
+html:not(.has-js) .site-shell:has(#contacts:target) .hero {
 	opacity: 0;
 	visibility: hidden;
 	z-index: 0;
 	transform: translate3d(0, -2rem, 0);
 }
 
-.site-shell[data-view='about'] .about {
-	opacity: 1;
-	visibility: visible;
-	z-index: 2;
-	transform: translate3d(0, 0, 0);
-	transition-delay: 0s;
+.site-shell[data-view='contacts'] .about,
+html:not(.has-js) .site-shell:has(#contacts:target) .about {
+	opacity: 0;
+	visibility: hidden;
+	z-index: 0;
+	transform: translate3d(0, -2rem, 0);
 }
 
 .nav-container {
@@ -102,28 +108,45 @@ main {
 	left: clamp(0.5rem, 2vw, 2rem);
 	bottom: clamp(0.5rem, 2vw, 1rem);
 	z-index: 10;
-	opacity: 0.5;
-	transition: opacity 300ms ease;
 }
 
-.nav-container:hover,
-.nav-container:focus-within {
-	opacity: 1;
+.nav-container__links {
+	display: flex;
+	align-items: center;
+	gap: clamp(1rem, 2vw, 2rem);
 }
 
 .nav-container__link {
+	display: inline-block;
 	color: var(--foreground);
 	font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
 	font-size: 0.72rem;
 	letter-spacing: 0.14em;
+	opacity: 0.5;
 	text-decoration: none;
 	text-transform: uppercase;
-	transition: color 300ms ease;
+	transition: color 300ms ease, opacity 300ms ease;
 }
 
 .nav-container__link:hover,
-.nav-container__link:focus-visible {
+.nav-container__link:focus-visible,
+html:not(.has-js):has(#about-me:target) .nav-container__link[href='#about-me'],
+html:not(.has-js):has(#contacts:target) .nav-container__link[href='#contacts'],
+.nav-container__link[aria-current='page'] {
 	color: #fff;
+	opacity: 1;
+}
+
+.nav-copyright {
+	position: fixed;
+	right: clamp(0.5rem, 2vw, 2rem);
+	bottom: clamp(0.5rem, 2vw, 1rem);
+	z-index: 10;
+	margin: 0;
+	color: rgba(242, 240, 236, 0.48);
+	font-size: 0.68rem;
+	letter-spacing: 0.08em;
+	white-space: nowrap;
 }
 
 .nav-container__link:focus-visible {
@@ -144,7 +167,8 @@ main {
 
 @media (prefers-reduced-motion: reduce) {
 	.hero,
-	.about {
+	.about,
+	.contacts {
 		transition: none;
 	}
 
