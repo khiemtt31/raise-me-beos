@@ -62,6 +62,10 @@ a five-message calendar-week limit using the `ContactQuota` Durable Object, and 
 messages to `shacker1357@gmail.com` through the Gmail API. The visitor's address is preserved as
 the `Reply-To` address.
 
+Contact submissions have request-size limits, attempt throttling, and browser security protections.
+See [the manual security checklist](.docs/sec-manual.md) for deployment setup and remaining protections,
+and [the security assessment](.docs/sec-cerns.md) for findings and follow-up work.
+
 Configure the Gmail OAuth secrets in the Cloudflare Worker; never commit them to the repository:
 
 ```sh

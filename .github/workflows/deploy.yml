@@ -36,6 +36,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check Worker types
+        run: pnpm typecheck:worker
+
+      - name: Security regression tests
+        run: pnpm test
+
+      - name: Dependency audit
+        run: pnpm audit --audit-level=high
+
       - name: Deploy to Cloudflare
         run: pnpm run deploy
         env:

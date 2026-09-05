@@ -1,6 +1,7 @@
 const contactForm = document.querySelector<HTMLFormElement>('[data-contact-form]');
 
 if (contactForm) {
+	let submitting = false;
 	const submitButton = contactForm.querySelector<HTMLButtonElement>('button[type="submit"]');
 	const status = contactForm.querySelector<HTMLElement>('[data-contact-status]');
 
@@ -17,7 +18,7 @@ if (contactForm) {
 	contactForm.addEventListener('submit', async (event) => {
 		event.preventDefault();
 
-		if (!contactForm.reportValidity()) return;
+		if (submitting || !contactForm.reportValidity()) return;
 
 		const formData = new FormData(contactForm);
 		const payload = {
@@ -26,6 +27,7 @@ if (contactForm) {
 			message: formData.get('message'),
 		};
 
+		submitting = true;
 		if (submitButton) submitButton.disabled = true;
 		setStatus('Sending…', '');
 
@@ -49,6 +51,7 @@ if (contactForm) {
 				: 'The message could not be sent. Please email me directly.';
 			setStatus(message, 'error');
 		} finally {
+			submitting = false;
 			if (submitButton) submitButton.disabled = false;
 		}
 	});

@@ -10,16 +10,19 @@
   "scripts": {
     "dev": "astro dev",
     "stop": "astro dev stop",
-    "build": "astro build",
-    "build:cloudflare": "astro build",
+    "build": "astro build && node scripts/check-built-security.mjs",
+    "build:cloudflare": "pnpm build",
     "preview": "astro preview",
     "deploy": "pnpm run build:cloudflare && wrangler deploy",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "typecheck:worker": "wrangler types .wrangler/worker-configuration.d.ts && tsc -p tsconfig.worker.json"
   },
   "dependencies": {
     "astro": "^7.2.4"
   },
   "devDependencies": {
+    "typescript": "^7.0.2",
     "wrangler": "^4.125.0"
   }
 }
