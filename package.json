@@ -16,12 +16,13 @@
     "deploy": "pnpm run build:cloudflare && wrangler deploy",
     "astro": "astro",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
-    "typecheck:worker": "wrangler types .wrangler/worker-configuration.d.ts && tsc -p tsconfig.worker.json"
+    "typecheck:worker": "mkdir -p .wrangler && wrangler types .wrangler/worker-configuration.d.ts && tsc -p tsconfig.worker.json"
   },
   "dependencies": {
     "astro": "^7.2.4"
   },
   "devDependencies": {
+    "@types/node": "^26.4.1",
     "typescript": "^7.0.2",
     "wrangler": "^4.125.0"
   }
