@@ -209,7 +209,7 @@ async function getAccessToken(env: Env): Promise<string> {
 	try {
 		response = await fetch('https://oauth2.googleapis.com/token', {
 			signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
-			redirect: 'error',
+			redirect: 'manual',
 			method: 'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			body: new URLSearchParams({
@@ -268,7 +268,7 @@ async function sendGmailMessage(
 	try {
 		response = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
 			signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
-			redirect: 'error',
+			redirect: 'manual',
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${accessToken}`,

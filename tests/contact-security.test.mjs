@@ -19,7 +19,7 @@ function fixture(t, { throttle = false, quotaFail = false, provider = 'ok' } = {
 	t.mock.method(globalThis, 'fetch', async (url, options) => {
 		calls.provider.push({ url, options });
 		assert.ok(options.signal instanceof AbortSignal);
-		assert.equal(options.redirect, 'error');
+		assert.equal(options.redirect, 'manual');
 		if (provider === 'oauth-invalid-grant') return Response.json({
 			error: 'invalid_grant',
 			error_description: 'Token has been expired or revoked.',
