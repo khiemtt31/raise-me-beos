@@ -11,6 +11,16 @@ class RequestError extends Error {
 	}
 }
 
+class ProviderError extends Error {
+	stage: 'oauth' | 'gmail';
+	status?: number;
+	constructor(stage: 'oauth' | 'gmail', status?: number) {
+		super(`${stage} provider request failed${status ? ` with ${status}` : ''}`);
+		this.stage = stage;
+		this.status = status;
+	}
+}
+
 interface Env extends Pick<Cloudflare.Env, 'ASSETS' | 'CONTACT_QUOTA' | 'CONTACT_ATTEMPTS'> {
 	CONTACT_EMAIL: string;
 	GOOGLE_CLIENT_ID: string;
@@ -160,10 +170,14 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 		sendStarted = true;
 		await sendGmailMessage(accessToken, env.CONTACT_EMAIL, { name, email, message });
 		return json({ message: 'Message sent. I’ll get back to you soon.' });
-	} catch {
+	} catch (error) {
 		// Once a send starts, a lost response may still mean Gmail delivered it.
 		// Keep its slot and do not retry automatically on ambiguous outcomes.
-		console.error(sendStarted ? 'Contact delivery outcome uncertain' : 'Contact token request failed');
+		if (error instanceof ProviderError) {
+			console.error(error.message);
+		} else {
+			console.error(sendStarted ? 'Contact delivery outcome uncertain' : 'Contact token request failed');
+		}
 		if (!sendStarted) {
 			await useQuota(env, 'release', week).catch(() => {
 				console.error('Contact quota release failed');
@@ -204,7 +218,7 @@ async function getAccessToken(env: Env): Promise<string> {
 		}),
 	});
 
-	if (!response.ok) throw new Error(`Google token request failed with ${response.status}`);
+	if (!response.ok) throw new ProviderError('oauth', response.status);
 
 	const result = await response.json() as { access_token?: string };
 	if (!result.access_token) throw new Error('Google token response did not include an access token');
@@ -243,7 +257,7 @@ async function sendGmailMessage(
 		body: JSON.stringify({ raw: base64UrlEncode(mimeMessage) }),
 	});
 
-	if (!response.ok) throw new Error(`Gmail send failed with ${response.status}`);
+	if (!response.ok) throw new ProviderError('gmail', response.status);
 }
 
 function normalizedText(value: unknown, maxLength: number): string {

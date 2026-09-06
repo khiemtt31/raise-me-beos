@@ -9,6 +9,14 @@ export default defineConfig({
 	},
 	vite: {
 		build: { assetsInlineLimit: 0 },
+		server: {
+			proxy: {
+				'/api': {
+					target: 'http://127.0.0.1:8787',
+					changeOrigin: false,
+				},
+			},
+		},
 	},
 	devToolbar: {
 		enabled: false,
