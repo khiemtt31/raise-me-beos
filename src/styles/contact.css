@@ -156,19 +156,39 @@
 }
 
 .contact-form__status {
-	min-height: 1.2em;
+	position: fixed;
+	right: clamp(1rem, 4vw, 4.5rem);
+	bottom: clamp(4.5rem, 10vh, 7rem);
+	z-index: 4;
+	max-width: min(28rem, calc(100vw - 2rem));
 	margin: 0;
-	color: rgba(242, 240, 236, 0.64);
+	border: 1px solid rgba(242, 240, 236, 0.24);
+	border-left: 3px solid rgba(242, 240, 236, 0.62);
+	padding: 0.85rem 1rem;
+	background: rgba(16, 16, 16, 0.94);
+	color: rgba(242, 240, 236, 0.86);
 	font-size: 0.82rem;
 	line-height: 1.35;
+	box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.24);
+}
+
+.contact-form__status[hidden] {
+	display: none;
 }
 
 .contact-form__status[data-state='success'] {
 	color: rgba(220, 238, 218, 0.9);
+	border-left-color: rgba(145, 194, 137, 0.9);
+}
+
+.contact-form__status[data-state='warning'] {
+	color: rgba(245, 220, 165, 0.96);
+	border-left-color: rgba(218, 166, 67, 0.96);
 }
 
 .contact-form__status[data-state='error'] {
 	color: rgba(244, 190, 190, 0.92);
+	border-left-color: rgba(211, 103, 103, 0.96);
 }
 
 .contact-form__trap {
@@ -280,5 +300,10 @@ html:not(.has-js) .site-shell:has(#contacts:target) .contacts__right {
 	.contact-form__actions {
 		align-items: flex-start;
 		flex-direction: column;
+	}
+
+	.contact-form__status {
+		right: 1rem;
+		bottom: 5rem;
 	}
 }

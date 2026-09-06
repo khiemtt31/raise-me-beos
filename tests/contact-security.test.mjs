@@ -130,7 +130,11 @@ test('limiter and quota outages return controlled 503 without sending', async t 
 test('successful sends still respect the persistent weekly budget', async t => {
   const { send, calls } = fixture(t);
   for (let i = 0; i < 5; i++) assert.equal((await send()).status, 200);
-  assert.equal((await send()).status, 429);
+  const response = await send();
+  assert.equal(response.status, 429);
+  assert.deepEqual(await response.json(), {
+    message: 'The weekly message limit has been reached. Please try again next week.',
+  });
   assert.equal(calls.provider.length, 10);
 });
 
