@@ -40,8 +40,8 @@ test('contact client shows the quota message as a warning toast', async t => {
   assert.equal(status.dataset.state, 'warning');
   assert.equal(button.disabled, false);
 
-  response = Response.json({ message: 'The message could not be sent. Please try again later.' }, { status: 502 });
+  response = Response.json({ message: 'Email delivery is temporarily unavailable. Please try again later.' }, { status: 502 });
   await submitHandler({ preventDefault: () => {} });
-  assert.equal(status.textContent, 'The message could not be sent. Please try again later.');
+  assert.equal(status.textContent, 'Email delivery is temporarily unavailable. Please try again later.');
   assert.equal(status.dataset.state, 'error');
 });

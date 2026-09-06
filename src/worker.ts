@@ -185,7 +185,7 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 		}
 		return json({ message: sendStarted
 			? 'Delivery could not be confirmed. Please avoid submitting the same message again.'
-			: 'The message could not be sent. Please try again later.' }, 502);
+			: 'Email delivery is temporarily unavailable. Please try again later.' }, 502);
 	}
 }
 
