@@ -219,8 +219,8 @@ async function getAccessToken(env: Env): Promise<string> {
 				grant_type: 'refresh_token',
 			}),
 		});
-	} catch {
-		throw new ProviderError('oauth');
+	} catch (error) {
+		throw new ProviderError('oauth', undefined, providerExceptionDetail(error));
 	}
 
 	let body: string;
@@ -276,8 +276,8 @@ async function sendGmailMessage(
 			},
 			body: JSON.stringify({ raw: base64UrlEncode(mimeMessage) }),
 		});
-	} catch {
-		throw new ProviderError('gmail');
+	} catch (error) {
+		throw new ProviderError('gmail', undefined, providerExceptionDetail(error));
 	}
 
 	if (!response.ok) {
@@ -298,6 +298,13 @@ function providerErrorDetail(body: string): string | undefined {
 	} catch {
 		return undefined;
 	}
+}
+
+function providerExceptionDetail(error: unknown): string | undefined {
+	const name = error instanceof Error ? error.name : '';
+	const message = error instanceof Error ? error.message : '';
+	const detail = [name, message].filter(Boolean).join(': ');
+	return detail ? detail.replace(/[\r\n]+/g, ' ').slice(0, 180) : undefined;
 }
 
 function normalizedText(value: unknown, maxLength: number): string {
