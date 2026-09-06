@@ -16,11 +16,15 @@ function fixture(t, { throttle = false, quotaFail = false, provider = 'ok' } = {
   } } } });
   t.after(() => db.close());
   const calls = { attempts: [], quota: [], provider: [] };
-  t.mock.method(globalThis, 'fetch', async (url, options) => {
-    calls.provider.push({ url, options });
-    assert.ok(options.signal instanceof AbortSignal);
-    assert.equal(options.redirect, 'error');
-    if (provider === 'oauth-fail') return new Response('', { status: 503 });
+	t.mock.method(globalThis, 'fetch', async (url, options) => {
+		calls.provider.push({ url, options });
+		assert.ok(options.signal instanceof AbortSignal);
+		assert.equal(options.redirect, 'error');
+		if (provider === 'oauth-invalid-grant') return Response.json({
+			error: 'invalid_grant',
+			error_description: 'Token has been expired or revoked.',
+		}, { status: 400 });
+		if (provider === 'oauth-fail') return new Response('', { status: 503 });
     if (String(url).includes('/token')) return Response.json({ access_token: 'mock-token' });
     if (provider === 'send-fail') throw new Error('Simulated lost response');
     return Response.json({ id: 'mock-message' });
@@ -143,6 +147,14 @@ test('OAuth failure refunds delivery budget but every attempt is counted', async
   for (let i = 0; i < 6; i++) assert.equal((await send()).status, 502);
   assert.equal(calls.attempts.length, 6);
   assert.equal(calls.quota.filter(call => call.action === 'release').length, 6);
+});
+
+test('OAuth errors log provider status and safe error details', async t => {
+  const errors = [];
+  t.mock.method(console, 'error', (...args) => errors.push(args.join(' ')));
+  const { send } = fixture(t, { provider: 'oauth-invalid-grant' });
+  assert.equal((await send()).status, 502);
+  assert.ok(errors.includes('oauth provider request failed with 400 (invalid_grant: Token has been expired or revoked.)'));
 });
 
 test('uncertain Gmail delivery retains its slot and never retries or refunds', async t => {

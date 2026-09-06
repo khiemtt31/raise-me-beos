@@ -14,8 +14,8 @@ class RequestError extends Error {
 class ProviderError extends Error {
 	stage: 'oauth' | 'gmail';
 	status?: number;
-	constructor(stage: 'oauth' | 'gmail', status?: number) {
-		super(`${stage} provider request failed${status ? ` with ${status}` : ''}`);
+	constructor(stage: 'oauth' | 'gmail', status?: number, detail?: string) {
+		super(`${stage} provider request failed${status ? ` with ${status}` : ''}${detail ? ` (${detail})` : ''}`);
 		this.stage = stage;
 		this.status = status;
 	}
@@ -205,23 +205,41 @@ async function useQuota(env: Env, action: 'reserve' | 'release', week: string): 
 }
 
 async function getAccessToken(env: Env): Promise<string> {
-	const response = await fetch('https://oauth2.googleapis.com/token', {
-		signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
-		redirect: 'error',
-		method: 'POST',
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-		body: new URLSearchParams({
-			client_id: env.GOOGLE_CLIENT_ID,
-			client_secret: env.GOOGLE_CLIENT_SECRET,
-			refresh_token: env.GOOGLE_REFRESH_TOKEN,
-			grant_type: 'refresh_token',
-		}),
-	});
+	let response: Response;
+	try {
+		response = await fetch('https://oauth2.googleapis.com/token', {
+			signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
+			redirect: 'error',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: new URLSearchParams({
+				client_id: env.GOOGLE_CLIENT_ID,
+				client_secret: env.GOOGLE_CLIENT_SECRET,
+				refresh_token: env.GOOGLE_REFRESH_TOKEN,
+				grant_type: 'refresh_token',
+			}),
+		});
+	} catch {
+		throw new ProviderError('oauth');
+	}
 
-	if (!response.ok) throw new ProviderError('oauth', response.status);
+	let body: string;
+	try {
+		body = await response.text();
+	} catch {
+		throw new ProviderError('oauth', response.status, 'response body unavailable');
+	}
 
-	const result = await response.json() as { access_token?: string };
-	if (!result.access_token) throw new Error('Google token response did not include an access token');
+	const detail = providerErrorDetail(body);
+	if (!response.ok) throw new ProviderError('oauth', response.status, detail);
+
+	let result: { access_token?: string };
+	try {
+		result = JSON.parse(body) as { access_token?: string };
+	} catch {
+		throw new ProviderError('oauth', response.status, 'invalid JSON response');
+	}
+	if (!result.access_token) throw new ProviderError('oauth', response.status, detail ?? 'access token missing');
 	return result.access_token;
 }
 
@@ -246,18 +264,40 @@ async function sendGmailMessage(
 		contact.message,
 	].join('\r\n');
 
-	const response = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-		signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
-		redirect: 'error',
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${accessToken}`,
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ raw: base64UrlEncode(mimeMessage) }),
-	});
+	let response: Response;
+	try {
+		response = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+			signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
+			redirect: 'error',
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ raw: base64UrlEncode(mimeMessage) }),
+		});
+	} catch {
+		throw new ProviderError('gmail');
+	}
 
-	if (!response.ok) throw new ProviderError('gmail', response.status);
+	if (!response.ok) {
+		const body = await response.text().catch(() => '');
+		throw new ProviderError('gmail', response.status, providerErrorDetail(body));
+	}
+}
+
+function providerErrorDetail(body: string): string | undefined {
+	try {
+		const parsed: unknown = JSON.parse(body);
+		if (!parsed || typeof parsed !== 'object') return undefined;
+		const record = parsed as Record<string, unknown>;
+		const code = typeof record.error === 'string' ? record.error : '';
+		const description = typeof record.error_description === 'string' ? record.error_description : '';
+		const detail = [code, description].filter(Boolean).join(': ');
+		return detail ? detail.replace(/[\r\n]+/g, ' ').slice(0, 180) : undefined;
+	} catch {
+		return undefined;
+	}
 }
 
 function normalizedText(value: unknown, maxLength: number): string {
